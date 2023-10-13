@@ -4,8 +4,11 @@ const mongoose = require('mongoose')
 const cors = require("cors")
 
 const postRoute = require('./routes/post.routes')
+const userRoute = require('./routes/user.routes')
 
 const port = process.env.port || 4000
+
+/* ----------------------------- MongoDB connect ---------------------------- */
 
 mongoose
   .connect("mongodb+srv://ndross427:RTvuH2nbonoV7Fjn@blog-app.numnxm7.mongodb.net/Blog-App")
@@ -18,13 +21,21 @@ mongoose
 
 
 const app = express()
-app.use(cors)
 
+app.use(cors)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended : true
 }))
+
+/* ------------------------------- App routes ------------------------------- */
+
 app.use("/posts", postRoute)
+app.use("/users", userRoute)
+
+
+/* ----------------------------- Error handling ----------------------------- */
+
 app.use((req, res, next) => {
   next(createError(404))
 })
@@ -33,6 +44,7 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode).send(err.message)
 })
 
+/* ------------------------------ Start server ------------------------------ */
 
 app.listen(port, () => {
   console.log(`Server listening on port: ${port}`)

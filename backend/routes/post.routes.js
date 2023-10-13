@@ -1,11 +1,10 @@
-const mongoose = require('mongoose')
 const express = require('express')
 const router = express.Router()
 
 
 let postSchema = require("../models/Post.js")
 
-
+/* 
 router.get("/", async (req, res, next) => {
   await studentSchema
     .find()
@@ -20,8 +19,9 @@ router.get("/", async (req, res, next) => {
       return next(err)
     })
 })
+ */
+/* -------------------------- Create post from form ------------------------- */
 
-/* ------------------------------- Post routes ------------------------------ */
 router.post("/create-post", async (req, res, next) => {
   await postSchema
     .create(req.body)
@@ -37,8 +37,9 @@ router.post("/create-post", async (req, res, next) => {
     })
 })
 
+/* --------------------------- Get a post with _id -------------------------- */
 
-/* router.route("/get-student/:id").get(async (req, res, next) => {
+router.get("/get-post/:id", async (req, res, next) => {
   await studentSchema
     .findById(req.params.id)
     .then((result) => {
@@ -52,7 +53,9 @@ router.post("/create-post", async (req, res, next) => {
       return next(err)
     })
 })
- */
+
+/* --------------------------- Edit post with _id --------------------------- */
+
 router.post("/edit-post/:id", async (req, res, next) => {
   await postSchema
     .findByIdAndUpdate(req.params.id, req.body)
@@ -68,6 +71,8 @@ router.post("/edit-post/:id", async (req, res, next) => {
     })
   }
 )
+
+/* -------------------------- Delete post with _id -------------------------- */
 
 router.delete("/delete-post/:id", async (req, res, next) => {
   await postSchema
