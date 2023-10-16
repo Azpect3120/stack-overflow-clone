@@ -7,17 +7,25 @@ const axios = require("axios")
 /*
     Send username and password through form  
 */
-router.post("/create", async(req, res) => {
+router.post("/create", async (req, res) => {
     const { username, password } = req.body;
     const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43";
 
-    const response = await axios.post("https://authentication-server-lzo6.onrender.com/users/create", {
-        applicationID: appId,
-        username,
-        password
+    const response = await fetch("https://authentication-server-lzo6.onrender.com/users/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            applicationId: appId,
+            username: username,
+            password: password
+        })
     });
+    
+    const data = await response.json();
 
-    res.json(response);
+    res.json(data);
 });
 
 /*
@@ -27,13 +35,21 @@ router.post("/verify", async (req, res) => {
     const { username, password } = req.body;
     const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43";
 
-    const response = await axios.post("https://authentication-server-lzo6.onrender.com/users/verify", {
-        applicationID: appId,
-        username,
-        password
+    const response = await fetch("https://authentication-server-lzo6.onrender.com/users/verify", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            applicationId: appId,
+            username: username,
+            password: password
+        })
     });
+    
+    const data = await response.json();
 
-    res.json(response);
+    res.json(data);
 });
 
 
