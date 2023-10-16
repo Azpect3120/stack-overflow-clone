@@ -20,6 +20,7 @@ router.get("/", async (req, res, next) => {
     })
 })
  */
+
 /* -------------------------- Create post from form ------------------------- */
 
 router.post("/create-post", async (req, res, next) => {
@@ -40,12 +41,12 @@ router.post("/create-post", async (req, res, next) => {
 /* --------------------------- Get a post with _id -------------------------- */
 
 router.get("/get-post/:id", async (req, res, next) => {
-  await studentSchema
+  await postSchema
     .findById(req.params.id)
     .then((result) => {
       res.json({
         data: result,
-        message: "All items successfully fetched",
+        message: "Post successfully fetched",
         status: 200,
       })
     })
@@ -64,6 +65,7 @@ router.post("/edit-post/:id", async (req, res, next) => {
       res.json({
         data: result, 
         message: "Data successfully updated",
+        status: 200
       })
     })
     .catch(err => {
@@ -79,7 +81,7 @@ router.delete("/delete-post/:id", async (req, res, next) => {
   .findByIdAndRemove(req.params.id)
   .then(() => {
     res.json({
-      message: "Post Successfully Deleted",
+      message: `Post _id: ${req.params.id} Successfully Deleted`,
     })
   })
   .catch(err => {

@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require("cors")
+require("dotenv").config()
 
 const postRoute = require('./routes/post.routes')
 const userRoute = require('./routes/user.routes')
@@ -10,8 +11,10 @@ const port = process.env.port || 4000
 
 /* ----------------------------- MongoDB connect ---------------------------- */
 
+const password = process.env.password
+
 mongoose
-  .connect("mongodb+srv://ndross427:RTvuH2nbonoV7Fjn@blog-app.numnxm7.mongodb.net/Blog-App")
+  .connect(`mongodb+srv://ndross427:${password}@blog-app.numnxm7.mongodb.net/Blog-App`)
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
