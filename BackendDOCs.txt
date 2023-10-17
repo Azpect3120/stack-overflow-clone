@@ -1,3 +1,5 @@
+All post routes start with /posts
+
 create post route
 method: post
 route: /create-post
