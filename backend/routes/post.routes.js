@@ -1,11 +1,10 @@
-const mongoose = require('mongoose')
 const express = require('express')
 const router = express.Router()
 
 
 let postSchema = require("../models/Post.js")
 
-
+/* 
 router.get("/", async (req, res, next) => {
   await studentSchema
     .find()
@@ -20,8 +19,22 @@ router.get("/", async (req, res, next) => {
       return next(err)
     })
 })
+ */
 
-/* ------------------------------- Post routes ------------------------------ */
+/* -------------------------- Check if post exists -------------------------- */
+
+async function checkPost(id) {
+  const post = await postSchema.findById(id)
+
+  if (!post) {
+    throw new Error(`Post with _id: ${id} not found`)
+  }
+
+  return post
+}
+
+/* -------------------------- Create post from form ------------------------- */
+
 router.post("/create-post", async (req, res, next) => {
   await postSchema
     .create(req.body)
@@ -37,14 +50,24 @@ router.post("/create-post", async (req, res, next) => {
     })
 })
 
+/* --------------------------- Get a post with _id -------------------------- */
 
-/* router.route("/get-student/:id").get(async (req, res, next) => {
-  await studentSchema
-    .findById(req.params.id)
+router.get("/get-post/:id", async (req, res, next) => {
+  try {
+    await checkPost(req.params.id)
+  }
+  catch(error) {
+    res.json({
+      message: `Post with _id: ${req.params.id} does not exist`
+    })
+    return false
+  }
+  
+  await postSchema
     .then((result) => {
       res.json({
         data: result,
-        message: "All items successfully fetched",
+        message: "Post successfully fetched",
         status: 200,
       })
     })
@@ -52,15 +75,28 @@ router.post("/create-post", async (req, res, next) => {
       return next(err)
     })
 })
- */
+
+/* --------------------------- Edit post with _id --------------------------- */
+
 router.post("/edit-post/:id", async (req, res, next) => {
-  await postSchema
+  try {
+    await checkPost(req.params.id)
+  }
+  catch(error) {
+    res.json({
+      message: `Post with _id: ${req.params.id} does not exist`
+    })
+    return false
+  }
+
+  await postSchema  
     .findByIdAndUpdate(req.params.id, req.body)
     .then(result => {
       console.log(result)
       res.json({
         data: result, 
         message: "Data successfully updated",
+        status: 200
       })
     })
     .catch(err => {
@@ -69,17 +105,29 @@ router.post("/edit-post/:id", async (req, res, next) => {
   }
 )
 
+/* -------------------------- Delete post with _id -------------------------- */
+
 router.delete("/delete-post/:id", async (req, res, next) => {
-  await postSchema
-  .findByIdAndRemove(req.params.id)
-  .then(() => {
+  try {
+    await checkPost(req.params.id)
+  }
+  catch(error) {
     res.json({
-      message: "Post Successfully Deleted",
+      message: `Post with _id: ${req.params.id} does not exist`
     })
-  })
-  .catch(err => {
-    return next(err)
-  })
+    return false
+  }
+  
+  await postSchema
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.json({
+        message: `Post _id: ${req.params.id} Successfully Deleted`,
+      })
+    })
+    .catch(err => {
+      return next(err)
+    })
 })
 
 module.exports = router

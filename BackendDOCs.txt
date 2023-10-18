@@ -1,0 +1,17 @@
+All post routes start with /posts
+
+create post route
+method: post
+route: /create-post
+
+edit post route
+method: post
+route: /edit-post/:id
+
+get post route
+method: get
+route: /get-post/:id
+
+delete post route
+method: delete
+route: /delete-post/:id
