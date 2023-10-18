@@ -4,33 +4,29 @@ const router = express.Router()
 
 let postSchema = require("../models/Post.js")
 
-/* 
-router.get("/", async (req, res, next) => {
-  await studentSchema
-    .find()
-    .then((result) => {
-      res.json({
-        data: result,
-        message: "All items successfully fetched",
-        status: 200,
-      })
-    })
-    .catch(err => {
-      return next(err)
-    })
-})
- */
-
 /* -------------------------- Check if post exists -------------------------- */
 
-async function checkPost(id) {
+async function checkPost_id(id) {
   const post = await postSchema.findById(id)
 
-  if (!post) {
-    throw new Error(`Post with _id: ${id} not found`)
-  }
+  if (!post) throw new Error(`Post with _id: ${id} not found`)
 
   return post
+}
+
+async function isValid_id(res, id) {
+  try {
+    await checkPost_id(id)
+    return true
+  }
+  catch(error) {
+    res.status(404)
+    res.json({
+      message: `Post with _id: ${id} does not exist`,
+      status: 404
+    })
+    return false
+  }
 }
 
 /* -------------------------- Create post from form ------------------------- */
@@ -53,17 +49,10 @@ router.post("/create-post", async (req, res, next) => {
 /* --------------------------- Get a post with _id -------------------------- */
 
 router.get("/get-post/:id", async (req, res, next) => {
-  try {
-    await checkPost(req.params.id)
-  }
-  catch(error) {
-    res.json({
-      message: `Post with _id: ${req.params.id} does not exist`
-    })
-    return false
-  }
+  if (!await isValid_id(res, req.params.id)) return false
   
   await postSchema
+    .findById(req.params.id)
     .then((result) => {
       res.json({
         data: result,
@@ -79,15 +68,7 @@ router.get("/get-post/:id", async (req, res, next) => {
 /* --------------------------- Edit post with _id --------------------------- */
 
 router.post("/edit-post/:id", async (req, res, next) => {
-  try {
-    await checkPost(req.params.id)
-  }
-  catch(error) {
-    res.json({
-      message: `Post with _id: ${req.params.id} does not exist`
-    })
-    return false
-  }
+  if (!await isValid_id(res, req.params.id)) return false
 
   await postSchema  
     .findByIdAndUpdate(req.params.id, req.body)
@@ -108,15 +89,7 @@ router.post("/edit-post/:id", async (req, res, next) => {
 /* -------------------------- Delete post with _id -------------------------- */
 
 router.delete("/delete-post/:id", async (req, res, next) => {
-  try {
-    await checkPost(req.params.id)
-  }
-  catch(error) {
-    res.json({
-      message: `Post with _id: ${req.params.id} does not exist`
-    })
-    return false
-  }
+  if (!await isValid_id(res, req.params.id)) return false
   
   await postSchema
     .findByIdAndRemove(req.params.id)
@@ -131,4 +104,3 @@ router.delete("/delete-post/:id", async (req, res, next) => {
 })
 
 module.exports = router
-
