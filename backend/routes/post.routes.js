@@ -8,10 +8,8 @@ let postSchema = require("../models/Post.js")
 
 async function checkPost_id(id) {
   const post = await postSchema.findById(id)
-
   if (!post) throw new Error(`Post with _id: ${id} not found`)
-
-  return post
+  return true
 }
 
 async function isValid_id(res, id) {
@@ -22,6 +20,7 @@ async function isValid_id(res, id) {
   catch(error) {
     res.status(404)
     res.json({
+      id: id,
       message: `Post with _id: ${id} does not exist`,
       status: 404
     })
