@@ -4,10 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        "light-background": "#f8f9f9",
+        "light-background": "#e6e6e6",
+        "light-border": "#c4c4c4",
       },
     },
   },
   plugins: [],
 }
-
