@@ -5,10 +5,10 @@ function Navbar() {
 
     return (
         <>
-            <nav className="relative flex w-full flex-nowrap items-center justify-between bg-[#FBFBFB] py-2 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-neutral-600 lg:flex-wrap lg:justify-start lg:py-4" data-te-navbar-ref>
+            <nav className="relative flex w-full flex-nowrap items-center justify-between bg-[#0f6313] py-2 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-[#0f6313] lg:flex-wrap lg:justify-start lg:py-4" data-te-navbar-ref>
                 <div className="flex w-full flex-wrap items-center justify-between px-3">
                     <button
-                        className="block border-0 bg-transparent px-2 text-neutral-500 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden"
+                        className="block border-0 bg-transparent px-2 text-neutral-100 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden"
                         type="button"
                         data-te-collapse-init
                         data-te-target="#navbarSupportedContent13"
@@ -35,11 +35,11 @@ function Navbar() {
                         data-te-collapse-item>
                         <div className="ml-2">
                             <a
-                                className="text-xl text-neutral-800 dark:text-neutral-200"
+                                className="text-xl text-neutral-100 dark:text-neutral-100"
                                 href="#"
                             >Hidden brand</a>
                         </div>
-                        <ul className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row" data-te-navbar-nav-ref>
+                        <ul className="list-style-none mr-auto flex flex-col pl-0 lg:mt-1 lg:flex-row w-full" data-te-navbar-nav-ref>
                             <li className="my-4 pl-2 lg:my-0 lg:pl-2 lg:pr-1" data-te-nav-item-ref>
                                 <a className="active disabled:text-black/30 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400" aria-current="page" href="#" data-te-nav-link-ref
                                 >Home</a>
@@ -61,25 +61,30 @@ function Navbar() {
                                 <a className="p-0 text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400" href="#" data-te-nav-link-ref
                                 >Link</a>
                             </li>
-                        </ul>
-                        <div className="w-[300px] lg:pr-2 flex-grow">
-                            <div className="relative flex w-full flex-wrap items-stretch">
+                            <li className="ml-auto w-1/3">
                                 <input
                                     type="search"
-                                    className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none motion-reduce:transition-none dark:border-neutral-500 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                                    className="w-full relative block min-w-0 basis-2/3 rounded border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-100 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-100 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none motion-reduce:transition-none dark:border-neutral-500 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
                                     placeholder="Search"
                                     aria-label="Search"
                                     aria-describedby="button-addon3" />
-
+                            </li>
+                            <li>
                                 <button
-                                    className="relative z-[2] rounded border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 motion-reduce:transition-none"
+                                    className="ml-5 text-neutral-100 relative z-[2] rounded border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 motion-reduce:transition-none"
                                     type="button"
                                     id="button-addon3"
                                     data-te-ripple-init>
                                     Search
                                 </button>
+
+                            </li>
+                        </ul>
+                        {/* <div className="w-[300px] bg-red-500 lg:pr-2 flex-grow">
+                            <div className="relative flex w-full flex-wrap items-stretch">
+
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </nav>
