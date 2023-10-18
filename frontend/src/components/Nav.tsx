@@ -6,7 +6,7 @@ function Navbar() {
 
     return (
         <>
-            <nav className="relative flex w-full flex-nowrap items-center justify-between bg-[#0f6313] py-2 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-[#0f6313] lg:flex-wrap lg:justify-start lg:py-4" data-te-navbar-ref>
+            <nav className="fixed top-0 flex w-full flex-nowrap items-center justify-between bg-[#0f6313] py-2 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 dark:bg-[#0f6313] lg:flex-wrap lg:justify-start lg:py-4" data-te-navbar-ref>
                 <div className="flex w-full flex-wrap items-center justify-between px-3">
                     <button
                         className="block border-0 bg-transparent px-2 text-neutral-100 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden"
@@ -84,9 +84,9 @@ function Navbar() {
                                 <Link
                                     className="ml-5 text-neutral-100 relative z-[2] rounded border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 motion-reduce:transition-none"
                                     id="link-addon3"
-                                    to="/login"
-                                    // onClick={() => window.location.href='/login'}
-                                    data-te-ripple-init>
+                                    to="/accounts/login"
+                                    data-te-ripple-init
+                                >
                                     Login
                                 </Link>
 

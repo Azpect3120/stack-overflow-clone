@@ -1,14 +1,13 @@
 import Nav from "../components/Nav";
-import GargabeFooter from "../components/GargabeFooter";
 import LoginForm from "../components/LoginForm"; 
+import "../assets/css/output.css"
 
 function LoginPage (): JSX.Element {
     return (
-      <>
+      <div className="h-screen">
         <Nav />
         <LoginForm />
-        <GargabeFooter />
-      </>
+      </div>
     );
 }
 
