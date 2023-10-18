@@ -36,7 +36,7 @@ function CreateAccountForm () {
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Password</label>
                             </div>
                             <div className="mt-2">
-                                <input id="password" name="password" value={password1} onChange={(e) => setPassword1(e.target.value)} type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input id="password" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#{}[\]+/])[A-Za-z\d@$!%*?&^#{}[\]+/]{12,}$" value={password1} onChange={(e) => setPassword1(e.target.value)} type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
 
@@ -45,7 +45,7 @@ function CreateAccountForm () {
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
                             </div>
                             <div className="mt-2">
-                                <input id="confirmPassword" name="confirmPassword" value={password2} onChange={(e) => setPassword2(e.target.value)} type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input id="confirmPassword" name="confirmPassword" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#{}[\]+/])[A-Za-z\d@$!%*?&^#{}[\]+/]{12,}$" value={password2} onChange={(e) => setPassword2(e.target.value)} type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
 

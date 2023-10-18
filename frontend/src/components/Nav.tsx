@@ -1,4 +1,5 @@
 import "../assets/css/output.css"
+import { Link } from "react-router-dom"
 
 function Navbar() {
 
@@ -79,15 +80,15 @@ function Navbar() {
                                 </button>
 
                             </li>
-                            <li>
-                                <button
+                            <li className="flex items-center">
+                                <Link
                                     className="ml-5 text-neutral-100 relative z-[2] rounded border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 motion-reduce:transition-none"
-                                    type="button"
-                                    id="button-addon3"
-                                    onClick={() => window.location.href='/login'}
+                                    id="link-addon3"
+                                    to="/login"
+                                    // onClick={() => window.location.href='/login'}
                                     data-te-ripple-init>
                                     Login
-                                </button>
+                                </Link>
 
                             </li>
                         </ul>
