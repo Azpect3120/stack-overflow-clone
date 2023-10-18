@@ -79,6 +79,17 @@ function Navbar() {
                                 </button>
 
                             </li>
+                            <li>
+                                <button
+                                    className="ml-5 text-neutral-100 relative z-[2] rounded border-2 border-primary px-6 py-2 text-xs font-medium uppercase text-primary transition duration-150 ease-in-out hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 motion-reduce:transition-none"
+                                    type="button"
+                                    id="button-addon3"
+                                    onClick={() => window.location.href='/login'}
+                                    data-te-ripple-init>
+                                    Login
+                                </button>
+
+                            </li>
                         </ul>
                         {/* <div className="w-[300px] bg-red-500 lg:pr-2 flex-grow">
                             <div className="relative flex w-full flex-wrap items-stretch">

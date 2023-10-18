@@ -1,6 +1,6 @@
 import Nav from "../components/Nav";
-import Footer from "../components/Footer";
-import CreateAccountForm from "../components/CreateAccountForm";
+import GargabeFooter from "../components/GargabeFooter";
+import CreateAccountForm from "../components/CreateAccountForm";    
 
 function CreateAccountPage () {
 
@@ -9,7 +9,7 @@ function CreateAccountPage () {
         <>
             <Nav />
             <CreateAccountForm />
-            <footer
+            <GargabeFooter />
         </>
     )
 }
