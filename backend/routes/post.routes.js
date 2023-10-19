@@ -64,6 +64,23 @@ router.get("/get-post/:id", async (req, res, next) => {
     })
 })
 
+/* ------------------------------ Get all posts ----------------------------- */
+
+router.get("/get-all-posts", async (req, res, next) => {
+  await postSchema
+    .find()
+    .then((result) => {
+      res.json({
+        data: result,
+        message: "Posts successfully fetched",
+        status: 200,
+      })
+    })
+    .catch(err => {
+      return next(err)
+    })
+})
+
 /* --------------------------- Edit post with _id --------------------------- */
 
 router.post("/edit-post/:id", async (req, res, next) => {
