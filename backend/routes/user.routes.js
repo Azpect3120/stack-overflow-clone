@@ -11,7 +11,7 @@ router.post("/create", async (req, res) => {
     const { username, password } = req.body;
     const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43";
 
-    const response = await fetch("https://authentication-server-lzo6.onrender.com/users/create", {
+    const response = await fetch("http://54.176.161.136:8080/users/create", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -35,7 +35,7 @@ router.post("/verify", async (req, res) => {
     const { username, password } = req.body;
     const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43";
 
-    const response = await fetch("https://authentication-server-lzo6.onrender.com/users/verify", {
+    const response = await fetch("http://54.176.161.136:8080/users/verify", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
