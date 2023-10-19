@@ -9,7 +9,7 @@ interface Post {
     content: string;
     author: string;
     date: Date;
-    id: string;
+    _id: string;
 }
 
 function ViewPosts(): JSX.Element {
@@ -20,7 +20,7 @@ function ViewPosts(): JSX.Element {
             fetch("http://localhost:4000/posts/posts")
             .then(res => res.json())
             .then(data => {
-                console.log(data.data);
+                data.data.forEach((post: Post) => post.date = new Date(post.date));
                 setPosts(data.data);
             })
         } catch (err) {
