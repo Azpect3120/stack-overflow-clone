@@ -37,7 +37,7 @@ router.get("/posts", async (req, res, next) => {
     .find()
     .then((result) => {
       res.json({
-        data: result,
+        data: result.reverse(),
         message: "Posts successfully fetched",
         status: 200,
       })
