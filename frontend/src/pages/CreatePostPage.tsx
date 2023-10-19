@@ -6,12 +6,13 @@ import Footer from "../components/Footer";
 interface FormData {
     title: string,
     content: string,
-    author: string | null,
-    date: Date | null
+    author: string,
+    date: Date
 }
 
 function CreatePostPage (): JSX.Element {
-    const author: string | null = JSON.parse(localStorage.getItem("user")).username;
+    const ls = localStorage.getItem("user");
+    const author: string = ls ? JSON.parse(ls) : "";
 
     let [form, setForm] = useState<FormData>({title: "", content: "", author, date: new Date() })
 

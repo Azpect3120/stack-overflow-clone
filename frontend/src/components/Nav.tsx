@@ -2,12 +2,13 @@ import "../assets/css/output.css"
 import { Link } from "react-router-dom"
 
 interface User {
-    username: String | null,
-    id: String | null
+    username: String,
+    id: String
 }
 
 function Navbar() {
-    const user: User | null = JSON.parse(localStorage.getItem("user")) || null;
+    const ls = localStorage.getItem("user");
+    const user: User = ls ? JSON.parse(ls) : null;
 
     const handleSubmit = () => {
 
@@ -25,7 +26,7 @@ function Navbar() {
                 Dev<span className="font-bold">Debate</span>
             </Link>
 
-            <Link to={(user) ? "/posts/create" : "/accounts/login"} className="text-sm p-4 text-light-theme-green hover:text-light-theme-green-active">
+            <Link to={(user) ? "/posts/create" : "/accounts/login"} className="text-sm mx-2 px-3 py-1.5 rounded-lg text-light-theme-green hover:bg-green-100 hover:text-light-theme-green-active">
                 New Post
             </Link>
 
