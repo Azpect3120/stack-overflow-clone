@@ -10,7 +10,7 @@ interface FormData {
     date: Date | null
 }
 
-function PostForm (): JSX.Element {
+function CreatePostPage (): JSX.Element {
     let [form, setForm] = useState<FormData>({title: "", content: "", author: "", date: new Date() })
 
     const handleSubmit = async (event: Event) => {
@@ -44,7 +44,7 @@ function PostForm (): JSX.Element {
 
     return (
         <div className="w-full h-fit bg-light-background">
-            <Navbar />
+            <Navbar user={{username: "Azpect", password: "root", id: "1"}}/>
 
             <form onSubmit={handleSubmit} className="w-2/3 mx-auto h-fit pb-12">
                 <h1 className="font-bold text-3xl px-2 py-10">
@@ -70,4 +70,4 @@ function PostForm (): JSX.Element {
     );
 }
 
-export default PostForm;
+export default CreatePostPage;

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
-import PostForm from "./pages/PostForm";
+import CreatePostPage from "./pages/CreatePostPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
 import ViewPosts from "./pages/ViewPosts";
 
@@ -13,7 +13,7 @@ function App() {
         <Route path="/accounts/login" element={<LoginPage />} />
         <Route path="/accounts/create" element={<CreateAccountPage />} />
         <Route path="/posts" element={<ViewPosts />} />
-        <Route path="/posts/create" element={<PostForm />} />
+        <Route path="/posts/create" element={<CreatePostPage />} />
       </Routes>
     </Router>
   )
