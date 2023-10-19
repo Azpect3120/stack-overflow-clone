@@ -18,7 +18,7 @@ function Post (props: Props): JSX.Element {
                     {props.title}
                 </Link>
                 <p className="text-sm text-light-theme-green">
-                    {props.author} <span className="text-xs px-1 font-light text-black">{props.date.toDateString()}</span>
+                    {props.author} <span className="text-xs px-1 font-light text-black">{(props.date) ? props.date.toString() : ""}</span>
                 </p>
             </div>
             <p className="text-sm font-light px-8 pb-4 whitespace-nowrap overflow-x-hidden overflow-ellipsis">

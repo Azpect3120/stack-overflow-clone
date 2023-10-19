@@ -12,7 +12,7 @@ interface FormData {
 
 function CreatePostPage (): JSX.Element {
     const ls = localStorage.getItem("user");
-    const author: string = ls ? JSON.parse(ls) : "";
+    const author: string = ls ? JSON.parse(ls).username : "";
 
     let [form, setForm] = useState<FormData>({title: "", content: "", author, date: new Date() })
 
@@ -37,7 +37,8 @@ function CreatePostPage (): JSX.Element {
 
     const handleInputChange = (event: any) => {
         const { name, value } = event.target;
-        setForm({...form, date: new Date(), [name]: value })
+        setForm({...form, date: new Date(), [name]: value });
+        console.log(form);
     };
 
     const textareaStyles: any = {
