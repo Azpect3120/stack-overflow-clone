@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
 import ViewPosts from "./pages/ViewPosts";
+import PostPage from "./pages/PostPage";
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
         <Route path="/accounts/login" element={<LoginPage />} />
         <Route path="/accounts/create" element={<CreateAccountPage />} />
         <Route path="/posts" element={<ViewPosts />} />
+        <Route path="/posts/:id" element={<PostPage />} />
         <Route path="/posts/create" element={<CreatePostPage />} />
       </Routes>
     </Router>
