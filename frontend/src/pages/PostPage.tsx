@@ -1,6 +1,10 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+<<<<<<< HEAD
 import CommentSection from "../components/CommentSection";
+=======
+import CommentList from "../components/CommentList";
+>>>>>>> f630539695d524a6851372a26856845eec02e636
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -39,15 +43,15 @@ function PostPage(): JSX.Element {
                     <h1 className="p-20 pb-10 text-4xl">
                         {post ? post.title : "Loading..."}         
                     </h1>
-                    <p className="p-20 pt-0 text-sm text-light-theme-green">
+                    <p className="p-20 py-5 text-sm text-light-theme-green border-b border-light-border">
                         {post ? post.author : "Loading..."}
                     </p>
 
-                    <p className="mx-20 text-lg whitespace-pre-line">
+                    <p className="mx-20 my-10 text-lg whitespace-pre-line">
                         {post ? post.content : "Loading..."}
                     </p>
 
-
+                    <CommentList />
 
                 </div>
             </div>
