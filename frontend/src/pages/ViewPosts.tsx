@@ -13,7 +13,7 @@ interface Post {
 }
 
 function ViewPosts(): JSX.Element {
-    const [posts, setPosts] = useState<Post[]>([])
+    const [posts, setPosts] = useState<Post[]>([]);
 
     useEffect(() => {
         try {
