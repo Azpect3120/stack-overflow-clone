@@ -66,9 +66,33 @@ router.get("/get-post/:id", async (req, res, next) => {
 
 /* ------------------------------ Get all posts ----------------------------- */
 
-router.get("/get-all-posts", async (req, res, next) => {
+router.get("/posts", async (req, res, next) => {
   await postSchema
     .find()
+    .then((result) => {
+      res.json({
+        data: result,
+        message: "Posts successfully fetched",
+        status: 200,
+      })
+    })
+    .catch(err => {
+      return next(err)
+    })
+})
+
+/* ------------------- Search posts with title and content ------------------ */
+
+router.get("/posts/:query", async (req, res, next) => {
+  let query = req.params.query
+  await postSchema
+    .find({
+      $or: [
+        {title: {$regex: query}},
+        {content: {$regex: query}},
+        {author: {$regex: query}}
+      ]
+    })
     .then((result) => {
       res.json({
         data: result,
