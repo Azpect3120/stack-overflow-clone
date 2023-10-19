@@ -28,6 +28,7 @@ function PostPage(): JSX.Element {
         }
     }, []);
 
+    useEffect(() => console.log(post), [post])
     return (
         <div>
             <Nav />
@@ -41,7 +42,7 @@ function PostPage(): JSX.Element {
                         {post ? post.author : "Loading..."}
                     </p>
 
-                    <p className="mx-20 text-lg">
+                    <p className="mx-20 text-lg whitespace-pre-line">
                         {post ? post.content : "Loading..."}
                     </p>
 

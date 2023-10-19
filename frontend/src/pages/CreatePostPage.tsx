@@ -29,6 +29,7 @@ function CreatePostPage (): JSX.Element {
                 },
                 body: JSON.stringify(form)
             });
+            console.log(form);
             window.location.href = "/posts";
         } catch (err) {
             console.error(err);
