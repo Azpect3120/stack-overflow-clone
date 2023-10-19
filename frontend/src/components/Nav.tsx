@@ -2,19 +2,20 @@ import "../assets/css/output.css"
 import { Link } from "react-router-dom"
 
 interface User {
-    username: String,
-    password: String,
-    id: String
+    username: String | null,
+    id: String | null
 }
 
-interface Props {
-    user: User | null
-}
-
-function Navbar(props: Props) {
+function Navbar() {
+    const user: User | null = JSON.parse(localStorage.getItem("user")) || null;
 
     const handleSubmit = () => {
 
+    };
+
+    const logout = () => {
+        localStorage.removeItem("user");
+        window.location.href = "/accounts/login";
     };
 
     return (
@@ -24,7 +25,7 @@ function Navbar(props: Props) {
                 Dev<span className="font-bold">Debate</span>
             </Link>
 
-            <Link to={(props.user) ? "/posts/create" : "/accounts/login"} className="text-sm p-4 text-light-theme-green hover:text-light-theme-green-active">
+            <Link to={(user) ? "/posts/create" : "/accounts/login"} className="text-sm p-4 text-light-theme-green hover:text-light-theme-green-active">
                 New Post
             </Link>
 
@@ -40,9 +41,9 @@ function Navbar(props: Props) {
 
             <div className="px-4 text-md">
                 {
-                   (props.user) ? 
-                    <h1 className="hover:underline hover:underline-offset-2 transition-all">
-                        {props.user.username}
+                   (user) ? 
+                    <h1 onClick={logout} title="Logout of account" className="hover:underline hover:underline-offset-2 transition-all">
+                        {user.username}
                     </h1>
                     :
                     <Link to="/accounts/login" className="hover:underline hover:underline-offset-2 transition-all">

@@ -6,17 +6,19 @@ import Footer from "../components/Footer";
 interface FormData {
     title: string,
     content: string,
-    author: string,
+    author: string | null,
     date: Date | null
 }
 
 function CreatePostPage (): JSX.Element {
-    let [form, setForm] = useState<FormData>({title: "", content: "", author: "", date: new Date() })
+    const author: string | null = JSON.parse(localStorage.getItem("user")).username;
+
+    let [form, setForm] = useState<FormData>({title: "", content: "", author, date: new Date() })
 
     const handleSubmit = async (event: Event) => {
         event.preventDefault();
 
-        setForm({ ...form, date: new Date() })
+        setForm({ ...form, date: new Date() });
 
         try {
             await fetch("http://localhost:4000/posts/create-post", {
@@ -34,7 +36,7 @@ function CreatePostPage (): JSX.Element {
 
     const handleInputChange = (event: any) => {
         const { name, value } = event.target;
-        setForm({...form, [name]: value })
+        setForm({...form, date: new Date(), [name]: value })
     };
 
     const textareaStyles: any = {
@@ -44,7 +46,7 @@ function CreatePostPage (): JSX.Element {
 
     return (
         <div className="w-full h-fit bg-light-background">
-            <Navbar user={{username: "Azpect", password: "root", id: "1"}}/>
+            <Navbar />
 
             <form onSubmit={handleSubmit} className="w-2/3 mx-auto h-fit pb-12">
                 <h1 className="font-bold text-3xl px-2 py-10">

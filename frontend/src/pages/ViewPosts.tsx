@@ -6,8 +6,7 @@ function ViewPosts(): JSX.Element {
     return (
         <div>
             <Navbar />
-        
-        
+            <PostList />
             <Footer />
         </div>
     );

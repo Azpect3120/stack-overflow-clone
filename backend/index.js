@@ -13,14 +13,14 @@ const port = process.env.port || 4000
 
 const password = process.env.password
 
-mongoose
-  .connect(`mongodb+srv://ndross427:${password}@blog-app.numnxm7.mongodb.net/Blog-App`)
-  .then(x => {
-    console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
-  })
-  .catch(err => {
-    console.error('Error connecting to mongo', err.reason);
-  })
+// mongoose
+//   .connect(`mongodb+srv://ndross427:${password}@blog-app.numnxm7.mongodb.net/Blog-App`)
+//   .then(x => {
+//     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
+//   })
+//   .catch(err => {
+//     console.error('Error connecting to mongo', err.reason);
+//   })
 
 
 const app = express()

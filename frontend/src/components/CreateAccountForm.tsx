@@ -6,16 +6,31 @@ function CreateAccountForm () {
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
 
-    const handleFormSubmit = (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (password1 !== password2) {
             // Passwords do not match
         } else {
             // Query database and ensure username and such is valid
+            try {
+                const response = await fetch("http://localhost:4000/users/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, password: password1 })
+                });
 
-            // Store user somewhere...
-            
-            window.location.href = "/posts"
+                const data = await response.json();
+
+                if (data.status == 201) {
+                    window.location.href = "/accounts/login";
+                } else {
+                    window.alert("Could not create user!");
+                }
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 

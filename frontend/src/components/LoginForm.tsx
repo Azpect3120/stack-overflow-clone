@@ -6,12 +6,26 @@ function LoginForm() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        try {
+            const response = await fetch("http://localhost:4000/users/verify", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
 
+            const data = await response.json();
 
-        // Sign in logic
+            localStorage.setItem("user", JSON.stringify({ id: data.user.ID, username: data.user.username }));
+
+            window.location.href = "/posts";
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
