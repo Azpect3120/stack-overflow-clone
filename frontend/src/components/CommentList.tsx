@@ -5,11 +5,12 @@ interface CommentObject {
     author: String;
     content: String;
     date: Date;
-    postId: String;
+    postID: String;
+    _id: String;
 }
 
 function CommentList(): JSX.Element {
-    const commentData: CommentObject = { author: "Azpect", content: "Hello world", date: new Date(), postId: "98ruin2n8iubhuhb" };
+    const commentData: CommentObject = { author: "Azpect", content: "Hello world", date: new Date(), postID: "98ruin2n8iubhuhb", _id: "" };
     return (
         <div className="border-t border-light-border py-4">
             <h1 className="text-3xl px-20 py-8 w-full">

@@ -37,9 +37,13 @@ function PostPage(): JSX.Element {
             
             <div className="w-full flex justify-center">
                 <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
-                    <h1 className="p-20 pb-10 text-4xl">
-                        {post ? post.title : "Loading..."}         
-                    </h1>
+                    <div className="flex items-center justify-between">
+                        <h1 className="p-20 pb-10 text-4xl">
+                            {post ? post.title : "Loading..."}         
+                        </h1>
+
+                        {/* <button className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg"> Delete Post </button> */}
+                    </div>
                     <p className="p-20 py-5 text-sm text-light-theme-green border-b border-light-border">
                         {post ? post.author : "Loading..."}
                     </p>
