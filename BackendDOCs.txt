@@ -23,3 +23,22 @@ route: /:query
 delete post route
 method: delete
 route: /delete-post/:id
+
+
+Comment routes start with /Comments
+
+create comment route
+method: post
+route: /create/:posts_id
+
+delete comment route
+method: delete
+route: /delete/:comment_id
+
+edit comment
+method: post
+route: /edit/:comment_id
+
+get all comments on post
+method: get
+route: /:post_id
