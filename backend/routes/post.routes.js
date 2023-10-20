@@ -2,14 +2,15 @@ const express = require('express')
 const router = express.Router()
 
 let postSchema = require("../models/Post.js")
+let commentSchema = require("../models/Comment.js")
 
 // All posts start with /post
 
 /* -------------------------- Check if post exists -------------------------- */
 
-async function isValid_id(res, id) {
+async function isValid_id(res, id, schema) {
   try {
-    const post = await postSchema.findById(id)
+    const post = await schema.findById(id)
     if (!post) throw new Error(`Post with _id: ${id} not found`)
     return true
   }
@@ -85,7 +86,9 @@ router.post("/create-post", async (req, res, next) => {
 /* --------------------------- Get a post with _id -------------------------- */
 
 router.get("/get-post/:id", async (req, res, next) => {
-  if (!await isValid_id(res, req.params.id)) return false
+  const postID = req.params.id
+
+  if (!await isValid_id(res, postID, postSchema)) return false
   
   await postSchema
     .findById(req.params.id)
@@ -104,7 +107,9 @@ router.get("/get-post/:id", async (req, res, next) => {
 /* --------------------------- Edit post with _id --------------------------- */
 
 router.post("/edit-post/:id", async (req, res, next) => {
-  if (!await isValid_id(res, req.params.id)) return false
+  const postID = req.params.id
+
+  if (!await isValid_id(res, postID, postSchema)) return false
 
   await postSchema  
     .findByIdAndUpdate(req.params.id, req.body)
@@ -125,13 +130,28 @@ router.post("/edit-post/:id", async (req, res, next) => {
 /* -------------------------- Delete post with _id -------------------------- */
 
 router.post("/delete-post/:id", async (req, res, next) => {
-  if (!await isValid_id(res, req.params.id)) return false
+  const postID = req.params.id
+
+  if (!await isValid_id(res, postID, postSchema)) return false
   
   await postSchema
     .findByIdAndRemove(req.params.id)
     .then(() => {
       res.json({
         message: `Post _id: ${req.params.id} Successfully Deleted`,
+      })
+    })
+    .catch(err => {
+      return next(err)
+    })
+
+  await commentSchema
+    .deleteMany({
+      postID: postID
+    })
+    .then(() => {
+      res.json({
+        message: `Comments under Post _id: ${postID} Successfully Deleted`,
       })
     })
     .catch(err => {
