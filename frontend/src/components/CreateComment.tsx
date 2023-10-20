@@ -4,14 +4,17 @@ interface CommentObject {
     author: String;
     content: String;
     date: Date;
-    postId: String;
 }
 
-function createComment (): JSX.Element {
+interface Props {
+    postID: String;
+}
+
+function createComment (props: Props): JSX.Element {
     const ls = localStorage.getItem("user");
     const author: string = ls ? JSON.parse(ls).username : "";
 
-    let [comment, setComment] = useState<CommentObject>({author, content: "", date: new Date(), postId: ""});
+    let [comment, setComment] = useState<CommentObject>({author, content: "", date: new Date() });
 
     const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
         event.preventDefault();
@@ -19,14 +22,15 @@ function createComment (): JSX.Element {
         setComment({ ...comment, date: new Date() });
 
         try {
-            await fetch("!!!fetchURL", {
+            await fetch(`http://localhost:4000/comments/create/${props.postID}`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(comment)
             })
-            console.log(comment);
+
+            window.location.href = `/posts/${props.postID}`;
         } catch (err) {
             console.error(err);
         }

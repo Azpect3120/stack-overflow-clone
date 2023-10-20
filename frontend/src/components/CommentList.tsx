@@ -1,33 +1,50 @@
 import "../assets/css/output.css"
 import Comment from "./Comment";
 import CreateComment from "./CreateComment";
+import { useEffect, useState } from "react";
 
 interface CommentObject {
     author: String;
     content: String;
     date: Date;
-    postId: String;
+    postID: String;
+    _id: String;
 }
 
-function CommentList(): JSX.Element {
-    const commentData: CommentObject = { author: "Azpect", content: "Hello world", date: new Date(), postId: "98ruin2n8iubhuhb" };
+interface Props {
+    id: String;
+}
+
+function CommentList(props: Props): JSX.Element {
+    const [comments, setComments] = useState<CommentObject[]>([]);
+
+    useEffect(() => {
+        try {
+            fetch(`http://localhost:4000/comments/${props.id}`)
+            .then(res => res.json())
+            .then(data => {
+                data.data.forEach((comment: CommentObject) => comment.date = new Date(comment.date));
+                setComments(data.data as CommentObject[]);
+            })
+        } catch (err) {
+            console.error(err);
+        }
+    }, [props]);
+
     return (
         <div className="border-t border-light-border py-4">
             <h1 className="text-3xl px-20 py-8 w-full">
-                12 Responses
+                {comments.length} Responses
             </h1>
             <div className="w-full divide-y divide-light-border">
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
-                <Comment comment={commentData} />
+                {
+                    comments.map((cmt: CommentObject) => (
+                        <Comment comment={cmt} />
+                    ))
+                }
+
             </div>
-            <CreateComment />
+            <CreateComment postID={props.id}/>
         </div>
     );
 }

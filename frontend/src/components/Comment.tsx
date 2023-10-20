@@ -4,7 +4,8 @@ interface CommentObject {
     author: String;
     content: String;
     date: Date;
-    postId: String;
+    postID: String;
+    _id: String;
 }
 
 interface Props {
