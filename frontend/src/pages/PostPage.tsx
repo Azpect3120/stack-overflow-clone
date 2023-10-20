@@ -30,7 +30,7 @@ function PostPage(): JSX.Element {
         }
     }, []);
 
-    useEffect(() => console.log(post), [post])
+    // useEffect(() => console.log(post), [post])
     return (
         <div>
             <Nav />
@@ -52,8 +52,7 @@ function PostPage(): JSX.Element {
                         {post ? post.content : "Loading..."}
                     </p>
 
-                    <CommentList />
-
+                    <CommentList id={post ? post._id : ""}/>
                 </div>
             </div>
 
