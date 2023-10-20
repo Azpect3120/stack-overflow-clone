@@ -5,6 +5,23 @@ let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require('../models/Vote.js')
 
+/* ------------------------------- Count votes ------------------------------ */
+
+function countVotes(data) {
+  let trueVotes = 0;
+  let falseVotes = 0;
+
+  for (const item of data) {
+    if (item.vote === true) {
+      trueVotes++;
+    } else if (item.vote === false) {
+      falseVotes++;
+    }
+  }
+
+  return trueVotes - falseVotes;
+}
+
 /* -------------------------- Check if post exists -------------------------- */
 
 async function isValid_id(res, id, schema) {
@@ -24,44 +41,21 @@ async function isValid_id(res, id, schema) {
   }
 }
 
-/* ---------------------------- Get all Comments ---------------------------- */
+/* ---------------------------- Post vote on post --------------------------- */
 
-router.post("/:id", async (req, res, next) => {
-  const targetID = req.params.id
-
-  if (!await isValid_id(res, targetID, postSchema)) return false
-  
-  await commentSchema
-    .find({
-      postID: postID
-    })
-    .then((result) => {
-      res.json({
-        data: result.reverse(),
-        message: "Comments successfully fetched",
-        status: 200,
-      })
-    })
-    .catch(err => {
-      return next(err)
-    })
-  })
-
-/* ------------------------------ Make comment ------------------------------ */
-
-router.post("/create/:id", async (req, res, next) => {
+router.post("/post/:id", async (req, res, next) => {
   const postID = req.params.id
 
   if (!await isValid_id(res, postID, postSchema)) return false
   
-  await commentSchema
+  await voteSchema
     .create({
       ...req.body,
-      postID: postID
+      targetID: postID
     })
-    .then(() => {
+    .then((result) => {
       res.json({
-        message: "Comment successfully created",
+        message: `Vote on post ${postID} successful`,
         status: 200,
       })
     })
@@ -70,18 +64,21 @@ router.post("/create/:id", async (req, res, next) => {
     })
   })
 
-/* ------------------------------ Edit comment ------------------------------ */
+/* -------------------------- Post vote on comment -------------------------- */
 
-router.post("/edit/:id", async (req, res, next) => {
+router.post("/comment/:id", async (req, res, next) => {
   const commentID = req.params.id
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
   
-  await commentSchema
-    .findByIdAndUpdate(commentID, req.body)
+  await voteSchema
+    .create({
+      ...req.body,
+      targetID: commentID
+    })
     .then(() => {
       res.json({
-        message: "Comment updated successfully",
+        message: `Vote on comment ${commentID} successful`,
         status: 200,
       })
     })
@@ -90,18 +87,22 @@ router.post("/edit/:id", async (req, res, next) => {
     })
   })
 
-/* ----------------------------- Delete comment ----------------------------- */
+/* --------------------- Get votes on post and comments --------------------- */
 
-router.post("/delete/:id", async (req, res, next) => {
-  const commentID = req.params.id
+router.get("/:id", async (req, res, next) => {
+  const targetID = req.params.id
 
-  if (!await isValid_id(res, commentID, commentSchema)) return false
+  if (!await isValid_id(res, targetID, postSchema) && !await isValid_id(res, targetID, commentSchema) ) return false
   
-  await commentSchema
-    .findByIdAndDelete(commentID)
-    .then(() => {
+  await voteSchema
+    .find({
+      targetID: targetID
+    })
+    .then(result => {
       res.json({
-        message: "Comment successfully Deleted",
+        data: result,
+        voteCount: countVotes(result),
+        message: "All votes successfully fetched",
         status: 200,
       })
     })

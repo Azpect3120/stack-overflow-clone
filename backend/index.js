@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({
 app.use("/posts", postRoute)
 app.use("/users", userRoute)
 app.use("/comments", commentRoute)
-app.use("/vote", voteRoute)
+app.use("/votes", voteRoute)
 
 /* ----------------------------- Error handling ----------------------------- */
 
