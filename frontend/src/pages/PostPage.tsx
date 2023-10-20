@@ -52,9 +52,6 @@ function PostPage(): JSX.Element {
 
                 </div>
             </div>
-
-            <CommentSection />
-
             <Footer />
         </div>
     )
