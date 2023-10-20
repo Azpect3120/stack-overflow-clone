@@ -1,10 +1,7 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-<<<<<<< HEAD
 import CommentSection from "../components/CommentSection";
-=======
 import CommentList from "../components/CommentList";
->>>>>>> f630539695d524a6851372a26856845eec02e636
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
