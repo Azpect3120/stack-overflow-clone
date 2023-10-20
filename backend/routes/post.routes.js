@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 
-
 let postSchema = require("../models/Post.js")
 
 // All posts start with /post
@@ -125,7 +124,7 @@ router.post("/edit-post/:id", async (req, res, next) => {
 
 /* -------------------------- Delete post with _id -------------------------- */
 
-router.delete("/delete-post/:id", async (req, res, next) => {
+router.post("/delete-post/:id", async (req, res, next) => {
   if (!await isValid_id(res, req.params.id)) return false
   
   await postSchema
@@ -139,5 +138,7 @@ router.delete("/delete-post/:id", async (req, res, next) => {
       return next(err)
     })
 })
+
+/* -------------------------------------------------------------------------- */
 
 module.exports = router
