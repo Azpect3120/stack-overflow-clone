@@ -1,6 +1,6 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import CommentSection from "../components/CommentSection";
+// import CommentSection from "../components/CommentSection";
 import CommentList from "../components/CommentList";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -52,8 +52,6 @@ function PostPage(): JSX.Element {
 
                 </div>
             </div>
-
-            <CommentSection />
 
             <Footer />
         </div>

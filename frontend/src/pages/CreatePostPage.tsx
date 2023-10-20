@@ -1,5 +1,5 @@
 import "../assets/css/output.css"
-import { useState } from "react"
+import { SyntheticEvent, useState } from "react"
 import Navbar from "../components/Nav";
 import Footer from "../components/Footer";
 
@@ -16,7 +16,7 @@ function CreatePostPage (): JSX.Element {
 
     let [form, setForm] = useState<FormData>({title: "", content: "", author, date: new Date() })
 
-    const handleSubmit = async (event: Event) => {
+    const handleSubmit = async (event: SyntheticEvent): Promise<void> =>   {
         event.preventDefault();
 
         setForm({ ...form, date: new Date() });

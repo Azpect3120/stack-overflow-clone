@@ -1,10 +1,21 @@
 import "../assets/css/output.css"
 
+interface CommentObject {
+    author: String;
+    content: String;
+    date: Date;
+    postId: String;
+}
 
-function Comment(): JSX.Element {
+interface Props {
+    comment: CommentObject;
+}
+
+function Comment(props: Props): JSX.Element {
     return (
         <div className="px-24 py-4">
-            <h1> This is a comment </h1>
+            <p className="text-light-theme-green text-xs py-2"> {props.comment.author} ({props.comment.date.toLocaleDateString()}) </p>
+            <p className="text-md"> {props.comment.content} </p>
         </div>
     );
 }
