@@ -91,7 +91,7 @@ router.post("/edit/:id", async (req, res, next) => {
 
 /* ----------------------------- Delete comment ----------------------------- */
 
-router.delete("/delete/:id", async (req, res, next) => {
+router.post("/delete/:id", async (req, res, next) => {
   const commentID = req.params.id
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
