@@ -26,7 +26,9 @@ async function isValid_id(res, id) {
 
 router.get("/:id", async (req, res, next) => {
   const postID = req.params.id
+
   if (!await isValid_id(res, postID)) return false
+  
   await commentSchema
     .find({
       postID: postID
@@ -35,6 +37,27 @@ router.get("/:id", async (req, res, next) => {
       res.json({
         data: result.reverse(),
         message: "Comments successfully fetched",
+        status: 200,
+      })
+    })
+    .catch(err => {
+      return next(err)
+    })
+  })
+
+/* ------------------------------ Make comment ------------------------------ */
+
+router.post("/create/:id", async (req, res, next) => {
+  const postID = req.params.id
+
+  if (!await isValid_id(res, postID)) return false
+  
+  await commentSchema
+    .create(req.body)
+    .then((result) => {
+      res.json({
+        data: result.reverse(),
+        message: "Comment successfully created",
         status: 200,
       })
     })
