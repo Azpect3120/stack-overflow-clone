@@ -1,5 +1,6 @@
 import "../assets/css/output.css"
 import Comment from "./Comment";
+import CreateComment from "./CreateComment";
 
 interface CommentObject {
     author: String;
@@ -27,6 +28,7 @@ function CommentList(): JSX.Element {
                 <Comment comment={commentData} />
                 <Comment comment={commentData} />
             </div>
+            <CreateComment />
         </div>
     );
 }
