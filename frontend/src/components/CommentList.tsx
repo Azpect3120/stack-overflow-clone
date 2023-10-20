@@ -20,8 +20,7 @@ function CommentList(props: Props): JSX.Element {
 
     useEffect(() => {
         try {
-            console.log(props);
-            fetch(`http://localhost:4000/comments/${props ? props.id : ""}`)
+            fetch(`http://localhost:4000/comments/${props.id}`)
             .then(res => res.json())
             .then(data => {
                 data.data.forEach((comment: CommentObject) => comment.date = new Date(comment.date));
@@ -30,7 +29,7 @@ function CommentList(props: Props): JSX.Element {
         } catch (err) {
             console.error(err);
         }
-    }, []);
+    }, [props]);
 
     return (
         <div className="border-t border-light-border py-4">
