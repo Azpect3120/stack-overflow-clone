@@ -7,6 +7,7 @@ require("dotenv").config()
 const postRoute = require('./routes/post.routes')
 const userRoute = require('./routes/user.routes')
 const commentRoute = require('./routes/comments.routes')
+const voteRoute = require('./routes/votes.routes')
 
 const port = process.env.port || 4000
 
@@ -37,6 +38,7 @@ app.use(bodyParser.urlencoded({
 app.use("/posts", postRoute)
 app.use("/users", userRoute)
 app.use("/comments", commentRoute)
+app.use("/vote", voteRoute)
 
 /* ----------------------------- Error handling ----------------------------- */
 
