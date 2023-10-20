@@ -44,7 +44,7 @@ function CommentList(props: Props): JSX.Element {
                 }
 
             </div>
-            <CreateComment />
+            <CreateComment postID={props.id}/>
         </div>
     );
 }
