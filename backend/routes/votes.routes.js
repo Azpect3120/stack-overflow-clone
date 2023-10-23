@@ -34,7 +34,7 @@ async function isDuplicate(req, res, id, author) {
     });
 
     if (existingVote) {
-      await voteSchema.findByIdAndUpdate(id, req.body);
+      await voteSchema.findByIdAndUpdate(existingVote._id, req.body);
 
       res.status(200).json({
         id: id,
@@ -136,23 +136,25 @@ router.get("/:id", async (req, res, next) => {
     .then(async votes => {
       let message = votes.length == 0 ? `No votes found for this item` : `All votes successfully fetched`
       
-      switch(votes[0].type) {
-        case "Comment":
-          !await isValid_id(res, targetID, commentSchema)
-          break
-          
-        case "Post":
-          !await isValid_id(res, targetID, postSchema)
-          break
-
-        default:
-          res.json({
-            error: `Invalid id for post and comment: '${targetID}'`,
-          })
-
-      }
-
-
+      // I think this CAN help with error handling but is still pointless
+      /* if (votes.length != 0) {
+        switch(votes[0].type) {
+          case "Comment":
+            !await isValid_id(res, targetID, commentSchema)
+            break
+            
+          case "Post":
+            !await isValid_id(res, targetID, postSchema)
+            break
+              
+          default:
+            res.json({
+              error: `Invalid id for post or comment: '${targetID}'`,
+            })
+            break
+          }
+      } */
+      
       res.json({
         data: votes,
         voteCount: countVotes(votes),
