@@ -4,6 +4,8 @@ const router = express.Router()
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 
+// All comments start with /comments
+
 /* -------------------------- Check if post exists -------------------------- */
 
 async function isValid_id(res, id, schema) {

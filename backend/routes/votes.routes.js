@@ -5,6 +5,8 @@ let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require('../models/Vote.js')
 
+// All votes start with /votes
+
 /* ------------------------------- Count votes ------------------------------ */
 
 function countVotes(data) {
@@ -32,7 +34,7 @@ async function isDuplicate(req, res, id, author) {
     });
 
     if (existingVote) {
-      await voteSchema.findByIdAndUpdate(existingVote._id, req.body);
+      await voteSchema.findByIdAndUpdate(id, req.body);
 
       res.status(200).json({
         id: id,
@@ -78,7 +80,7 @@ router.post("/post/:id", async (req, res, next) => {
   const postID = req.params.id
 
   if (!await isValid_id(res, postID, postSchema)) return false
-  if (await isDuplicate(req, res, postID, "Username")) return true
+  if (await isDuplicate(req, res, postID, req.body.author)) return true
 
   await voteSchema
     .create({
@@ -103,7 +105,7 @@ router.post("/comment/:id", async (req, res, next) => {
   const commentID = req.params.id
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
-  if (await isDuplicate(req, res, postID, "Username")) return true
+  if (await isDuplicate(req, res, postID, req.body.author)) return true
 
   await voteSchema
     .create({
@@ -127,18 +129,30 @@ router.post("/comment/:id", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   const targetID = req.params.id
 
-/*   let post = !!await isValid_id(res, targetID, postSchema)
-  let comment = !!await isValid_id(res, targetID, commentSchema)
-  console.log(
-  comment, 
-  post) */
-
   await voteSchema
     .find({
       targetID: targetID
     })
-    .then(votes => {
+    .then(async votes => {
       let message = votes.length == 0 ? `No votes found for this item` : `All votes successfully fetched`
+      
+      switch(votes[0].type) {
+        case "Comment":
+          !await isValid_id(res, targetID, commentSchema)
+          break
+          
+        case "Post":
+          !await isValid_id(res, targetID, postSchema)
+          break
+
+        default:
+          res.json({
+            error: `Invalid id for post and comment: '${targetID}'`,
+          })
+
+      }
+
+
       res.json({
         data: votes,
         voteCount: countVotes(votes),

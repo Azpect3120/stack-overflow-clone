@@ -15,12 +15,12 @@ async function isValid_id(res, id, schema) {
     return true
   }
   catch(error) {
-    res.status(404)
     res.json({
       id: id,
       message: error.message,
       status: 404
     })
+    res.status(404)
     return false
   }
 }
@@ -46,18 +46,23 @@ router.get("/posts", async (req, res, next) => {
 
 router.get("/posts/:query", async (req, res, next) => {
   let query = req.params.query
+  const regex = new RegExp(query, 'i');
+
   await postSchema
     .find({
       $or: [
-        { title: { $regex: query } },
-        { content: { $regex: query } },
-        { author: { $regex: query } }
+        { title: { $regex: regex } },
+        { content: { $regex: regex } },
+        { author: { $regex: regex } }
       ]
     })
     .then((result) => {
+      let message = result.length == 0 ? `No posts found from search` : `Posts successfully fetched`
+
       res.json({
         data: result,
-        message: "Posts successfully fetched",
+        count: result.length,
+        message: message,
         status: 200,
       })
     })
