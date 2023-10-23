@@ -13,6 +13,9 @@ let voteSchema = new Schema({
     },
     targetID: {
       type: String
+    },
+    type: {
+      type: String
     }
 },{
     collection: 'votes'
