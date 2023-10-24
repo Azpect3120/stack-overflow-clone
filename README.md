@@ -10,7 +10,7 @@ All post routes start with `/posts`.
 ## Search All Posts Route
 
 - **Method**: GET
-- **Route**: `/:query`
+- **Route**: `/search?query=input`
 
 ## Create Post Route
 
@@ -54,7 +54,7 @@ All comment routes start with `/comments`.
 
 ## Delete Comment Route
 
-- **Method**: DELETE
+- **Method**: POST
 - **Route**: `/delete/:comment_id`
 
 # Vote Routes
@@ -75,3 +75,17 @@ All vote routes start with `/votes`.
 
 - **Method**: POST
 - **Route**: `/comment/:comment_id`
+
+# User Routes
+
+All vote routes start with `/users`.
+
+## Create user on app 
+
+- **Method**: POST
+- **Route**: `/create`
+
+## Verify
+
+- **Method**: POST
+- **Route**: `/verify`
