@@ -1,5 +1,6 @@
 import "../assets/css/output.css"
 import { Link } from "react-router-dom"
+import { useState } from "react"
 
 interface User {
     username: String,
@@ -9,9 +10,15 @@ interface User {
 function Navbar() {
     const ls = localStorage.getItem("user");
     const user: User = ls ? JSON.parse(ls) : null;
+    const [search, setSearch] = useState<string>("");
 
     const handleSubmit = () => {
+        window.location.href = `/posts?search=${search}`;
+    };
 
+    const handleInputChange = (event: any) => {
+        const query = event.target.value;
+        setSearch(query);
     };
 
     const logout = () => {
@@ -19,12 +26,16 @@ function Navbar() {
         window.location.href = "/accounts/login";
     };
 
+    const toHome = () => {
+        window.location.href = "/posts";
+    };
+
     return (
         <nav className="h-fit w-full border shadow-sm border-b-light-border flex items-center justify-center">
             
-            <Link to="/posts" className="text-xl w-fit h-full p-4 hover:bg-light-border transition-all">
+            <button onClick={toHome} className="text-xl w-fit h-full p-4 hover:bg-light-border transition-all">
                 Dev<span className="font-bold">Debate</span>
-            </Link>
+            </button>
 
             <Link to={(user) ? "/posts/create" : "/accounts/login"} className="text-sm mx-2 px-3 py-1.5 rounded-lg text-light-theme-green hover:bg-green-100 hover:text-light-theme-green-active">
                 New Post
@@ -32,8 +43,9 @@ function Navbar() {
 
             <form onSubmit={handleSubmit} className="w-1/2">
                 <input
-                    type="search"
-                    name="search"
+                    type="text"
+                    name="search" 
+                    onChange={handleInputChange} 
                     placeholder="Search..."
                     className="outline-none px-2 py-1.5 text-sm w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-light-theme-green"
                 />
