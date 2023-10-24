@@ -30,7 +30,7 @@ All post routes start with `/posts`.
 
 ## Delete Post Route
 
-- **Method**: DELETE
+- **Method**: POST
 - **Route**: `/delete-post/:id`
 
 # Comment Routes
