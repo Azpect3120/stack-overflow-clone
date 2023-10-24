@@ -39,7 +39,6 @@ function CreatePostPage (): JSX.Element {
     const handleInputChange = (event: any) => {
         const { name, value } = event.target;
         setForm({...form, date: new Date(), [name]: value });
-        console.log(form);
     };
 
     const textareaStyles: any = {
