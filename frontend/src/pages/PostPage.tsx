@@ -22,9 +22,6 @@ function PostPage(): JSX.Element {
             fetch(`http://localhost:4000/posts/get-post/${id}`)
                 .then(res => res.json())
                 .then(data => setPost(data.data as Post))
-
-            console.log(post);
-
         } catch (err) {
             console.error(err);
         }
