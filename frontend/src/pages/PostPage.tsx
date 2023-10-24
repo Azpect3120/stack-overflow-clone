@@ -27,9 +27,9 @@ function PostPage(): JSX.Element {
         }
     }, []);
 
-    const deletePost = () => {
+    const deletePost = async () => {
         try {
-            fetch(`http://localhost:4000/posts/delete-post/${id}`, {
+            await fetch(`http://localhost:4000/posts/delete-post/${id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

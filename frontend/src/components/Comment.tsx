@@ -13,9 +13,9 @@ interface Props {
 }
 
 function Comment(props: Props): JSX.Element {
-    const deleteComment = () => {
+    const deleteComment = async () => {
         try {
-            fetch(`http://localhost:4000/comments/delete/${props.comment._id}`, {
+            await fetch(`http://localhost:4000/comments/delete/${props.comment._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

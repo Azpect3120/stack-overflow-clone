@@ -117,34 +117,24 @@ router.post("/edit-post/:id", async (req, res, next) => {
 /* -------------------------- Delete post with _id -------------------------- */
 
 router.post("/delete-post/:id", async (req, res, next) => {
-  const postID = req.params.id
+  const postID = req.params.id;
 
-  if (!await isValid_id(res, postID, postSchema)) return false
-  
-  await postSchema
-    .findByIdAndRemove(req.params.id)
-    .then(() => {
-      res.json({
-        message: `Post _id: ${req.params.id} Successfully Deleted`,
-      })
-    })
-    .catch(err => {
-      return next(err)
-    })
+  if (!await isValid_id(res, postID, postSchema)) return false;
 
-  await commentSchema
-    .deleteMany({
-      postID: postID
-    })
-    .then(() => {
-      res.json({
-        message: `Comments under Post _id: ${postID} Successfully Deleted`,
-      })
-    })
-    .catch(err => {
-      return next(err)
-    })
-})
+  try {
+    await Promise.all([
+      postSchema.findByIdAndRemove(postID),
+      commentSchema.deleteMany({ postID: postID })
+    ]);
+
+    res.json({
+      message: `Post _id: ${postID} Successfully Deleted, along with its comments.`,
+    });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 
 /* -------------------------------------------------------------------------- */
 
