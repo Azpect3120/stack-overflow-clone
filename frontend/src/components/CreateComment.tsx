@@ -18,6 +18,11 @@ function createComment (props: Props): JSX.Element {
 
     const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
         event.preventDefault();
+        
+        if (localStorage.getItem("user") == null) {
+            window.location.href = "/accounts/login"; 
+            return;
+        }
 
         setComment({ ...comment, date: new Date() });
 
