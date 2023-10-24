@@ -1,29 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
+let { isValid_id } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 
 // All comments start with /comments
-
-/* -------------------------- Check if post exists -------------------------- */
-
-async function isValid_id(res, id, schema) {
-  try {
-    const post = await schema.findById(id)
-    if (!post) throw new Error(`Post with _id: ${id} not found`)
-    return true
-  }
-  catch(error) {
-    res.status(404)
-    res.json({
-      id: id,
-      message: error.message,
-      status: 404
-    })
-    return false
-  }
-}
 
 /* ---------------------------- Get all Comments ---------------------------- */
 

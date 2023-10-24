@@ -1,78 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
+let { countVotes, isValid_id, isDuplicate } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require('../models/Vote.js')
 
 // All votes start with /votes
-
-/* ------------------------------- Count votes ------------------------------ */
-
-function countVotes(data) {
-  let trueVotes = 0;
-  let falseVotes = 0;
-
-  for (const item of data) {
-    if (item.vote === true) {
-      trueVotes++;
-    } else if (item.vote === false) {
-      falseVotes++;
-    }
-  }
-
-  return trueVotes - falseVotes;
-}
-
-/* ------------------------ check for duplicate vote ------------------------ */
-
-async function isDuplicate(req, res, id, author) {
-  try {
-    const existingVote = await voteSchema.findOne({
-      author: author,
-      targetID: id
-    });
-
-    if (existingVote) {
-      await voteSchema.findByIdAndUpdate(existingVote._id, req.body);
-
-      res.status(200).json({
-        id: id,
-        message: `Updated ${author}'s vote on ${id}`,
-        status: 200
-      });
-
-      return true
-    }
-
-    return false
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: 'An error occurred',
-      error: error
-    });
-  }
-}
-
-/* -------------------------- Check if post exists -------------------------- */
-
-async function isValid_id(res, id, schema) {
-  try {
-    const post = await schema.findById(id);
-    if (!post) throw new Error(`Post with _id: ${id} not found`);
-    return true;
-  } 
-  catch (error) {
-    res.json({
-      id: id,
-      message: error.message,
-      status: 404
-    });
-    return false;
-  }
-}
-
 
 /* ---------------------------- Post vote on post --------------------------- */
 
@@ -134,27 +68,8 @@ router.get("/:id", async (req, res, next) => {
       targetID: targetID
     })
     .then(async votes => {
-      let message = votes.length == 0 ? `No votes found for this item` : `All votes successfully fetched`
-      
-      // I think this CAN help with error handling but is still pointless
-      /* if (votes.length != 0) {
-        switch(votes[0].type) {
-          case "Comment":
-            !await isValid_id(res, targetID, commentSchema)
-            break
-            
-          case "Post":
-            !await isValid_id(res, targetID, postSchema)
-            break
-              
-          default:
-            res.json({
-              error: `Invalid id for post or comment: '${targetID}'`,
-            })
-            break
-          }
-      } */
-      
+      let message = votes.length == 0 ? `No votes found for id: ${targetID}` : `All votes successfully fetched`
+
       res.json({
         data: votes,
         voteCount: countVotes(votes),
