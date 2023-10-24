@@ -19,15 +19,17 @@ function CommentList(props: Props): JSX.Element {
     const [comments, setComments] = useState<CommentObject[]>([]);
 
     useEffect(() => {
-        try {
-            fetch(`http://localhost:4000/comments/${props.id}`)
-            .then(res => res.json())
-            .then(data => {
-                data.data.forEach((comment: CommentObject) => comment.date = new Date(comment.date));
-                setComments(data.data as CommentObject[]);
-            })
-        } catch (err) {
-            console.error(err);
+        if (props.id) {
+            try {
+                fetch(`http://localhost:4000/comments/${props.id}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.data.forEach((comment: CommentObject) => comment.date = new Date(comment.date));
+                    setComments(data.data as CommentObject[]);
+                })
+            } catch (err) {
+                console.error(err);
+            }
         }
     }, [props]);
 
