@@ -42,7 +42,7 @@ router.get("/search", async (req, res, next) => {
       let message = result.length == 0 ? `No posts found from search` : `Posts successfully fetched`
 
       res.json({
-        data: result,
+        data: result.reverse(),
         count: result.length,
         message: message,
         status: 200,
