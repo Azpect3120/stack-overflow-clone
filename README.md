@@ -78,7 +78,7 @@ All vote routes start with `/votes`.
 
 # User Routes
 
-All vote routes start with `/users`.
+All User routes start with `/users`.
 
 ## Create user on app 
 
