@@ -9,7 +9,7 @@ let commentSchema = require("../models/Comment.js")
 
 /* ------------------------------ Get all posts ----------------------------- */
 
-router.get("/posts", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   await postSchema
     .find()
     .then((result) => {
@@ -26,8 +26,8 @@ router.get("/posts", async (req, res, next) => {
 
 /* ------------------- Search posts with title and content ------------------ */
 
-router.get("/posts/:query", async (req, res, next) => {
-  let query = req.params.query
+router.get("/search", async (req, res, next) => {
+  let query = req.query.query
   const regex = new RegExp(query, 'i');
 
   await postSchema
