@@ -13,10 +13,10 @@ const port = process.env.port || 4000
 
 /* ----------------------------- MongoDB connect ---------------------------- */
 
-const password = process.env.password
+const mongodbURl = process.env.mongodbURl
 
 mongoose
-  .connect(`mongodb+srv://ndross427:${password}@blog-app.numnxm7.mongodb.net/Blog-App`)
+  .connect(mongodbURl)
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
@@ -52,8 +52,11 @@ app.use((err, req, res, next) => {
 
 /* ------------------------------ Start server ------------------------------ */
 
-app.listen(port, () => {
-  console.log(`Server listening on port: ${port}`)
-})
+const server = app.listen(port, () => {
+  const host = server.address().address;
+  const port = server.address().port;
+  console.log(host)
+  console.log(`Server is listening at http://${host}:${port}`);
+});
 
 
