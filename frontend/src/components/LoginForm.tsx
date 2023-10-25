@@ -1,10 +1,12 @@
 import "../assets/css/output.css"
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import LoginError from "./LoginError";
 
 function LoginForm() {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState<String>("");
+    const [password, setPassword] = useState<String>("");
+    const [error, setError] = useState<String | null>(null);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -20,16 +22,31 @@ function LoginForm() {
 
             const data = await response.json();
 
-            localStorage.setItem("user", JSON.stringify({ id: data.user.ID, username: data.user.username }));
+            console.log(data);
 
-            window.location.href = "/posts";
+            if (data.status === 200) {
+                localStorage.setItem("user", JSON.stringify({ id: data.user.ID, username: data.user.username }));
+
+                window.location.href = "/posts";
+            } else if (data.status === 401) {
+                setError(data.error);
+            } else {
+                window.alert(data.error);
+            }
+
+
         } catch (err) {
             console.error(err);
         }
     };
+    
 
     return (
-        <div className="h-full flex flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="h-full flex flex-col items-center justify-center px-6 py-12 lg:px-8">
+            {error && (
+                <LoginError message="Failed to login" onClose={() => setError(null)} />
+                )
+            }
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                 <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
             </div>
