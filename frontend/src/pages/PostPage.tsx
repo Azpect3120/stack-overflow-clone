@@ -1,6 +1,5 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-// import CommentSection from "../components/CommentSection";
 import CommentList from "../components/CommentList";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -17,11 +16,11 @@ function PostPage(): JSX.Element {
     const [post, setPost] = useState<Post | null>(null);
     const { id } = useParams();
 
-    useEffect(() => {
+    useEffect(async () => {
         try {
-            fetch(`http://localhost:4000/posts/get-post/${id}`)
-                .then(res => res.json())
-                .then(data => setPost(data.data as Post))
+            const res = await fetch(`http://localhost:4000/posts/get-post/${id}`);
+            const data = await res.json();
+            setPost(data.data as Post);
         } catch (err) {
             console.error(err);
         }
@@ -53,7 +52,18 @@ function PostPage(): JSX.Element {
                             {post ? post.title : "Loading..."}         
                         </h1>
 
-                        {post ? (post.author === JSON.parse(localStorage.getItem("user")).username) ? <button onClick={deletePost} className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg"> Delete Post </button> : "" : "Loading..."}
+                        {
+                            (post) ? 
+                                (JSON.parse(localStorage.getItem("user")) ? 
+                                    (post.author == JSON.parse(localStorage.getItem("user")) ?
+                                        <button onClick={deletePost} className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg">
+                                            Delete Post
+                                        </button>
+                                        : null)
+                                    : null)
+                            : "Loading..."
+                        }
+
                     </div>
                     <p className="p-20 py-5 text-sm text-light-theme-green border-b border-light-border">
                         {post ? post.author : "Loading..."}
