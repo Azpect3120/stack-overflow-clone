@@ -1,6 +1,8 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import CommentList from "../components/CommentList";
+import upvoteIcon from "../assets/images/upvote.svg";
+import downvoteIcon from "../assets/images/downvote.svg";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -39,7 +41,7 @@ function PostPage(): JSX.Element {
         } catch (err) {
             console.error(err);
         }
-    };
+    }
 
     return (
         <div>
@@ -65,10 +67,22 @@ function PostPage(): JSX.Element {
                         }
 
                     </div>
-                    <p className="p-20 py-5 text-sm text-light-theme-green border-b border-light-border">
-                        {post ? post.author : "Loading..."}
-                    </p>
-
+                    <div className="flex items-center justify-between">
+                        <div className="w-auto flex flex-col justify-between items-center px-8 py-4">
+                            <button className="btn w-1/3 rounded-full">
+                                <img src={upvoteIcon} alt="Upvote Logo" />
+                            </button>
+                            <p className="">
+                                doest this work
+                            </p>
+                            <button className="btn w-1/3 rounded-full container">
+                                <img src={downvoteIcon} alt="Downvote Logo" />
+                            </button>
+                        </div>
+                        <p className="p-20 py-5 text-sm text-light-theme-green border-b border-light-border">
+                            {post ? post.author : "Loading..."}
+                        </p>
+                    </div>
                     <p className="mx-20 my-10 text-lg whitespace-pre-line">
                         {post ? post.content : "Loading..."}
                     </p>
