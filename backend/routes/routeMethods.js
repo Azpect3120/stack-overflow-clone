@@ -1,3 +1,5 @@
+const voteSchema = require('../models/Vote')
+
 
 /* ------------------------------- Count votes ------------------------------ */
 

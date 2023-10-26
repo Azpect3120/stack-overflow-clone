@@ -52,11 +52,8 @@ app.use((err, req, res, next) => {
 
 /* ------------------------------ Start server ------------------------------ */
 
-const server = app.listen(port, () => {
-  const host = server.address().address;
-  const port = server.address().port;
-  console.log(host)
-  console.log(`Server is listening at http://${host}:${port}`);
+app.listen(port, () => {
+  console.log(`Server is listening at http://localhost:${port}`);
 });
 
 

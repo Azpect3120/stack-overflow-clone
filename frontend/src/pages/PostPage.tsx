@@ -1,8 +1,8 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import CommentList from "../components/CommentList";
-import upvoteIcon from "../assets/images/upvote.svg";
-import downvoteIcon from "../assets/images/downvote.svg";
+import UpvoteIcon from "../components/UpvoteIcon";
+import DownvoteIcon from "../components/DownvoteIcon";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -16,17 +16,62 @@ interface Post {
 
 function PostPage(): JSX.Element {
     const [post, setPost] = useState<Post | null>(null);
+    const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
     const { id } = useParams();
 
-    useEffect(async () => {
+    const getVotes = async () => {
         try {
+          const res = await fetch(`http://localhost:4000/votes/${id}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await res.json();
+          console.log(`All ${data.data.length} votes successfully fetched `)
+          setVoteCount(data.voteCount); // Update voteCount state with the fetched data
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+    useEffect(() => {
+        console.log(UpvoteIcon)
+        // setVoteCount("Loading...")
+        const fetchData = async () => {
+          try {
             const res = await fetch(`http://localhost:4000/posts/get-post/${id}`);
             const data = await res.json();
             setPost(data.data as Post);
+          } catch (err) {
+            console.error(err);
+          }
+        };
+        fetchData(); // Call the async function inside the effect
+        getVotes()
+    }, []);
+
+    const addVote = async (isUpvote: boolean) => {
+        try {
+            let res = await fetch(`http://localhost:4000/votes/post/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    date: new Date(),
+                    author: JSON.parse(localStorage.getItem("user")).username,
+                    vote: isUpvote,
+                })
+            });
+            let data = await res.json()
+            console.log(data.message)
         } catch (err) {
             console.error(err);
         }
-    }, []);
+        getVotes()
+
+    };
 
     const deletePost = async () => {
         try {
@@ -69,15 +114,17 @@ function PostPage(): JSX.Element {
                     </div>
                     <div className="flex items-center justify-between">
                         <div className="w-auto flex flex-col justify-between items-center px-8 py-4">
-                            <button className="btn w-1/3 rounded-full">
-                                <img src={upvoteIcon} alt="Upvote Logo" />
-                            </button>
-                            <p className="">
-                                doest this work
-                            </p>
-                            <button className="btn w-1/3 rounded-full container">
-                                <img src={downvoteIcon} alt="Downvote Logo" />
-                            </button>
+                        <button className="btn w-1/3 rounded-full" onClick={() => addVote(true)}>
+                            {/* <img src={UpvoteIcon} alt="Upvote Logo" /> */}
+                            {UpvoteIcon()}
+                        </button>
+                        <b className="">
+                            {voteCount}
+                        </b>
+                        <button className="btn w-1/3 rounded-full" onClick={() => addVote(false)}>
+                            {/* <img src={downvoteIcon} alt="Downvote Logo" /> */}
+                            {DownvoteIcon()}
+                        </button>
                         </div>
                         <p className="p-20 py-5 text-sm text-light-theme-green border-b border-light-border">
                             {post ? post.author : "Loading..."}
