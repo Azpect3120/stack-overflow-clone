@@ -18,7 +18,7 @@ router.post("/create", async (req, res) => {
             applicationId: appId,
             username: username,
             password: password,
-            data: ""
+            data: "{}"
         })
     });
     

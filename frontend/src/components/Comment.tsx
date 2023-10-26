@@ -37,17 +37,21 @@ function Comment(props: Props): JSX.Element {
                     {props.comment.author} (
                     {props.comment.date.toLocaleDateString()}){" "}
                 </p>
-                {props.comment.author ===
-                JSON.parse(localStorage.getItem("user")).username ? (
-                    <button
-                        onClick={deleteComment}
-                        className="text-red-600 transition-all hover:bg-red-200 px-2 py-1 rounded-lg"
-                    >
-                        {" "}
-                        Delete{" "}
-                    </button>
+
+                {props.comment ? (
+                    JSON.parse(localStorage.getItem("user")) ? (
+                        props.comment.author ==
+                        JSON.parse(localStorage.getItem("user")) ? (
+                            <button
+                                onClick={deleteComment}
+                                className="text-red-600 transition-all hover:bg-red-200 px-2 py-1 rounded-lg"
+                            >
+                                Delete Post
+                            </button>
+                        ) : null
+                    ) : null
                 ) : (
-                    ""
+                    "Loading..."
                 )}
             </div>
             <p className="text-md"> {props.comment.content} </p>
