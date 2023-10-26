@@ -17,7 +17,8 @@ router.post("/create", async (req, res) => {
         body: JSON.stringify({
             applicationId: appId,
             username: username,
-            password: password
+            password: password,
+            data: ""
         })
     });
     

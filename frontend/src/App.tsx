@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
@@ -6,7 +11,6 @@ import ViewPosts from "./pages/ViewPosts";
 import PostPage from "./pages/PostPage";
 
 function App() {
-
   return (
     <Router>
       <Routes>
@@ -18,7 +22,7 @@ function App() {
         <Route path="/posts/create" element={<CreatePostPage />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
 export default App;
