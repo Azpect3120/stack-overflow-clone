@@ -39,14 +39,14 @@ function Comment(props: Props): JSX.Element {
                 </p>
 
                 {props.comment ? (
-                    JSON.parse(localStorage.getItem("user")) ? (
+                    JSON.parse(localStorage.getItem("user")).username ? (
                         props.comment.author ==
-                        JSON.parse(localStorage.getItem("user")) ? (
+                        JSON.parse(localStorage.getItem("user")).username ? (
                             <button
                                 onClick={deleteComment}
                                 className="text-red-600 transition-all hover:bg-red-200 px-2 py-1 rounded-lg"
                             >
-                                Delete Post
+                                Delete Comment
                             </button>
                         ) : null
                     ) : null
