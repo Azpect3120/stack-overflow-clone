@@ -4,6 +4,7 @@ const router = express.Router()
 let { isValid_id } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
+let voteSchema = require("../models/Vote.js")
 
 // All posts start with /post
 
@@ -124,7 +125,8 @@ router.post("/delete-post/:id", async (req, res, next) => {
   try {
     await Promise.all([
       postSchema.findByIdAndRemove(postID),
-      commentSchema.deleteMany({ postID: postID })
+      commentSchema.deleteMany({ postID: postID }),
+      voteSchema.deleteMany({ targetID: postID })
     ]);
 
     res.json({
