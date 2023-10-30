@@ -64,18 +64,18 @@ All vote routes start with `/votes`.
 
 ### Get All Votes with Post or Comment ID
 
-- **Method**: GET
+- **Method**: GET 
 - **Route**: `/:post_id`
 
 ### Create Vote on Post
 
 - **Method**: POST
-- **Route`: `/post/:post_id`
+- **Route**: `/post/:post_id`
 
 ### Create Vote on Comment
 
 - **Method**: POST
-- **Route`: `/comment/:comment_id`
+- **Route**: `/comment/:comment_id`
 
 ## User Routes
 
@@ -84,9 +84,9 @@ All user routes start with `/users`.
 ### Create User on App
 
 - **Method**: POST
-- **Route`: `/create`
+- **Route**: `/create`
 
 ### Verify User
 
 - **Method**: POST
-- **Route`: `/verify`
+- **Route**: `/verify`
