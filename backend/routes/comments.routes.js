@@ -14,7 +14,8 @@ router.get("/:id", async (req, res, next) => {
 
   if (!await isValid_id(res, postID, postSchema)) return false
   
-  await commentSchema
+  try {
+    await commentSchema
     .find({
       postID: postID
     })
@@ -25,10 +26,10 @@ router.get("/:id", async (req, res, next) => {
         status: 200,
       })
     })
-    .catch(err => {
-      return next(err)
-    })
-  })
+  } catch(err) {
+    return next(err)
+  }
+})
 
 /* ------------------------------ Make comment ------------------------------ */
 
@@ -36,8 +37,9 @@ router.post("/create/:id", async (req, res, next) => {
   const postID = req.params.id
 
   if (!await isValid_id(res, postID, postSchema)) return false
-  
-  await commentSchema
+
+  try {
+    await commentSchema
     .create({
       ...req.body,
       postID: postID
@@ -48,10 +50,10 @@ router.post("/create/:id", async (req, res, next) => {
         status: 200,
       })
     })
-    .catch(err => {
-      return next(err)
-    })
-  })
+  } catch(err) {
+    return next(err)
+  }
+})
 
 /* ------------------------------ Edit comment ------------------------------ */
 
@@ -59,7 +61,7 @@ router.post("/edit/:id", async (req, res, next) => {
   const commentID = req.params.id
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
-  
+  try {
   await commentSchema
     .findByIdAndUpdate(commentID, req.body)
     .then(() => {
@@ -68,10 +70,10 @@ router.post("/edit/:id", async (req, res, next) => {
         status: 200,
       })
     })
-    .catch(err => {
-      return next(err)
-    })
-  })
+  } catch(err) {
+    return next(err)
+  }
+})
 
 /* ----------------------------- Delete comment ----------------------------- */
 
@@ -80,7 +82,8 @@ router.post("/delete/:id", async (req, res, next) => {
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
   
-  await commentSchema
+  try {
+    await commentSchema
     .findByIdAndDelete(commentID)
     .then(() => {
       res.json({
@@ -88,10 +91,10 @@ router.post("/delete/:id", async (req, res, next) => {
         status: 200,
       })
     })
-    .catch(err => {
-      return next(err)
-    })
-  })
+  } catch(err) {
+    return next(err)
+  }
+})
 
 /* -------------------------------------------------------------------------- */
   

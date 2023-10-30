@@ -15,8 +15,10 @@ router.post("/post/:id", async (req, res, next) => {
 
   if (!await isValid_id(res, postID, postSchema)) return false
   if (await isDuplicate(req, res, postID, req.body.author)) return true
+  
+  try {
 
-  await voteSchema
+    await voteSchema
     .create({
       ...req.body,
       targetID: postID,
@@ -28,10 +30,10 @@ router.post("/post/:id", async (req, res, next) => {
         status: 200,
       })
     })
-    .catch(err => {
+  } catch(err) {
       return next(err)
-    })
-  })
+  }
+})
 
 /* -------------------------- Post vote on comment -------------------------- */
 
@@ -40,8 +42,9 @@ router.post("/comment/:id", async (req, res, next) => {
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
   if (await isDuplicate(req, res, postID, req.body.author)) return true
-
-  await voteSchema
+  
+  try {
+    await voteSchema
     .create({
       ...req.body,
       targetID: commentID,
@@ -53,17 +56,18 @@ router.post("/comment/:id", async (req, res, next) => {
         status: 200,
       })
     })
-    .catch(err => {
-      return next(err)
-    })
-  })
+  } catch(err) {
+    return next(err)
+  }
+})
 
 /* --------------------- Get votes on post and comments --------------------- */
 
 router.get("/:id", async (req, res, next) => {
   const targetID = req.params.id
 
-  await voteSchema
+  try {
+    await voteSchema
     .find({
       targetID: targetID
     })
@@ -77,10 +81,10 @@ router.get("/:id", async (req, res, next) => {
         status: 200,
       })
     })
-    .catch(err => {
-      return next(err)
-    })
-  })
+  } catch(err) {
+    return next(err)
+  }
+})
 
 /* -------------------------------------------------------------------------- */
   
