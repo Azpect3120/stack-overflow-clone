@@ -5,6 +5,9 @@ let userSchema = new Schema({
     username: {
       type: String
     },
+    userAuthID: {
+      type: String
+    },
     admin: {
       type: Boolean
     }
