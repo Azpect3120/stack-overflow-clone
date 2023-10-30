@@ -35,6 +35,34 @@ function Comment(props: Props): JSX.Element {
         }
     };
 
+    const renderComment = async () => {
+
+        {props.comment ? (
+            typeof(JSON.parse(localStorage.getItem("user")).username) === 'string' ? (
+                props.comment.author ===
+                JSON.parse(localStorage.getItem("user")).username ? (
+                    <div>
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            className="text-green-600 transition-all hover:bg-green-200 px-2 py-1 rounded-lg mr-2"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            onClick={deleteComment}
+                            className="text-red-600 transition-all hover:bg-red-200 px-2 py-1 rounded-lg ml-2"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                ) : ""
+            ) : ""
+        ) : (
+            "Loading..."
+        )}
+    }
+
     return (
         <div className="px-24 py-4">
             <div className="flex text-xs items-center justify-between">
@@ -52,7 +80,8 @@ function Comment(props: Props): JSX.Element {
                     />
                 ) : (
                     <div>
-                        {props.comment ? (
+                        {
+                        /* {props.comment ? (
                             JSON.parse(localStorage.getItem("user")).username ? (
                                 props.comment.author ===
                                 JSON.parse(localStorage.getItem("user")).username ? (
@@ -71,11 +100,12 @@ function Comment(props: Props): JSX.Element {
                                             Delete
                                         </button>
                                     </div>
-                                ) : null
-                            ) : null
+                                ) : ""
+                            ) : ""
                         ) : (
                             "Loading..."
-                        )}
+                        )} */
+                        }
                     </div>
                 )}
             </div>

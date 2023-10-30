@@ -88,28 +88,33 @@ function PostPage(): JSX.Element {
         }
     }
 
+    const renderDeleteButton = () => {
+        if (post) {
+            if (typeof JSON.parse(localStorage.getItem("user") || "").username === "string" && (post.author == JSON.parse(localStorage.getItem("user") || "").username)) {
+                return (
+                    <button onClick={deletePost} className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg">
+                        Delete Post
+                    </button>
+                );
+            } else {
+                return "";
+            }
+        } 
+        return "";
+    }
+        
     return (
-        <div>
-            <Nav />
-            
-            <div className="w-full flex justify-center">
-                <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
-                    <div className="flex items-center justify-between">
-                        <h1 className="p-20 pb-10 text-4xl">
-                            {post ? post.title : "Loading..."}         
-                        </h1>
+            <div>
+                <Nav />
 
-                        {
-                            (post) ? 
-                                (JSON.parse(localStorage.getItem("user")).username ? 
-                                    (post.author == JSON.parse(localStorage.getItem("user")).username ?
-                                        <button onClick={deletePost} className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg">
-                                            Delete Post
-                                        </button>
-                                        : null)
-                                    : null)
-                            : "Loading..."
-                        }
+                <div className="w-full flex justify-center">
+                    <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
+                        <div className="flex items-center justify-between">
+                            <h1 className="p-20 pb-10 text-4xl">
+                                {post ? post.title : "Loading..."}
+                            </h1>
+
+                            {renderDeleteButton()}
 
                     </div>
                     <div className="flex items-center justify-between">
