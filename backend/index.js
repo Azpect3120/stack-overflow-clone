@@ -1,4 +1,5 @@
 const express = require('express')
+const cloudinary = require('cloudinary').v2;
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require("cors")
@@ -8,6 +9,15 @@ const postRoute = require('./routes/post.routes')
 const userRoute = require('./routes/user.routes')
 const commentRoute = require('./routes/comments.routes')
 const voteRoute = require('./routes/votes.routes')
+
+/* ------------------------------ Config files ------------------------------ */
+
+cloudinary.config({
+  cloud_name: process.env.cloud_name,
+  api_key: process.env.api_key,
+  api_secret: process.env.api_secret,
+  secure: true,
+});
 
 const port = process.env.port || 4000
 

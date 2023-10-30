@@ -1,10 +1,24 @@
 const express = require('express')
 const router = express.Router()
+const cloudinary = require('cloudinary')
+const multer = require('multer')
 
 let { isValid_id } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require("../models/Vote.js")
+
+
+const storage = multer.diskStorage({
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now()
+    );
+  },
+});
+
+const upload = multer({ storage });
 
 // All posts start with /post
 
@@ -56,19 +70,29 @@ router.get("/search", async (req, res, next) => {
 
 /* -------------------------- Create post from form ------------------------- */
 
-router.post("/create-post", async (req, res, next) => {
-  await postSchema
-    .create(req.body)
-    .then((result) => {
-      res.json({
-        data: result,
-        message: "Data successfully uploaded",
-        status: 200,
-      })
-    })
-    .catch(err => {
-      return next(err)
-    })
+router.post("/create-post", upload.single('image'), async (req, res, next) => {
+  try {
+    let imageData = null;
+    if (req.file) {
+      const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path);
+      imageData = cloudinaryResponse.secure_url;
+    }
+
+    const postData = {
+      ...req.body,
+      imageUrl: imageData,
+    };
+
+    const result = await postSchema.create(postData);
+
+    res.json({
+      data: result,
+      message: "Data successfully uploaded",
+      status: 200,
+    });
+  } catch (err) {
+    return next(err);
+  }
 })
 
 /* --------------------------- Get a post with _id -------------------------- */

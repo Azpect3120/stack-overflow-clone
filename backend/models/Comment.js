@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let commentSchema = new Schema({
-    content: {
-      type: String
-    },
     author: {
       type: String
     }, 
+    content: {
+      type: String
+    },
     date: {
       type: Date
     },
