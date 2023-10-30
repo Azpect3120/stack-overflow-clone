@@ -3,14 +3,30 @@ const router = express.Router()
 
 const userSchema = require('../models/User')
 
-/* ----------------- Send username and password through form ---------------- */
+const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43";
 
+/* ------------------------------ Get all users ----------------------------- */
+
+router.get("/", async (req, res, next) => {
+    await userSchema
+        .find()
+        .then(user => {
+            res.json({
+                ...user,
+                message: `All ${user.length} users found`,
+                userCount: user.length,
+                status: 200
+            })
+        })
+        .catch(err => {
+            return next(err)
+        })
+})
+
+/* ----------------- Send username and password through form ---------------- */
 
 router.post("/create", async (req, res, next) => {
     const { username, password } = req.body;
-    const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43";
-
-
 
     const response = await fetch("http://54.176.161.136:8080/users/create", {
         method: "POST",
@@ -27,10 +43,14 @@ router.post("/create", async (req, res, next) => {
     
     const data = await response.json();
 
+    console.log(data)
+
+    //! Fix these conditions to check if data works
     if (data) {
         await userSchema
             .create({
                 username: username,
+                userAuthID: data.user.ID,
                 admin: false
             })
             .catch(err => {
@@ -41,12 +61,43 @@ router.post("/create", async (req, res, next) => {
     res.json(data);
 });
 
+/* ------------------------------- Delete user ------------------------------ */
+
+router.post("/delete/:userAuthID", async (req, res, next) => {
+    const userAuthID = req.params.userAuthID
+
+    const response = await fetch("http://54.176.161.136:8080/users/delete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            applicationId: appId,
+            ID: userAuthID
+        })
+    });
+
+    const data = await response.json();
+
+    //! Fix these conditions to check if data works
+    if (data) {
+        await userSchema
+        .deleteOne({
+            userAuthID: userAuthID
+        })
+        .catch(err => {
+            return next(err)
+        })
+    }
+
+    res.json(data);
+})
+
 
 /* ----------------- Send username and password through form ---------------- */
 
 router.post("/verify", async (req, res) => {
     const { username, password } = req.body;
-    const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43";
 
     const response = await fetch("http://54.176.161.136:8080/users/verify", {
         method: "POST",
@@ -74,7 +125,8 @@ router.get("/profile/:name", async (req, res, next) => {
         .then(user => {
             if (!user) return res.status(404).send(`No user found with the username ${name}`);
             res.json({
-                ...user,
+                username: user.username,
+                admin: user.admin,
                 message: `User ${user.name} found`,
                 status: 200
             })
@@ -84,16 +136,25 @@ router.get("/profile/:name", async (req, res, next) => {
         })
 })
 
-/* ------------------------------ Get all users ----------------------------- */
+/* -------------------- Update users profile information -------------------- */
 
-router.get("/", async (req, res, next) => {
+//! WORK IN PROGRESS, UPDATING DOES NOT CURRENT CHANGE INFORMATION
+router.post("/update-profile/:name", async (req, res, next) => {
+    const name = req.params.name;
+    const userRequest = req.body.username
+
+    if (name !== userRequest) {
+        return res.status(403).send(`You do not have permission to edit this users profile`)
+    }
+
     await userSchema
-        .find()
+        .findOneAndUpdate({ username: name }, req.body)
         .then(user => {
+            if (!user) return res.status(404).send(`No user found with the username ${name}`);
             res.json({
-                ...user,
-                message: `All ${user.length} users found`,
-                userCount: user.length,
+                username: user.username,
+                admin: user.admin,
+                message: `User ${user.name} found`,
                 status: 200
             })
         })
