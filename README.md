@@ -1,8 +1,9 @@
 # API Routes
 
-## Post Routes
+## Posts
 
-All post routes start with `/posts`.
+<details>
+<summary>GET Requests</summary>
 
 ### Get All Posts
 
@@ -14,6 +15,15 @@ All post routes start with `/posts`.
 - **Method**: GET
 - **Route**: `/search?query=input`
 
+### Get Post
+
+- **Method**: GET
+- **Route**: `/get-post/:id`
+</details>
+
+<details>
+<summary>POST Requests</summary>
+
 ### Create Post
 
 - **Method**: POST
@@ -24,24 +34,25 @@ All post routes start with `/posts`.
 - **Method**: POST
 - **Route**: `/edit-post/:id`
 
-### Get Post
-
-- **Method**: GET
-- **Route**: `/get-post/:id`
-
 ### Delete Post
 
 - **Method**: POST
 - **Route**: `/delete-post/:id`
+</details>
 
-## Comment Routes
+## Comments
 
-All comment routes start with `/comments`.
+<details>
+<summary>GET Requests</summary>
 
 ### Get All Comments on Post
 
 - **Method**: GET
 - **Route**: `/:post_id`
+</details>
+
+<details>
+<summary>POST Requests</summary>
 
 ### Create Comment
 
@@ -57,15 +68,21 @@ All comment routes start with `/comments`.
 
 - **Method**: POST
 - **Route**: `/delete/:comment_id`
+</details>
 
-## Vote Routes
+## Votes
 
-All vote routes start with `/votes`.
+<details>
+<summary>GET Requests</summary>
 
 ### Get All Votes with Post or Comment ID
 
-- **Method**: GET 
+- **Method**: GET
 - **Route**: `/:post_id`
+</details>
+
+<details>
+<summary>POST Requests</summary>
 
 ### Create Vote on Post
 
@@ -76,17 +93,54 @@ All vote routes start with `/votes`.
 
 - **Method**: POST
 - **Route**: `/comment/:comment_id`
+</details>
 
-## User Routes
+## Users
 
-All user routes start with `/users`.
+<details>
+<summary>GET Requests</summary>
+
+### Get All Users on App
+
+- **Method**: GET
+- **Route**: `/`
+
+### Get Users Profile
+
+- **Method**: GET
+- **Route**: `/profile/:name`
+
+### Check Admin Status
+
+- **Method**: GET
+- **Route**: `/is-admin/:username`
+</details>
+
+<details>
+<summary>POST Requests</summary>
+
+### Update users profile information
+
+- **Method**: POST
+- **Route**: `/update-profile/:name`
 
 ### Create User on App
 
 - **Method**: POST
 - **Route**: `/create`
 
+### Make User Admin
+
+- **Method**: POST
+- **Route**: `/make-admin/:_id`
+
 ### Verify User
 
 - **Method**: POST
 - **Route**: `/verify`
+
+### Delete User
+
+- **Method**: POST
+- **Route**: `/delete/:userAuthID`
+</details>
