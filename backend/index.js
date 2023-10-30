@@ -10,7 +10,9 @@ const userRoute = require('./routes/user.routes')
 const commentRoute = require('./routes/comments.routes')
 const voteRoute = require('./routes/votes.routes')
 
-/* ------------------------------ Config files ------------------------------ */
+const port = process.env.port || 4000
+
+/* --------------------------- cloudinary Config ---------------------------- */
 
 cloudinary.config({
   cloud_name: process.env.cloud_name,
@@ -18,8 +20,6 @@ cloudinary.config({
   api_secret: process.env.api_secret,
   secure: true,
 });
-
-const port = process.env.port || 4000
 
 /* ----------------------------- MongoDB connect ---------------------------- */
 
@@ -52,9 +52,6 @@ app.use("/votes", voteRoute)
 
 /* ----------------------------- Error handling ----------------------------- */
 
-/* app.use((req, res, next) => {
-  next(createError(404))
-}) */
 app.use((err, req, res, next) => {
   if(!err.statusCode) err.statusCode = 500;
   res.status(err.statusCode).send(err.message)
