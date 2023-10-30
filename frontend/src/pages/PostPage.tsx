@@ -101,8 +101,8 @@ function PostPage(): JSX.Element {
 
                         {
                             (post) ? 
-                                (JSON.parse(localStorage.getItem("user")) ? 
-                                    (post.author == JSON.parse(localStorage.getItem("user")) ?
+                                (JSON.parse(localStorage.getItem("user")).username ? 
+                                    (post.author == JSON.parse(localStorage.getItem("user")).username ?
                                         <button onClick={deletePost} className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg">
                                             Delete Post
                                         </button>
