@@ -15,7 +15,8 @@ let postSchema = new Schema({
       type: Date
     }
 },{
-    collection: 'posts'
+    collection: 'posts',
+    timestamps: true
 })
 
 module.exports = mongoose.model('Post', postSchema)

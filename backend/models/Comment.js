@@ -15,7 +15,8 @@ let commentSchema = new Schema({
       type: String
     }
 },{
-    collection: 'comments'
+    collection: 'comments',
+    timestamps: true
 })
 
 module.exports = mongoose.model('Comment', commentSchema)

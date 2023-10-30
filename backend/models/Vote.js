@@ -18,7 +18,8 @@ let voteSchema = new Schema({
       type: String
     }
 },{
-    collection: 'votes'
+    collection: 'votes',
+    timestamps: true
 })
 
 module.exports = mongoose.model('Vote', voteSchema)
