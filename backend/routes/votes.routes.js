@@ -39,7 +39,7 @@ router.post("/comment/:id", async (req, res, next) => {
   const commentID = req.params.id
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
-  if (await isDuplicate(req, res, postID, req.body.author)) return true
+  if (await isDuplicate(req, res, commentID, req.body.author)) return true
 
   await voteSchema
     .create({
