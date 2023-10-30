@@ -5,4 +5,5 @@
 
 # Updates
 
-- Crated Vote button components
+- Added photo uploading to posts
+- Added photo deletion when post deletes
