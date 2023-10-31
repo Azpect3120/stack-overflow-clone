@@ -87,7 +87,7 @@ function CreatePostPage(): JSX.Element {
                 <div className="h-fit w-full my-5 rounded-md p-6 bg-white border border-light-border">
                     <h1 className="text-lg py-2"> Post Details </h1>
                     <p className="text-xs"> Enter your posts details here </p>
-                    <textarea onChange={handleInputChange} style={textareaStyles} className="text-sm w-full my-2 px-2 py-1 border border-light-border rounded-md outline-none focus:ring-1 focus:ring-green-500 resize-none" name="content" placeholder="eg. 10 Reasons Why Go is Better Than Rust." required />
+                    <textarea onChange={handleInputChange} style={textareaStyles} className="text-sm w-full my-2 px-2 py-1 border border-light-border rounded-md outline-none focus:ring-1 focus:ring-green-500 resize-none" name="content" placeholder="eg. Right off the bat, there are clear differences between Go and Rust. Go has a stronger focus on building web APIs and small services that can scale endlessly, especially with the power of Goroutines. The latter is also possible with Rust, but things are much harder from a developer experience point of view..." required />
                 </div>
                 <input
                     type="file"
