@@ -58,6 +58,7 @@ function Comment(props: Props): JSX.Element {
       }, []);
 
     const addVote = async (isUpvote: boolean) => {
+        if (!localStorage.getItem("user")) return
         try {
             let res = await fetch(`http://localhost:4000/votes/comment/${props.comment._id}`, {
                 method: "POST",

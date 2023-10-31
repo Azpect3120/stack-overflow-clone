@@ -51,6 +51,7 @@ function PostPage(): JSX.Element {
     }, []);
 
     const addVote = async (isUpvote: boolean) => {
+        if (!localStorage.getItem("user")) return;
         try {
             let res = await fetch(`http://localhost:4000/votes/post/${id}`, {
                 method: "POST",
