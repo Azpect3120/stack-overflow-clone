@@ -73,9 +73,10 @@ router.post("/delete/:userAuthID", async (req, res, next) => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(
-        {applicationId: appId, ID: userAuthID}
-      )
+      body: JSON.stringify({
+        applicationId: appId, 
+        ID: userAuthID
+      })
     })
 
     const data = await response.json()
@@ -140,19 +141,19 @@ router.get("/profile/:name", async (req, res, next) => {
 /* -------------------- Update users profile information -------------------- */
 
 // ! WORK IN PROGRESS, UPDATING DOES NOT CURRENT CHANGE INFORMATION
-router.post("/update-profile/:name", async (req, res, next) => {
-  const name = req.params.name
-  const userRequest = req.body.username
+router.post("/update-profile/:userAuthID", async (req, res, next) => {
+  const userAuthID = req.params.userAuthID
+  const userRequest = req.body.userAuthID
 
   try {
-    if (name !== userRequest) {
+    if (userAuthID !== userRequest) {
       return res.status(403).send(`You do not have permission to edit this users profile`)
     }
     
     await userSchema
-      .findOneAndUpdate({username: name}, req.body)
+      .findOneAndUpdate({userAuthID: userAuthID}, req.body)
       .then(user => {
-        if (!user) return res.status(404).send(`No user found with the username ${name}`)
+        if (!user) return res.status(404).send(`No user found with the username ${userAuthID}`)
         
         res.json({
           username: user.username,
@@ -208,7 +209,7 @@ router.get("/is-admin/:name", async (req, res, next) => {
         status: 200})
       })
   } catch(err) {
-    next(err)
+    return next(err)
   }
 })
 
