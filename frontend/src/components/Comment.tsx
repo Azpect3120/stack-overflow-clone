@@ -100,7 +100,7 @@ function Comment(props: Props): JSX.Element {
                     ) : (
                         <div>
                             {props.comment ? (
-                                JSON.parse(localStorage.getItem("user")).username ? (
+                                JSON.parse(localStorage.getItem("user")) ? (
                                     props.comment.author ===
                                     JSON.parse(localStorage.getItem("user")).username ? (
                                         <div>

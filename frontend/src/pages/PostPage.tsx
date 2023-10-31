@@ -88,16 +88,11 @@ function PostPage(): JSX.Element {
 
     const renderDeleteButton = () => {
         if (post) {
-            if (
-                typeof JSON.parse(localStorage.getItem("user") || "")
-                    .username === "string" &&
-                post.author ==
-                    JSON.parse(localStorage.getItem("user") || "").username
-            ) {
+            if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).username === post.author) {
                 return (
                     <button
                         onClick={deletePost}
-                        className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg"
+                        className="ml-auto m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg"
                     >
                         Delete Post
                     </button>
