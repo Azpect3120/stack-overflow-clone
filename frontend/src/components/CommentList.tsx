@@ -41,7 +41,7 @@ function CommentList(props: Props): JSX.Element {
             <div className="w-full divide-y divide-light-border">
                 {
                     comments.map((cmt: CommentObject) => (
-                        <Comment comment={cmt} />
+                        <Comment comment={cmt} key={cmt._id}/>
                     ))
                 }
 

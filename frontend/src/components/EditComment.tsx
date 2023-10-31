@@ -9,6 +9,7 @@ interface CommentObject {
 interface Props {
     postID: string;
     commentData: CommentObject;
+    commentID: string;
 }
 
 function CreateComment(props: Props): JSX.Element {

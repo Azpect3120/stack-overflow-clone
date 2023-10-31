@@ -86,54 +86,60 @@ function PostPage(): JSX.Element {
         }
     };
 
+    const renderDeleteButton = () => {
+        if (post) {
+            if (
+                typeof JSON.parse(localStorage.getItem("user") || "")
+                    .username === "string" &&
+                post.author ==
+                    JSON.parse(localStorage.getItem("user") || "").username
+            ) {
+                return (
+                    <button
+                        onClick={deletePost}
+                        className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg"
+                    >
+                        Delete Post
+                    </button>
+                );
+            } else {
+                return "";
+            }
+        }
+        return "";
+    };
+
     return (
         <div>
             <Nav />
-
             <div className="w-full flex justify-center">
                 <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
-                    <div className="flex items-center">
-                        <Voting
-                            addVote={addVote}
-                            removeVote={addVote}
-                            voteCount={voteCount || 0}
-                        />
 
-                        <h1 className="p-20 px-0 text-4xl">
-                            {post ? post.title : "Loading..."}
-                        </h1>
+                    <div className="w-full">
+                        <div className="flex items-center">
+                            <Voting
+                                voteCount={voteCount || 0}
+                                addVote={addVote}
+                                removeVote={addVote}
+                            />
+                            <h1 className="p-20 px-10 text-4xl">
+                                {post ? post.title : "Loading..."}
+                            </h1>
+                            {renderDeleteButton()}
+                        </div>
+                        <div className="flex items-center justify-between border-b border-light-border">
+                            <p className="p-20 py-5 text-md text-light-theme-green">
+                                {post ? post.author : "Loading..."}
+                            </p>
+                        </div>
+                    </div>
 
-                        {post ? (
-                            JSON.parse(localStorage.getItem("user"))
-                                .username ? (
-                                post.author ==
-                                JSON.parse(localStorage.getItem("user"))
-                                    .username ? (
-                                    <button
-                                        onClick={deletePost}
-                                        className="m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg"
-                                    >
-                                        Delete Post
-                                    </button>
-                                ) : null
-                            ) : null
-                        ) : (
-                            "Loading..."
-                        )}
-                    </div>
-                    <div className="flex items-center justify-between border-b border-light-border">
-                        <p className="p-20 py-5 text-md text-light-theme-green">
-                            {post ? post.author : "Loading..."}
-                        </p>
-                    </div>
                     <p className="mx-20 my-10 text-lg whitespace-pre-line">
                         {post ? post.content : "Loading..."}
                     </p>
-
                     <CommentList id={post ? post._id : ""} />
                 </div>
             </div>
-
             <Footer />
         </div>
     );
