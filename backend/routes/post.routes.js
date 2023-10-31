@@ -10,12 +10,14 @@ let voteSchema = require("../models/Vote.js")
 
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now()
-    )
+    const user = req.body.author || 'unknown_user'
+    const date = new Date().toLocaleString()
+    const extension = file.originalname.split('.').pop()
+    const filename = `${user}-${date}-${Date.now()}.${extension}`
+    cb(null, filename)
   },
-})
+});
+
 
 const upload = multer({ storage })
 
