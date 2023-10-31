@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 function CreateAccountForm () {
@@ -6,10 +6,28 @@ function CreateAccountForm () {
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
 
+    const updateInput = (input: string, e: string) => {
+        switch (input) {
+            case "u": setUsername(e);
+            break;
+
+            case "p1": setPassword1(e);
+            break;
+
+            case "p2": setPassword2(e);
+            break;
+        }
+    }
+
+    const disable = useMemo(()=>{ 
+        return password1 === password2 && username.length > 3 && password1.length > 3;
+    }, [username, password1, password2]);
+
+
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (password1 !== password2) {
-            // Passwords do not match
+        if (password1 !== password2 || password1.length < 3) {
+            window.alert("You screwed up");
         } else {
             // Query database and ensure username and such is valid
             try {
@@ -45,7 +63,7 @@ function CreateAccountForm () {
                         <div>
                             <label className="block text-sm font-medium leading-6 text-gray-900">Username</label>
                             <div className="mt-2">
-                                <input name="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input name="username" type="text" onChange={(e) => updateInput("u", e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
 
@@ -54,7 +72,7 @@ function CreateAccountForm () {
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Password</label>
                             </div>
                             <div className="mt-2">
-                                <input name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#{}[\]+/])[A-Za-z\d@$!%*?&^#{}[\]+/]{12,}$" value={password1} onChange={(e) => setPassword1(e.target.value)} type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input onChange={(e) => updateInput("p1", e.target.value)} name="password" type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
 
@@ -63,12 +81,12 @@ function CreateAccountForm () {
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
                             </div>
                             <div className="mt-2">
-                                <input name="confirmPassword" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#{}[\]+/])[A-Za-z\d@$!%*?&^#{}[\]+/]{12,}$" value={password2} onChange={(e) => setPassword2(e.target.value)} type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input onChange={(e) => updateInput("p2", e.target.value)} name="confirmPassword" type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
 
                         <div>
-                            <button type="submit" className="flex w-full justify-center rounded-md bg-[#0f6313] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0f6313] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-[#0f6313]">Create Account</button>
+                            <button type="submit" disabled={!disable} className="flex w-full justify-center rounded-md bg-[#0f6313] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0f6313] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-[#0f6313]">Create Account</button>
                         </div>
                     </form>
                     
