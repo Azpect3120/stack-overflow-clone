@@ -10,6 +10,8 @@ function CreateAccountForm () {
     const [error, setError] = useState<String | null>(null);
 
     const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+
 
     const updateInput = (input: string, e: string) => {
         switch (input) {
@@ -37,12 +39,12 @@ function CreateAccountForm () {
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (password1 !== password2 || password1.length < 3) {
-            window.alert("You screwed up");
-        } 
-        else if (!emailRegex.test(email)) {
-            window.alert("Email is not proper format")
-        }
-        else {
+            setError("Passwords do not match");
+        } else if (!emailRegex.test(email)) {
+            setError("Email is not proper format");
+        } else if (!passwordRegex.test(password1)) {
+            setError("Password is not strong enough. Please try again!");
+        } else {
             // Query database and ensure username and such is valid
             try {
                 const response = await fetch("http://localhost:4000/users/create", {
@@ -102,6 +104,15 @@ function CreateAccountForm () {
                             <div className="mt-2">
                                 <input name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#{}[\]+/])[A-Za-z\d@$!%*?&^#{}[\]+/]{12,}$" value={password1} onChange={(e) => setPassword1(e.target.value)} type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
+
+                            <p className="text-sm text-red-500 font-bold p-1"> Password must meet the following criteria </p>
+                            <ul className="text-xs text-red-500 list-disc px-5">
+                                <li> At least 1 lower case character</li>
+                                <li> At least 1 upper case character </li>
+                                <li> At least 1 digit </li>
+                                <li>At least one special character (@$!%*?&) </li>
+                                <li> Must be 8+ characters long </li>
+                            </ul>
                         </div>
 
                         <div>
