@@ -8,6 +8,9 @@ let userSchema = new Schema({
     userAuthID: {
       type: String
     },
+    email: {
+      type: String
+    },
     admin: {
       type: Boolean
     }
