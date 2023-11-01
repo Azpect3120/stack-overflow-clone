@@ -4,13 +4,19 @@ import LoginError from "./LoginError";
 
 function CreateAccountForm () {
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
     const [error, setError] = useState<String | null>(null);
 
+    const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/
+
     const updateInput = (input: string, e: string) => {
         switch (input) {
             case "u": setUsername(e);
+            break;
+            
+            case "e": setEmail(e);
             break;
 
             case "p1": setPassword1(e);
@@ -31,8 +37,12 @@ function CreateAccountForm () {
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (password1 !== password2 || password1.length < 3) {
-            setError("Passwords do not match");
-        } else {
+            window.alert("You screwed up");
+        } 
+        else if (!emailRegex.test(email)) {
+            window.alert("Email is not proper format")
+        }
+        else {
             // Query database and ensure username and such is valid
             try {
                 const response = await fetch("http://localhost:4000/users/create", {
@@ -40,7 +50,7 @@ function CreateAccountForm () {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ username, password: password1 })
+                    body: JSON.stringify({ username, password: password1, email})
                 });
 
                 const data = await response.json();
@@ -75,6 +85,13 @@ function CreateAccountForm () {
                             <label className="block text-sm font-medium leading-6 text-gray-900">Username</label>
                             <div className="mt-2">
                                 <input name="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                            <div className="mt-2">
+                                <input name="email" type="text" onChange={(e) => updateInput("e", e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
 
