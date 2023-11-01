@@ -44,8 +44,8 @@ function LoginForm() {
         }
     };
 
-    const disable = useMemo(() => {
-        
+    const isDisabled = useMemo(() => {
+        return username.length < 3 || password.length < 3;
     }, [username, password])
 
     return (
@@ -99,7 +99,7 @@ function LoginForm() {
                     <div>
                         <button
                             type="submit"
-                            className={disable == false ? 
+                            className={isDisabled == true ? 
                             "flex w-full justify-center rounded-md bg-light-theme-green px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-light-theme-green hover:bg-light-theme-green-active transition-all opacity-25" : 
                             "flex w-full justify-center rounded-md bg-light-theme-green px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-light-theme-green hover:bg-light-theme-green-active transition-all"
                         }
