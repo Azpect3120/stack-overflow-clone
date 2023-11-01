@@ -47,12 +47,10 @@ router.post("/create", async (req, res, next) => {
     
     console.log(data)
     
-    const emails = await userSchema.find({email: email})
-
-    console.log(emails)
+    const emailCheck = await userSchema.find({email: email})
 
     // ! Fix these conditions to check if data works
-    if (data.status === 201) {
+    if (data.status === 201 && emailCheck.length === 0) {
       await userSchema.create({
         username: username, 
         userAuthID: data.user.ID, 
@@ -88,7 +86,7 @@ router.post("/delete/:userAuthID", async (req, res, next) => {
     const data = await response.json()
 
     // ! Fix these conditions to check if data works
-    if (data) await userSchema.deleteOne({userAuthID: userAuthID})
+    if (data.status === 201) await userSchema.deleteOne({userAuthID: userAuthID})
     
     res.json(data)
   } catch(err) {
@@ -133,11 +131,8 @@ router.get("/profile/:name", async (req, res, next) => {
         return res.status(404).send(`No user found with the username ${name}`)
         
         res.json({
-          username: user.username, 
-          admin: user.admin, 
+          user,
           message: `User ${user.name} found`, 
-          data: data,
-          status: 200
         })
       }) 
   } catch(err) {
@@ -163,8 +158,7 @@ router.post("/update-profile/:userAuthID", async (req, res, next) => {
         if (!user) return res.status(404).send(`No user found with the username ${userAuthID}`)
         
         res.json({
-          username: user.username,
-          admin: user.admin,
+          user,
           message: `User ${user.name} found`, 
           status: 200
         })
