@@ -1,15 +1,37 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import LoginError from "./LoginError";
 
 function CreateAccountForm () {
     const [username, setUsername] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [error, setError] = useState<String | null>(null);
+
+    const updateInput = (input: string, e: string) => {
+        switch (input) {
+            case "u": setUsername(e);
+            break;
+
+            case "p1": setPassword1(e);
+            break;
+
+            case "p2": setPassword2(e);
+            break;
+        }
+    }
+
+    useEffect(() => {console.log(error);}, [error])
+
+    const disable = useMemo(()=>{ 
+        return password1 === password2 && username.length > 3 && password1.length > 3;
+    }, [username, password1, password2]);
+
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (password1 !== password2) {
-            // Passwords do not match
+        if (password1 !== password2 || password1.length < 3) {
+            setError("Passwords do not match");
         } else {
             // Query database and ensure username and such is valid
             try {
@@ -26,7 +48,8 @@ function CreateAccountForm () {
                 if (data.status == 201) {
                     window.location.href = "/accounts/login";
                 } else {
-                    window.alert("Could not create user!");
+                    // window.alert("Could not create user!");
+                    setError(data.error);
                 }
             } catch (err) {
                 console.error(err);
@@ -35,7 +58,13 @@ function CreateAccountForm () {
     };
 
     return (
-            <div className="flex h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div className="flex h-full flex-col items-center justify-center px-6 py-12 lg:px-8">
+                {error && (
+                    <LoginError
+                        message={error}
+                        onClose={() => setError(null)}
+                    />
+                )}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create Account</h2>
                 </div>
@@ -68,7 +97,10 @@ function CreateAccountForm () {
                         </div>
 
                         <div>
-                            <button type="submit" className="flex w-full justify-center rounded-md bg-[#0f6313] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0f6313] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-[#0f6313]">Create Account</button>
+                            <button type="submit" disabled={!disable} className={disable == false ? 
+                            "flex w-full justify-center rounded-md bg-[#0f6313] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0f6313] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-[#0f6313] opacity-25" : 
+                            "flex w-full justify-center rounded-md bg-[#0f6313] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#0f6313] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-[#0f6313]"}>
+                                Create Account</button>
                         </div>
                     </form>
                     
