@@ -36,7 +36,6 @@ function PostPage(): JSX.Element {
       };
 
     useEffect(() => {
-        console.log(UpvoteIcon)
         // setVoteCount("Loading...")
         const fetchData = async () => {
           try {
@@ -114,8 +113,7 @@ function PostPage(): JSX.Element {
                                 {post ? post.title : "Loading..."}
                             </h1>
 
-
-                            {JSON.parse(localStorage.getItem("user") || "").username === "string" && renderDeleteButton()}
+                            {typeof JSON.parse(localStorage.getItem("user") || "").username === "string" &&  renderDeleteButton()}
 
                     </div>
                     <div className="flex items-center justify-between">

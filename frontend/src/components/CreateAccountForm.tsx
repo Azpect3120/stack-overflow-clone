@@ -1,11 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import LoginError from "./LoginError";
 
 function CreateAccountForm () {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [error, setError] = useState<String | null>(null);
 
     const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/
 
@@ -24,6 +26,8 @@ function CreateAccountForm () {
             break;
         }
     }
+
+    useEffect(() => {console.log(error);}, [error])
 
     const disable = useMemo(()=>{ 
         return password1 === password2 && username.length > 3 && password1.length > 3;
@@ -51,10 +55,11 @@ function CreateAccountForm () {
 
                 const data = await response.json();
 
-                if (data.status == 201) {
+                if (data.status === 201) {
                     window.location.href = "/accounts/login";
                 } else {
-                    window.alert("Could not create user!");
+                    // window.alert("Could not create user!");
+                    setError(data.error);
                 }
             } catch (err) {
                 console.error(err);
@@ -63,7 +68,13 @@ function CreateAccountForm () {
     };
 
     return (
-            <div className="flex h-full flex-col justify-center px-6 py-12 lg:px-8">
+            <div className="flex h-full flex-col items-center justify-center px-6 py-12 lg:px-8">
+                {error && (
+                    <LoginError
+                        message={error}
+                        onClose={() => setError(null)}
+                    />
+                )}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create Account</h2>
                 </div>
