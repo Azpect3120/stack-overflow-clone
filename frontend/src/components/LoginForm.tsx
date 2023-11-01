@@ -1,6 +1,6 @@
 import "../assets/css/output.css";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import LoginError from "./LoginError";
 
 function LoginForm() {
@@ -43,6 +43,10 @@ function LoginForm() {
             console.error(err);
         }
     };
+
+    const disable = useMemo(() => {
+        
+    }, [username, password])
 
     return (
         <div className="h-full flex flex-col items-center justify-center px-6 py-12 lg:px-8">
@@ -95,7 +99,10 @@ function LoginForm() {
                     <div>
                         <button
                             type="submit"
-                            className="flex w-full justify-center rounded-md bg-light-theme-green px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-light-theme-green hover:bg-light-theme-green-active transition-all"
+                            className={disable == false ? 
+                            "flex w-full justify-center rounded-md bg-light-theme-green px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-light-theme-green hover:bg-light-theme-green-active transition-all opacity-25" : 
+                            "flex w-full justify-center rounded-md bg-light-theme-green px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-light-theme-green hover:bg-light-theme-green-active transition-all"
+                        }
                         >
                             Sign in
                         </button>
