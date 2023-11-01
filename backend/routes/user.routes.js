@@ -48,7 +48,7 @@ router.post("/create", async (req, res, next) => {
     console.log(data)
     
     // ! Fix these conditions to check if data works
-    if (data) {
+    if (data.status === 201) {
       await userSchema.create({
         username: username, 
         userAuthID: data.user.ID, 
