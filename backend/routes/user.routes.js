@@ -27,7 +27,7 @@ router.get("/", async (req, res, next) => {
 /* ----------------- Send username and password through form ---------------- */
 
 router.post("/create", async (req, res, next) => {
-  const {username, password} = req.body
+  const {username, password, email} = req.body
 
   try {
     const response = await fetch("http://54.176.161.136:8080/users/create", {
@@ -47,12 +47,18 @@ router.post("/create", async (req, res, next) => {
     
     console.log(data)
     
+    const emails = await userSchema.find({email: email})
+
+    console.log(emails)
+
     // ! Fix these conditions to check if data works
-    if (data) {
+    if (data.status === 201) {
       await userSchema.create({
         username: username, 
         userAuthID: data.user.ID, 
-        admin: false
+        admin: false,
+        email: email,
+        data: data.data
       })
     }
     
@@ -90,7 +96,6 @@ router.post("/delete/:userAuthID", async (req, res, next) => {
   }
 })
 
-
 /* ----------------- Send username and password through form ---------------- */
 
 router.post("/verify", async (req, res, next) => {
@@ -126,12 +131,14 @@ router.get("/profile/:name", async (req, res, next) => {
       .then(user => {
         if (!user) 
         return res.status(404).send(`No user found with the username ${name}`)
-      
-      res.json({
-        username: user.username, 
-        admin: user.admin, 
-        message: `User ${user.name} found`, 
-        status: 200})
+        
+        res.json({
+          username: user.username, 
+          admin: user.admin, 
+          message: `User ${user.name} found`, 
+          data: data,
+          status: 200
+        })
       }) 
   } catch(err) {
     return next(err)
@@ -167,14 +174,17 @@ router.post("/update-profile/:userAuthID", async (req, res, next) => {
   }
 })
 
-/* -------------------------- Make a user an admin -------------------------- */
+/* ----------------------- Set an account to be admin ----------------------- */
 
 router.post("/make-admin/:id", async (req, res, next) => {
   const id = req.params.id
+  const admin = req.query.admin === "true"
+
+  const adminAccess = admin ? true : false
 
   try {
     await userSchema
-      .findByIdAndUpdate(id, {admin: true})
+      .findByIdAndUpdate(id, {admin: adminAccess})
       .then(user => {
         if (!user) return res.status(404).send(`No user found with the _id: ${id}`)
     
@@ -189,29 +199,5 @@ router.post("/make-admin/:id", async (req, res, next) => {
     return next(err)
   }
 })
-
-/* --------------------------- Check admin status --------------------------- */
-
-router.get("/is-admin/:name", async (req, res, next) => {
-  const name = req.params.name
-
-  try {
-    await userSchema
-    .findOne({username: name})
-    .then(user => {
-      if (!user) 
-      return res.status(404).send(`No user found with the username ${name}`)
-    
-      res.json({
-        isAdmin: user.admin, 
-        id: user._id, 
-        message: `User ${user.username} found`, 
-        status: 200})
-      })
-  } catch(err) {
-    return next(err)
-  }
-})
-
 
 module.exports = router
