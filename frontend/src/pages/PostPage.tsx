@@ -4,6 +4,7 @@ import CommentList from "../components/CommentList";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Voting from "../components/Voting";
+import LoginError from "../components/LoginError";
 
 interface Post {
     title: string;
@@ -15,6 +16,7 @@ interface Post {
 
 function PostPage(): JSX.Element {
     const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
+    const [error, setError] = useState<string | null>(null);
     const [post, setPost] = useState<Post | null>(null);
     const { id } = useParams();
 
@@ -51,7 +53,10 @@ function PostPage(): JSX.Element {
     }, []);
 
     const addVote = async (isUpvote: boolean) => {
-        if (!localStorage.getItem("user")) return;
+        if (!localStorage.getItem("user")) {
+            setError("You must be signed in to vote.");
+            return;
+        }
         try {
             let res = await fetch(`http://localhost:4000/votes/post/${id}`, {
                 method: "POST",
@@ -111,8 +116,16 @@ function PostPage(): JSX.Element {
             <div className="w-full flex justify-center">
                 <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
 
+
                     <div className="w-full">
                         <div className="flex items-center">
+                            {error && (
+                                <LoginError
+                                    styles={"mx-32"}
+                                    message={error}
+                                    onClose={() => setError(null)}
+                                />
+                            )}
                             <Voting
                                 voteCount={voteCount || 0}
                                 addVote={addVote}

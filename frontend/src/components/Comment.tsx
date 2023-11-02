@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../assets/css/output.css";
 import Voting from "./Voting";
+import LoginError from "./LoginError";
 
 import EditComment from "./EditComment"
 
@@ -19,6 +20,7 @@ interface Props {
 function Comment(props: Props): JSX.Element {
     const [isEditing, setIsEditing] = useState(false)
     const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
+    const [error, setError] = useState<String | null>(null);
 
     const deleteComment = async () => {
         try {
@@ -58,7 +60,10 @@ function Comment(props: Props): JSX.Element {
       }, []);
 
     const addVote = async (isUpvote: boolean) => {
-        if (!localStorage.getItem("user")) return
+        if (!localStorage.getItem("user")) {
+            setError("You must be logged in to vote.");
+            return;
+        }
         try {
             let res = await fetch(`http://localhost:4000/votes/comment/${props.comment._id}`, {
                 method: "POST",
@@ -81,7 +86,14 @@ function Comment(props: Props): JSX.Element {
     };
 
     return (
-        <div className="px-16 py-4 flex w-full">
+        <div className="px-16 py-4 flex w-full items-center justify-center">
+            {error && (
+                <LoginError
+                    styles={""}
+                    message={error}
+                    onClose={() => setError(null)}
+                />
+            )}
             <Voting voteCount={voteCount || 0 } addVote={addVote} removeVote={addVote} />
             
             <div className="w-full">

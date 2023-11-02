@@ -9,7 +9,6 @@ interface Props {
 }
 
 function Voting (props: Props): JSX.Element {
-
     return (
         <div className="h-fit w-fit flex flex-col px-10">
             <button className="btn w-1/3 rounded-full" onClick={() => props.addVote(true)}>
