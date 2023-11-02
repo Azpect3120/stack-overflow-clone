@@ -12,23 +12,6 @@ function CreateAccountForm () {
     const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 
-
-    const updateInput = (input: string, e: string) => {
-        switch (input) {
-            case "u": setUsername(e);
-            break;
-            
-            case "e": setEmail(e);
-            break;
-
-            case "p1": setPassword1(e);
-            break;
-
-            case "p2": setPassword2(e);
-            break;
-        }
-    }
-
     useEffect(() => {console.log(error);}, [error])
 
     const isDisabled = useMemo(()=>{ 
@@ -86,14 +69,14 @@ function CreateAccountForm () {
                         <div>
                             <label className="block text-sm font-medium leading-6 text-gray-900">Username</label>
                             <div className="mt-2">
-                                <input name="username" type="text" onChange={(e) => updateInput("u", e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input name="username" type="text" onChange={(e) => setUsername(e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
                         
                         <div>
                             <label className="block text-sm font-medium leading-6 text-gray-900">Email</label>
                             <div className="mt-2">
-                                <input name="email" type="text" onChange={(e) => updateInput("e", e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input name="email" type="text" onChange={(e) => setEmail(e.target.value)} required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
                         
@@ -102,7 +85,7 @@ function CreateAccountForm () {
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Password</label>
                             </div>
                             <div className="mt-2">
-                                <input onChange={(e) => updateInput("p1", e.target.value)} name="password" type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input onChange={(e) => setPassword1(e.target.value)} name="password" type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
 
                             <p className="text-sm text-red-500 font-bold p-1"> Password must meet the following criteria </p>
@@ -120,7 +103,7 @@ function CreateAccountForm () {
                                 <label className="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
                             </div>
                             <div className="mt-2">
-                                <input onChange={(e) => updateInput("p2", e.target.value)} name="confirmPassword" type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
+                                <input onChange={(e) => setPassword2(e.target.value)} name="confirmPassword" type="password" required className="outline-none p-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#0f6313] sm:text-sm sm:leading-6" />
                             </div>
                         </div>
 
