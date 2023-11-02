@@ -88,12 +88,14 @@ function CreatePostPage(): JSX.Element {
                     <h1 className="text-lg py-2"> Post Details </h1>
                     <p className="text-xs"> Enter your posts details here </p>
                     <textarea onChange={handleInputChange} style={textareaStyles} className="text-sm w-full my-2 px-2 py-1 border border-light-border rounded-md outline-none focus:ring-1 focus:ring-green-500 resize-none" name="content" placeholder="eg. Right off the bat, there are clear differences between Go and Rust. Go has a stronger focus on building web APIs and small services that can scale endlessly, especially with the power of Goroutines. The latter is also possible with Rust, but things are much harder from a developer experience point of view..." required />
+
+                    <input
+                        type="file"
+                        onChange={handleImageUpload}
+                        accept="image/*" // Restrict file type to images
+                        className="file:rounded-md file:bg-light-theme-green file:text-white file:outline-none file:border-0 file:p-1 file:px-2 file:mr-4 text-sm file:hover:bg-light-theme-green-active file:cursor-pointer"
+                    />
                 </div>
-                <input
-                    type="file"
-                    onChange={handleImageUpload}
-                    accept="image/*" // Restrict file type to images
-                />
                 <button type="submit" className="bg-light-theme-green text-white rounded-lg px-4 py-1.5 hover:bg-light-theme-green-active"> Create Post </button>
             </form>
 
