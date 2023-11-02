@@ -1,25 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const cloudinary = require('cloudinary')
-const multer = require('multer')
 
 let { isValid_id } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require("../models/Vote.js")
-
-const storage = multer.diskStorage({
-  filename: function (req, file, cb) {
-    const user = req.body.author || 'unknown_user'
-    const date = new Date().toLocaleString()
-    const extension = file.originalname.split('.').pop()
-    const filename = `${user}-${date}-${Date.now()}.${extension}`
-    cb(null, filename)
-  },
-});
-
-
-const upload = multer({ storage })
 
 // All posts start with /post
 
