@@ -72,20 +72,9 @@ router.get("/search", async (req, res, next) => {
 
 /* -------------------------- Create post from form ------------------------- */
 
-router.post("/create-post", upload.single('image'), async (req, res, next) => {
+router.post("/create-post", async (req, res, next) => {
   try {
-    let imageData = null
-    if (req.file) {
-      const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path)
-      imageData = cloudinaryResponse.secure_url
-    }
-
-    const postData = {
-      ...req.body,
-      imageUrl: imageData,
-    }
-
-    const result = await postSchema.create(postData)
+    const result = await postSchema.create(req.body);
 
     res.json({
       data: result,

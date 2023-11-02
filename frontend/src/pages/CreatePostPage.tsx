@@ -8,7 +8,7 @@ interface FormData {
     content: string,
     author: string,
     date: Date,
-    image: File | null
+    imageUrl: string
 }
 
 function CreatePostPage(): JSX.Element {
@@ -21,7 +21,7 @@ function CreatePostPage(): JSX.Element {
       content: "",
       author,
       date: new Date(),
-      image: null,
+      imageUrl: "",
     });
   
     const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
@@ -30,21 +30,12 @@ function CreatePostPage(): JSX.Element {
       setForm({ ...form, date: new Date() });
   
       try {
-        // Create a FormData object to send both text data and image file
-        const formData = new FormData();
-        formData.append("title", form.title);
-        formData.append("content", form.content);
-        formData.append("author", form.author);
-        formData.append("date", form.date.toISOString());
-  
-        // Add the image file to the FormData if it's not null
-        if (form.image) {
-          formData.append("image", form.image);
-        }
-  
         await fetch("http://localhost:4000/posts/create-post", {
           method: "POST",
-          body: formData, // Send the FormData object
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(form), // Send the FormData object
         });
         
         console.log(form);
@@ -62,11 +53,26 @@ function CreatePostPage(): JSX.Element {
     const handleInputChange = (event: any) => {
       const { name, value } = event.target;
       setForm({ ...form, date: new Date(), [name]: value });
+      console.log(form);
     };
   
     const handleImageUpload = (event: any) => {
       const imageFile = event.target.files[0];
-      setForm({ ...form, image: imageFile });
+      console.log(imageFile);
+      const formData = new FormData();
+      formData.append("file", imageFile);
+      formData.append("upload_preset", "BlogImages");
+
+      fetch(`https://api.cloudinary.com/v1_1/dhh4hjypo/image/upload`, {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        const url = data.secure_url;
+        setForm({...form, imageUrl: url});
+      })
+      .catch(err => console.error(err))
     };
 
     return (
@@ -76,7 +82,7 @@ function CreatePostPage(): JSX.Element {
             <form onSubmit={handleSubmit} className="w-2/3 mx-auto h-fit pb-12">
                 <h1 className="font-bold text-3xl px-2 py-10">
                     Create a Post
-                </h1>
+              </h1>
 
                 <div className="h-fit w-full rounded-md p-6 bg-white border border-light-border">
                     <h1 className="text-lg py-2"> Title </h1>
@@ -92,6 +98,7 @@ function CreatePostPage(): JSX.Element {
                     <input
                         type="file"
                         onChange={handleImageUpload}
+                        onSubmit={handleInputChange}
                         accept="image/*" // Restrict file type to images
                         className="file:rounded-md file:bg-light-theme-green file:text-white file:outline-none file:border-0 file:p-1 file:px-2 file:mr-4 text-sm file:hover:bg-light-theme-green-active file:cursor-pointer"
                     />
