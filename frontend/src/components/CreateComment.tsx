@@ -54,16 +54,12 @@ function createComment (props: Props): JSX.Element {
     return (
 
             <form onSubmit={handleSubmit} className="w-3/4 mx-auto h-fit pb-12">
-                <h1 className="font-bold text-3xl px-2 py-10">
-                   Post a Comment
-                </h1>
-
                 <div className="h-fit w-full my-5 rounded-md p-6 bg-white border border-light-border">
                     <h1 className="text-lg py-2"> Post Comment </h1>
                     <p className="text-xs"> Write comment here: </p>
                     <textarea onChange={handleInputChange} style={textareaStyles} className="text-sm w-full my-2 px-2 py-1 border border-light-border rounded-md outline-none focus:ring-1 focus:ring-green-500 resize-none" name="content" placeholder="eg. You're opinion is objectively bad" required />
+                    <button type="submit" className="bg-light-theme-green text-white rounded-lg px-4 py-1.5 hover:bg-light-theme-green-active"> Create Comment </button>
                 </div>
-                <button type="submit" className="bg-light-theme-green text-white rounded-lg px-4 py-1.5 hover:bg-light-theme-green-active"> Create Comment </button>
             </form>
     )
 }
