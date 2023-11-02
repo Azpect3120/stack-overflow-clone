@@ -1,5 +1,5 @@
 const express = require('express')
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary').v2
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require("cors")
@@ -18,8 +18,9 @@ cloudinary.config({
   cloud_name: process.env.cloud_name,
   api_key: process.env.api_key,
   api_secret: process.env.api_secret,
-  secure: true,
 });
+
+
 
 /* ----------------------------- MongoDB connect ---------------------------- */
 
@@ -40,7 +41,7 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
-  extended : true
+  extended : false
 }))
 
 /* ------------------------------- App routes ------------------------------- */

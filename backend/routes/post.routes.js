@@ -9,6 +9,9 @@ let commentSchema = require("../models/Comment.js")
 let voteSchema = require("../models/Vote.js")
 
 const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads'); // Store uploaded files in the 'uploads' folder
+  },
   filename: function (req, file, cb) {
     const user = req.body.author || 'unknown_user'
     const date = new Date().toLocaleString()
@@ -17,7 +20,6 @@ const storage = multer.diskStorage({
     cb(null, filename)
   },
 });
-
 
 const upload = multer({ storage })
 
@@ -73,26 +75,27 @@ router.get("/search", async (req, res, next) => {
 /* -------------------------- Create post from form ------------------------- */
 
 router.post("/create-post", upload.single('image'), async (req, res, next) => {
+  /* for (const [key, value] of res.body) {
+    formDataObject[key] = value;
+  } */
   try {
-    let imageData = null
-    if (req.file) {
-      const cloudinaryResponse = await cloudinary.uploader.upload(req.file.path)
-      imageData = cloudinaryResponse.secure_url
-    }
+    console.log(req.body)
+    // if (req.file) {
+      // let imageData = await cloudinary.uploader.upload(imageUrl)
+    // }
+    /* const postData = {
+      ...formDataObject
+    } */
 
-    const postData = {
-      ...req.body,
-      imageUrl: imageData,
-    }
-
-    const result = await postSchema.create(postData)
-
+    // const result = await postSchema.create(postData)
     res.json({
-      data: result,
+      // data: result,
+      // data: postData,
       message: "Data successfully uploaded",
       status: 200,
     })
   } catch (err) {
+    console.error(err)
     return next(err)
   }
 })

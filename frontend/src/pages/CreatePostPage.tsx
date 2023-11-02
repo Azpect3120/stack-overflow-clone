@@ -1,27 +1,29 @@
 import "../assets/css/output.css"
 import { SyntheticEvent, useState } from "react"
+import { Image, Transformation, CloudinaryContext } from 'cloudinary-react';
 import Navbar from "../components/Nav";
 import Footer from "../components/Footer";
+import axios from "axios"
 
-interface FormData {
+interface FormData1 {
     title: string,
     content: string,
     author: string,
     date: Date,
-    image: File | null
+    imageUrl: File | null
 }
 
 function CreatePostPage(): JSX.Element {
     const ls = localStorage.getItem("user");
     const author: string = ls ? JSON.parse(ls).username : "";
   
-    // Initialize the image file as null
-    let [form, setForm] = useState<FormData>({
+    // Initialize the imageUrl file as null
+    let [form, setForm] = useState<FormData1>({
       title: "",
       content: "",
       author,
       date: new Date(),
-      image: null,
+      imageUrl: null,
     });
   
     const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
@@ -30,25 +32,29 @@ function CreatePostPage(): JSX.Element {
       setForm({ ...form, date: new Date() });
   
       try {
-        // Create a FormData object to send both text data and image file
+        // Create a FormData object to send both text data and imageUrl file
         const formData = new FormData();
         formData.append("title", form.title);
         formData.append("content", form.content);
         formData.append("author", form.author);
         formData.append("date", form.date.toISOString());
   
-        // Add the image file to the FormData if it's not null
-        if (form.image) {
-          formData.append("image", form.image);
+        // Add the imageUrl file to the FormData if it's not null
+        if (form.imageUrl) {
+          formData.append("imageUrl", form.imageUrl);
         }
+        console.log(formData);
   
-        await fetch("http://localhost:4000/posts/create-post", {
-          method: "POST",
-          body: formData, // Send the FormData object
-        });
+        axios.post("http://localhost:4000/posts/create-post", {...formData.entries()}, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
+          },
+        })
+        .then(response => {
+          console.log(response)
+        })
         
-        console.log(form);
-        window.location.href = "/posts";
+        // window.location.href = "/posts";
       } catch (err) {
         console.error(err);
       }
@@ -66,7 +72,8 @@ function CreatePostPage(): JSX.Element {
   
     const handleImageUpload = (event: any) => {
       const imageFile = event.target.files[0];
-      setForm({ ...form, image: imageFile });
+      console.log(imageFile)
+      setForm({ ...form, imageUrl: imageFile });
     };
 
     return (
@@ -90,9 +97,10 @@ function CreatePostPage(): JSX.Element {
                     <textarea onChange={handleInputChange} style={textareaStyles} className="text-sm w-full my-2 px-2 py-1 border border-light-border rounded-md outline-none focus:ring-1 focus:ring-green-500 resize-none" name="content" placeholder="eg. Right off the bat, there are clear differences between Go and Rust. Go has a stronger focus on building web APIs and small services that can scale endlessly, especially with the power of Goroutines. The latter is also possible with Rust, but things are much harder from a developer experience point of view..." required />
                 </div>
                 <input
+                    name="image"
                     type="file"
                     onChange={handleImageUpload}
-                    accept="image/*" // Restrict file type to images
+                    accept="imageUrl/*" // Restrict file type to images
                 />
                 <button type="submit" className="bg-light-theme-green text-white rounded-lg px-4 py-1.5 hover:bg-light-theme-green-active"> Create Post </button>
             </form>
