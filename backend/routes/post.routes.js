@@ -6,6 +6,7 @@ let { isValid_id } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require("../models/Vote.js")
+let userSchema = require("../models/User.js")
 
 // All posts start with /post
 
@@ -119,11 +120,17 @@ router.post("/edit-post/:id", async (req, res, next) => {
 
 router.post("/delete-post/:id", async (req, res, next) => {
   const postID = req.params.id
+  const userAuth = req.query.userID
 
   if (!await isValid_id(res, postID, postSchema)) return false
-
+  
   try {
+    let user = await userSchema.findOne({ userAuthID: userAuth })
     const post = await postSchema.findById(postID)
+
+    if (!user) throw new Error('User not found')
+
+    if (user.username !== post.author) throw new Error('Username does not match post author')
 
     const deletePromises = [
       postSchema.findByIdAndRemove(postID),
