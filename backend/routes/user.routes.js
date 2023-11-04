@@ -70,7 +70,7 @@ router.post("/create", async (req, res, next) => {
         admin: false,
         email: email,
         data: data.data,
-        avatar: ""
+        avatar: "https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account-thumbnail.jpg"
       })
     }
     
