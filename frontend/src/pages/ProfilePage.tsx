@@ -39,8 +39,12 @@ function ProfilePage(): JSX.Element {
         fetch(`http://localhost:4000/posts/user/${username}`)
             .then((res) => res.json())
             .then((data) => {
-                setPosts(data.data as Post[]);
-                console.log(data.data as Post[]);
+                // Fix dates from stupid mongo date to JS date object
+                const postsWithDates: Post[] = data.data.map((post: Post) => ({
+                    ...post,
+                    date: new Date(post.date)
+                }));
+                setPosts(postsWithDates as Post[]);
             })
             .catch((err) => console.error(err));
     }, []);
@@ -65,6 +69,7 @@ function ProfilePage(): JSX.Element {
                         </h1>
                     </div>
 
+                    {/* Render the users posts */}
                     <div className="divide-y divide-light-border border-y border-light-border">
                         {posts.map((post) => (
                             <div className="w-full h-fit">
@@ -76,6 +81,9 @@ function ProfilePage(): JSX.Element {
                                     >
                                         {post.title}
                                     </Link>
+                                    <span className="text-xs px-1 font-light text-black">
+                                        {post.date.toLocaleDateString()}
+                                    </span>
                                 </div>
                                 <p className="text-sm font-light px-8 pb-4 whitespace-nowrap overflow-x-hidden overflow-ellipsis">
                                     {post.content}
