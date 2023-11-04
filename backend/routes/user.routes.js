@@ -5,6 +5,19 @@ const userSchema = require('../models/User')
 
 const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43"
 
+// USED TO DELETE THE ENTIRE USER DATABASE
+// MUST BE RAN EVERY TIME THE SCHEMA CHANGES
+// DATABASE WAS WIPED AND HAS ONLY A TESTING USER I MADE 
+// THIS IS BECAUSE WORKING ON ADDING URLS TO THE SCHEMA AND IT WILL NOT WORK IF WE DO NOT RESET THE DATABASE
+router.get("/CLEAR", async (req, res, next) => {
+  try {
+    await userSchema.deleteMany().then(data => res.json(data));
+
+  } catch (err) {
+    next(err)
+  }
+});
+
 /* ------------------------------ Get all users ----------------------------- */
 
 router.get("/", async (req, res, next) => {
@@ -56,7 +69,8 @@ router.post("/create", async (req, res, next) => {
         userAuthID: data.user.ID, 
         admin: false,
         email: email,
-        data: data.data
+        data: data.data,
+        avatar: ""
       })
     }
     
@@ -132,7 +146,7 @@ router.get("/profile/:name", async (req, res, next) => {
         
         res.json({
           user,
-          message: `User ${user.name} found`, 
+          message: `User ${user.username} found`, 
         })
       }) 
   } catch(err) {

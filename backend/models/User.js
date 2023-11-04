@@ -13,6 +13,9 @@ let userSchema = new Schema({
     },
     admin: {
       type: Boolean
+    },
+    avatar: {
+      type: String
     }
 },{
     collection: 'users',
