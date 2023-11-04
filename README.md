@@ -1,7 +1,7 @@
 # API Routes
 
 ## Posts
-
+Routes begin with /posts
 <details>
 <summary>GET Requests</summary>
 
@@ -33,15 +33,19 @@
 
 - **Method**: POST
 - **Route**: `/edit-post/:id`
+- **Querys**:  `userID=userAuthID`
+- **Details**: if the userID is an admin or the userID is the same as the one that created the post
 
 ### Delete Post
 
 - **Method**: POST
 - **Route**: `/delete-post/:id`
+- **Querys**:  `userID=userAuthID`
+- **Details**: if the userID is an admin or the userID is the same as the one that created the post
 </details>
 
 ## Comments
-
+Routes begin with /comments
 <details>
 <summary>GET Requests</summary>
 
@@ -63,15 +67,19 @@
 
 - **Method**: POST
 - **Route**: `/edit/:comment_id`
+- **Querys**:  `userID=userAuthID`
+- **Details**: if the userID is an admin or the userID is the same as the one that created the comment
 
 ### Delete Comment
 
 - **Method**: POST
 - **Route**: `/delete/:comment_id`
+- **Querys**:  `userID=userAuthID`
+- **Details**: if the userID is an admin or the userID is the same as the one that created the comment
 </details>
 
 ## Votes
-
+Routes begin with /votes
 <details>
 <summary>GET Requests</summary>
 
@@ -96,7 +104,7 @@
 </details>
 
 ## Users
-
+Routes begin with /users
 <details>
 <summary>GET Requests</summary>
 
@@ -109,11 +117,6 @@
 
 - **Method**: GET
 - **Route**: `/profile/:name`
-
-### Check Admin Status
-
-- **Method**: GET
-- **Route**: `/is-admin/:username`
 </details>
 
 <details>
@@ -122,7 +125,7 @@
 ### Update users profile information
 
 - **Method**: POST
-- **Route**: `/update-profile/:name`
+- **Route**: `/update-profile/:userAuthID`
 
 ### Create User on App
 
@@ -132,7 +135,8 @@
 ### Make User Admin
 
 - **Method**: POST
-- **Route**: `/make-admin/:_id`
+- **Route**: `/make-admin/:_id?admin=boolean&userID=userAuthID`
+- **Querys**:  `userID=userAuthID` and `admin=Boolean` 
 
 ### Verify User
 
@@ -143,4 +147,7 @@
 
 - **Method**: POST
 - **Route**: `/delete/:userAuthID`
+- **Querys**:  `userID=userAuthID` 
+- **Details**: if the userID is an admin or the userID is the same as the one that created the account
+
 </details>
