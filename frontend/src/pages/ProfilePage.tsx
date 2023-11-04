@@ -54,8 +54,8 @@ function ProfilePage(): JSX.Element {
 
     // Determine if the user is viewing their own profile
     useEffect(() => {
-        const loggedUser: { username: string, id: string }  = JSON.parse(localStorage.getItem("user") || "");
-        setSelf(loggedUser.username === user?.username);
+        const loggedUser: { username: string, id: string }  = JSON.parse(localStorage.getItem("user") || "{}") || null;
+        loggedUser ? setSelf(loggedUser.username === user?.username) : setSelf(false);
     }, [posts, user]);
 
 
