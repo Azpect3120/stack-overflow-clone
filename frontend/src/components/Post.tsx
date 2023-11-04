@@ -21,7 +21,9 @@ function Post(props: Props): JSX.Element {
                     {props.title}
                 </Link>
                 <p className="text-sm text-light-theme-green">
-                    {props.author}{" "}
+                    <Link to={"/accounts/profile/" + props.author} title={"View " + props.author + "'s profile"}>
+                        {props.author} 
+                    </Link>
                     <span className="text-xs px-1 font-light text-black">
                         {props.date ? props.date.toLocaleDateString() : ""}
                     </span>

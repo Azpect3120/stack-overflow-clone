@@ -54,6 +54,7 @@ function ProfilePage(): JSX.Element {
             <Nav />
             <div className="w-full flex justify-center">
                 <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
+                    {/* Render the users profile information */}
                     <div className="w-full h-fit p-10 flex items-center">
                         <img
                             src={user ? user.avatar : "https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account-thumbnail.jpg"}
@@ -62,6 +63,9 @@ function ProfilePage(): JSX.Element {
                         />
                         <h1 className="text-2xl px-10">
                             {user ? user.username : "Loading"}
+                            <span className="text-xs">
+                                {user ? ` #${user._id}` : "Loading"}
+                            </span>
                             <br />
                             <span className="text-sm">
                                 {user ? user.email : "Loading"}
