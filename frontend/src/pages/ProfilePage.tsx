@@ -27,15 +27,17 @@ function ProfilePage(): JSX.Element {
     const params = useParams();
     const [user, setUser] = useState<User | null>(null);
     const [posts, setPosts] = useState<Post[]>([]);
+    const [isSelf, setSelf] = useState<boolean>(false);
 
-    // Get user from mongo-db
     useEffect(() => {
+        // Get user from mongo-db
         const username = params["username"];
         fetch(`http://localhost:4000/users/profile/${username}`)
             .then((res) => res.json())
             .then((data) => setUser(data.user as User))
             .catch((err) => console.error(err));
 
+        // Get users posts from mongo-db
         fetch(`http://localhost:4000/posts/user/${username}`)
             .then((res) => res.json())
             .then((data) => {
@@ -47,7 +49,15 @@ function ProfilePage(): JSX.Element {
                 setPosts(postsWithDates as Post[]);
             })
             .catch((err) => console.error(err));
+
     }, []);
+
+    // Determine if the user is viewing their own profile
+    useEffect(() => {
+        const loggedUser: { username: string, id: string }  = JSON.parse(localStorage.getItem("user") || "");
+        setSelf(loggedUser.username === user?.username);
+    }, [posts, user]);
+
 
     return (
         <div className="h-screen">
@@ -64,11 +74,11 @@ function ProfilePage(): JSX.Element {
                         <h1 className="text-2xl px-10">
                             {user ? user.username : "Loading"}
                             <span className="text-xs">
-                                {user ? ` #${user._id}` : "Loading"}
+                                {isSelf ? user ? ` #${user._id}` : " #Loading" : ""}
                             </span>
                             <br />
                             <span className="text-sm">
-                                {user ? user.email : "Loading"}
+                                {isSelf ? user ? user.email : "Loading" : ""}
                             </span>
                         </h1>
                     </div>
