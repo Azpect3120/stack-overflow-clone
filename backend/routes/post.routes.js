@@ -30,6 +30,25 @@ router.get("/", async (req, res, next) => {
   }
 })
 
+/* ------------------- Get all of a users posts ------------------ */
+router.get("/user/:username", async (req, res, next) => {
+  const username = req.params.username;
+  try {
+    await postSchema
+      .find({author: username})
+      .then(result => {
+        res.json({
+          data: result.reverse(),
+          message: `${username}'s posts successfully fetched`,
+          status: 200
+        })
+      })
+
+  } catch (err) {
+    next(err)
+  }
+});
+
 /* ------------------- Search posts with title and content ------------------ */
 
 router.get("/search", async (req, res, next) => {
