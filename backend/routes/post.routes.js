@@ -2,11 +2,13 @@ const express = require('express')
 const router = express.Router()
 const cloudinary = require('cloudinary')
 
-let { isValid_id } = require("./routeMethods.js")
+const { isValid_id, getUserWithID } = require("./routeMethods.js")
+
+/* ----------------------------- MongoDB schemas ---------------------------- */
+
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require("../models/Vote.js")
-let userSchema = require("../models/User.js")
 
 // All posts start with /post
 
@@ -62,7 +64,6 @@ router.get("/search", async (req, res, next) => {
 router.post("/create-post", async (req, res, next) => {
   try {
     const result = await postSchema.create(req.body);
-
     res.json({
       data: result,
       message: "Data successfully uploaded",
@@ -98,11 +99,24 @@ router.get("/get-post/:id", async (req, res, next) => {
 
 router.post("/edit-post/:id", async (req, res, next) => {
   const postID = req.params.id
+  const userID = req.query.userID
+
+  const user = await getUserWithID(res, userID)
 
   if (!await isValid_id(res, postID, postSchema)) return false
+
   try {
+    const post = await postSchema.findById(postID);
+    
+    if (user.username !== post.author && !user.admin) {
+      res.status(403).json({
+        message: `User ${user.username} not authorized to edit ${post.author}'s post`
+      })
+      return false
+    }
+
     await postSchema  
-    .findByIdAndUpdate(req.params.id, req.body)
+    .findByIdAndUpdate(postID, req.body)
     .then(result => {
       console.log(result)
       res.json({
@@ -120,17 +134,21 @@ router.post("/edit-post/:id", async (req, res, next) => {
 
 router.post("/delete-post/:id", async (req, res, next) => {
   const postID = req.params.id
-  const userAuth = req.query.userID
+  const userID = req.query.userID
+
+  const user = await getUserWithID(res, userID)
 
   if (!await isValid_id(res, postID, postSchema)) return false
   
   try {
-    let user = await userSchema.findOne({ userAuthID: userAuth })
     const post = await postSchema.findById(postID)
 
-    if (!user) throw new Error('User not found')
-
-    if (user.username !== post.author) throw new Error('Username does not match post author')
+    if (user.username !== post.author && !user.admin) {
+      res.status(403).json({
+        message: 'You do not have permission to delete this post'
+      })
+      return false
+    }
 
     const deletePromises = [
       postSchema.findByIdAndRemove(postID),
@@ -145,7 +163,7 @@ router.post("/delete-post/:id", async (req, res, next) => {
     
     await Promise.all(deletePromises)
 
-    res.json({
+    res.status(200).json({
       message: `All info related to post: ${postID} has been deleted`,
     })
   } catch (err) {

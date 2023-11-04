@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-let { isValid_id } = require("./routeMethods.js")
+let { isValid_id, getUserWithID } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 
@@ -59,10 +59,22 @@ router.post("/create/:id", async (req, res, next) => {
 
 router.post("/edit/:id", async (req, res, next) => {
   const commentID = req.params.id
+  const userID = req.query.userID
+
+  const user = getUserWithID(res, userID)
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
   try {
-  await commentSchema
+    const comment = await commentSchema.findById(commentID)
+
+    if (user.username !== comment.author && !user.admin) {
+      res.status(403).json({
+        message: 'You do not have permission to edit this comment'
+      })
+      return false
+    }
+
+    await commentSchema
     .findByIdAndUpdate(commentID, req.body)
     .then(() => {
       res.json({
@@ -79,10 +91,22 @@ router.post("/edit/:id", async (req, res, next) => {
 
 router.post("/delete/:id", async (req, res, next) => {
   const commentID = req.params.id
+  const userID = req.query.userID
+
+  const user = await getUserWithID(res, userID)
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
   
   try {
+    const comment = await commentSchema.findById(commentID)
+
+    if (user.username !== comment.author && !user.admin) {
+      res.status(403).json({
+        message: 'You do not have permission to delete this comment'
+      })
+      return false
+    }
+    
     await commentSchema
     .findByIdAndDelete(commentID)
     .then(() => {

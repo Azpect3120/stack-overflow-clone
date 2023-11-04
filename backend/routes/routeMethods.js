@@ -1,5 +1,5 @@
 const voteSchema = require('../models/Vote')
-
+const userSchema = require('../models/User')
 
 /* ------------------------------- Count votes ------------------------------ */
 
@@ -32,8 +32,7 @@ async function isDuplicate(req, res, id, author) {
 
       res.status(200).json({
         id: id,
-        message: `Updated ${author}'s vote on ${id}`,
-        status: 200
+        message: `Updated ${author}'s vote on ${id}`
       });
 
       return true
@@ -54,17 +53,33 @@ async function isDuplicate(req, res, id, author) {
 async function isValid_id(res, id, schema) {
   try {
     const post = await schema.findById(id);
-    if (!post) throw new Error(`Post with _id: ${id} not found`);
+    if (!post) throw new Error;
     return true;
   } 
   catch (error) {
-    res.json({
+    res.status(404).json({
       id: id,
-      message: error.message,
-      status: 404
+      message: `Post with _id: ${id} not found`
     });
     return false;
   }
 }
 
-module.exports = { countVotes, isValid_id, isDuplicate }
+/* ---------------------- Get a users auth with authID ---------------------- */
+
+async function getUserWithID(res, userID) {
+  try {
+    const user = await userSchema.findOne({ userAuthID: userID })
+    if (!user) throw new Error
+    return user
+  }
+  catch (error) {
+    res.status(404).json({
+      userID: userID,
+      message: `User with userAuthID: ${userID} not found`
+    });
+    return false;
+  }
+}
+
+module.exports = { countVotes, isValid_id, isDuplicate, getUserWithID }
