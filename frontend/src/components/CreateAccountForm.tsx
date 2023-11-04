@@ -59,6 +59,8 @@ function CreateAccountForm () {
 
                 if (data.status === 201) {
                     window.location.href = "/accounts/login";
+                } else if (response.status === 409) {
+                    setError(data.message)
                 } else {
                     // window.alert("Could not create user!");
                     setError(data.error);
