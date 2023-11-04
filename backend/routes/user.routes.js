@@ -172,6 +172,25 @@ router.get("/profile/:name", async (req, res, next) => {
   }
 })
 
+/* -------------------- Update users avatar -------------------- */
+router.post("/update-avatar", async (req, res, next) => {
+  const { username, url } = req.body;
+
+  try {
+    await userSchema
+      .findOneAndUpdate({ username }, { avatar: url })
+      .then(user => {
+        res.json({
+          user,
+          message: `${username}'s avatar was updated.`,
+          status: 201
+        });
+      });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /* -------------------- Update users profile information -------------------- */
 
 // ! WORK IN PROGRESS, UPDATING DOES NOT CURRENTLY CHANGE INFORMATION
