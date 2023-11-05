@@ -53,6 +53,10 @@ function PostPage(): JSX.Element {
                 const res = await fetch(
                     `http://localhost:4000/posts/get-post/${id}`
                 );
+                // ! FIX THIS TO SEND NO POST TO CLIENT, PAGE WILL LOAD INDEFINITELY
+                if (res.status === 404) {
+                    throw new Error("No post found");
+                }
                 const data = await res.json();
                 setPost(data.data as Post);
             } catch (err) {

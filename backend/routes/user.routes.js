@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const cloudinary = require('cloudinary')
 
 const { getUserWithID } = require("./routeMethods.js")
 
@@ -73,7 +74,7 @@ router.post("/create", async (req, res, next) => {
         admin: false,
         email: email,
         data: data.data,
-        avatar: "https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account-thumbnail.jpg"
+        avatar: ""
       })
     }
     
@@ -172,20 +173,28 @@ router.get("/profile/:name", async (req, res, next) => {
   }
 })
 
-/* -------------------- Update users avatar -------------------- */
+/* --------------------------- Update users avatar -------------------------- */
+
 router.post("/update-avatar", async (req, res, next) => {
   const { username, url } = req.body;
 
   try {
-    await userSchema
-      .findOneAndUpdate({ username }, { avatar: url })
-      .then(user => {
-        res.json({
-          user,
-          message: `${username}'s avatar was updated.`,
-          status: 201
-        });
-      });
+    const user = await userSchema.findOne({ username })
+
+    if (user.avatar) {
+      const publicId = user.avatar.split('/').pop().split('.')[0];
+      cloudinary.v2.api
+        .delete_resources([`Avatars/${publicId}`], 
+          { type: 'upload', resource_type: 'image' })
+        .then(console.log);
+    }
+
+    await userSchema.findOneAndUpdate({ username }, { avatar: url }, { new: true })
+
+    res.status(201).json({
+      message: `${username}'s avatar was updated.`,
+      status: 201
+    });
   } catch (err) {
     return next(err);
   }
@@ -193,20 +202,28 @@ router.post("/update-avatar", async (req, res, next) => {
 
 /* -------------------- Update users profile information -------------------- */
 
-// ! WORK IN PROGRESS, UPDATING DOES NOT CURRENTLY CHANGE INFORMATION
-// ! DOES NOT CURRENTLY NEED ADMIN ACCESS
-router.post("/update-profile/:userAuthID", async (req, res, next) => {
-  const userAuthID = req.params.userAuthID
+router.post("/update-profile/:name", async (req, res, next) => {
+  const name = req.params.name
+  const userID = req.query.userID
+
+  const user = await getUserWithID(res, userID)
 
   try {
+
+    if (name !== user.username && !user.admin) {
+      res.status(403).json({
+        message: `User ${name}, not able to edit ${user.username}'s profile`
+      })
+      return false
+    }
+
     await userSchema
-      .findOneAndUpdate({userAuthID: userAuthID}, req.body)
-      .then(user => {
-        if (!user) return res.status(404).send(`No user found with the username ${userAuthID}`)
+      .findOneAndUpdate({username: name}, req.body)
+      .then(result => {
+        if (!result) return res.status(404).send(`No user found with the username ${user.username}`)
         
         res.json({
-          user,
-          message: `User ${user.name} found`, 
+          message: `User ${result.username} found and updated`, 
           status: 200
         })
       }) 
@@ -230,6 +247,7 @@ router.post("/make-admin/:id", async (req, res, next) => {
     res.status(403).json({
       message: `User with id: ${userID} not allowed to promote users`
     })
+    return false
   }
 
   try {

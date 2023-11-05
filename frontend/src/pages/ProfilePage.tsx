@@ -30,7 +30,15 @@ function ProfilePage(): JSX.Element {
     const [isSelf, setSelf] = useState<boolean>(false);
     const [avatar, setAvatar] = useState<string>("");
 
+    const [userId, setUserId] = useState(null);
+
     useEffect(() => {
+        // Retrieve the user ID from localStorage and store it in state.
+        const user = localStorage.getItem('user');
+        if (user) {
+            const userId = JSON.parse(user).id;
+            setUserId(userId);
+        }
         // Get user from mongo-db
         const username = params["username"];
         fetch(`http://localhost:4000/users/profile/${username}`)
@@ -52,7 +60,7 @@ function ProfilePage(): JSX.Element {
             .catch((err) => console.error(err));
     }, []);
 
-    // Update the users avatar display everytime the user object is updated
+    // Update the users avatar display every time the user object is updated
     useEffect(() => setAvatar(user ? user.avatar : ""), [user]);
 
     // Determine if the user is viewing their own profile
@@ -69,7 +77,7 @@ function ProfilePage(): JSX.Element {
         console.log(imageFile);
         const formData = new FormData();
         formData.append("file", imageFile);
-        formData.append("upload_preset", "BlogImages");
+        formData.append("upload_preset", "Avatars");
 
         const response = await fetch(
             `https://api.cloudinary.com/v1_1/dhh4hjypo/image/upload`,
@@ -82,20 +90,20 @@ function ProfilePage(): JSX.Element {
         const data = await response.json();
 
         // Ensure success
-        if (data && user) {
+        if (response.status === 200) {
             const url = data.secure_url;
-            const username = user.username;
+            const username = user?.username;
 
             setAvatar(url);
 
             // Update avatar in the backend mongo-db
-            fetch("http://localhost:4000/users/update-avatar", {
+            fetch(`http://localhost:4000/users/update-avatar?userID=${userId}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, url }),
             });
         } else {
-            console.error("Image reponse or user does not exist.");
+            console.error("Image response or user does not exist.");
         }
     };
 
@@ -109,7 +117,7 @@ function ProfilePage(): JSX.Element {
                         <div className="flex flex-col w-1/6">
                             <img
                                 src={
-                                    user
+                                    user?.avatar
                                         ? avatar
                                         : "https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account-thumbnail.jpg"
                                 }

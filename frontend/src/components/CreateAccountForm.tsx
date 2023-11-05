@@ -44,6 +44,8 @@ function CreateAccountForm () {
             setError("Email is not proper format");
         } else if (!passwordRegex.test(password1)) {
             setError("Password is not strong enough. Please try again!");
+        } else if (username.charAt(username.length - 1) === " ") {
+            setError("Username cannot end with a space");
         } else {
             // Query database and ensure username and such is valid
             try {
