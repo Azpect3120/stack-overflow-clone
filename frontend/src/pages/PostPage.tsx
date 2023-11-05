@@ -20,6 +20,17 @@ function PostPage(): JSX.Element {
     const [post, setPost] = useState<Post | null>(null);
     const { id } = useParams();
 
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        // Retrieve the user ID from localStorage and store it in state.
+        const user = localStorage.getItem('user');
+        if (user) {
+            const userId = JSON.parse(user).id;
+            setUserId(userId);
+        }
+    }, []);
+
     const getVotes = async () => {
         try {
             const res = await fetch(`http://localhost:4000/votes/${id}`, {
@@ -79,7 +90,7 @@ function PostPage(): JSX.Element {
 
     const deletePost = async () => {
         try {
-            await fetch(`http://localhost:4000/posts/delete-post/${id}`, {
+            await fetch(`http://localhost:4000/posts/delete-post/${id}?userID=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

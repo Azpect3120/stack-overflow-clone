@@ -7,9 +7,11 @@ interface CommentObject {
 }
 
 interface Props {
-    postID: string;
+    postID: String;
     commentData: CommentObject;
-    commentID: string;
+    commentID: String;
+    userId: String;
+    onCancel: Function
 }
 
 function CreateComment(props: Props): JSX.Element {
@@ -22,6 +24,10 @@ function CreateComment(props: Props): JSX.Element {
         date: new Date(),
     });
 
+    const handleCancelClick = () => {
+        props.onCancel();
+    };
+
     const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
         event.preventDefault();
 
@@ -33,7 +39,7 @@ function CreateComment(props: Props): JSX.Element {
         setComment({ ...comment, date: new Date() });
 
         try {
-            await fetch(`http://localhost:4000/comments/edit/${props.commentID}`, {
+            await fetch(`http://localhost:4000/comments/edit/${props.commentID}?userID=${props.userId}`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,6 +68,13 @@ function CreateComment(props: Props): JSX.Element {
             placeholder="eg. Your opinion is objectively bad"
             required
         />
+        <button
+          type="button"
+          onClick={handleCancelClick} // Call the onCancel function when the "Cancel" button is clicked
+          className="bg-red-500 text-white rounded-lg px-2 py-1.5 hover:bg-red-600"
+        >
+          Cancel
+        </button>
         <button
             type="submit"
             className="bg-light-theme-green text-white rounded-lg px-2 py-1.5 hover:bg-light-theme-green-active"

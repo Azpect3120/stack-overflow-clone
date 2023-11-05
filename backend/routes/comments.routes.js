@@ -4,6 +4,7 @@ const router = express.Router()
 let { isValid_id, getUserWithID } = require("./routeMethods.js")
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
+let voteSchema = require("../models/Vote.js")
 
 // All comments start with /comments
 
@@ -61,24 +62,26 @@ router.post("/edit/:id", async (req, res, next) => {
   const commentID = req.params.id
   const userID = req.query.userID
 
-  const user = getUserWithID(res, userID)
+  const user = await getUserWithID(res, userID)
 
   if (!await isValid_id(res, commentID, commentSchema)) return false
+
   try {
     const comment = await commentSchema.findById(commentID)
 
     if (user.username !== comment.author && !user.admin) {
       res.status(403).json({
-        message: 'You do not have permission to edit this comment'
+        message: `User ${user.username} not authorized to edit ${comment.author}'s comment`
       })
       return false
     }
 
     await commentSchema
     .findByIdAndUpdate(commentID, req.body)
-    .then(() => {
+    .then(async content => {
       res.json({
         message: "Comment updated successfully",
+        comment: await content,
         status: 200,
       })
     })
@@ -106,14 +109,17 @@ router.post("/delete/:id", async (req, res, next) => {
       })
       return false
     }
+
+    const deletePromises = [
+      commentSchema.findByIdAndDelete(commentID),
+      voteSchema.deleteMany({ targetID: commentID }),
+    ]
     
-    await commentSchema
-    .findByIdAndDelete(commentID)
-    .then(() => {
-      res.json({
-        message: "Comment successfully Deleted",
-        status: 200,
-      })
+    await Promise.all(deletePromises)
+
+    res.json({
+      message: "Comment and votes successfully Deleted",
+      status: 200,
     })
   } catch(err) {
     return next(err)

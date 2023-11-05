@@ -145,7 +145,7 @@ router.post("/delete-post/:id", async (req, res, next) => {
 
     if (user.username !== post.author && !user.admin) {
       res.status(403).json({
-        message: 'You do not have permission to delete this post'
+        message: `User ${user.username} not authorized to delete ${post.author}'s post`
       })
       return false
     }

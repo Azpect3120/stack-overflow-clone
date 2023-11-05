@@ -22,10 +22,21 @@ function Comment(props: Props): JSX.Element {
     const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
     const [error, setError] = useState<String | null>(null);
 
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        // Retrieve the user ID from localStorage and store it in state.
+        const user = localStorage.getItem('user');
+        if (user) {
+            const userId = JSON.parse(user).id;
+            setUserId(userId);
+        }
+    }, []);
+
     const deleteComment = async () => {
         try {
             await fetch(
-                `http://localhost:4000/comments/delete/${props.comment._id}`,
+                `http://localhost:4000/comments/delete/${props.comment._id}?userID=${userId}`,
                 {
                     method: "POST",
                     headers: {
@@ -85,6 +96,15 @@ function Comment(props: Props): JSX.Element {
 
     };
 
+    const handleEditClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+    };
+    
+
     return (
         <div className="px-16 py-4 flex w-full items-center justify-center">
             {error && (
@@ -109,6 +129,8 @@ function Comment(props: Props): JSX.Element {
                             commentData={props.comment}
                             postID={props.comment.postID}
                             commentID={props.comment._id}
+                            userId={userId}
+                            onCancel={handleCancelEdit}
                         />
                     ) : (
                         <div>
@@ -118,7 +140,7 @@ function Comment(props: Props): JSX.Element {
                                     JSON.parse(localStorage.getItem("user")).username ? (
                                         <div>
                                             <button
-                                                onClick={() => setIsEditing(true)}
+                                                onClick={handleEditClick}
                                                 className="text-green-600 transition-all hover:bg-green-200 px-2 py-1 rounded-lg mr-2"
                                             >
                                                 Edit
