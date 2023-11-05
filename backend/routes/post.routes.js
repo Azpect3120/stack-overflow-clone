@@ -30,7 +30,8 @@ router.get("/", async (req, res, next) => {
   }
 })
 
-/* ------------------- Get all of a users posts ------------------ */
+/* ------------------------ Get all of a users posts ------------------------ */
+
 router.get("/user/:username", async (req, res, next) => {
   const username = req.params.username;
   try {
@@ -99,11 +100,12 @@ router.get("/get-post/:id", async (req, res, next) => {
   const postID = req.params.id
 
   if (!await isValid_id(res, postID, postSchema)) return false
+  
   try {
     await postSchema
-    .findById(req.params.id)
+    .findById(postID)
     .then((result) => {
-      res.json({
+      res.status(200).json({
         data: result,
         message: "Post successfully fetched",
         status: 200,
@@ -177,7 +179,10 @@ router.post("/delete-post/:id", async (req, res, next) => {
     
     if (post.imageUrl) {
       const publicId = post.imageUrl.split('/').pop().split('.')[0]
-      deletePromises.push(cloudinary.uploader.destroy(publicId))
+      await cloudinary.v2.api.delete_resources(
+        [`BlogImages/${publicId}`], 
+        { type: 'upload', resource_type: 'image' }
+      )
     }
     
     await Promise.all(deletePromises)

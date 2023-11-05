@@ -125,7 +125,14 @@ Routes begin with /users
 ### Update users profile information
 
 - **Method**: POST
-- **Route**: `/update-profile/:userAuthID`
+- **Route**: `/update-profile/:name`
+- **Querys**:  `userID=userAuthID` 
+
+### Update users profile image
+
+- **Method**: POST
+- **Route**: `/update-avatar`
+
 
 ### Create User on App
 
