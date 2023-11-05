@@ -77,6 +77,7 @@ function CreateAccountForm () {
                     <LoginError
                         message={error}
                         onClose={() => setError(null)}
+                        styles=""
                     />
                 )}
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">

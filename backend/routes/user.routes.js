@@ -72,8 +72,8 @@ router.post("/create", async (req, res, next) => {
         userAuthID: data.user.ID, 
         admin: false,
         email: email,
-        avatar: "https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account-thumbnail.jpg",
-        tags: []
+        data: data.data,
+        avatar: "https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account-thumbnail.jpg"
       })
     }
     
@@ -164,13 +164,32 @@ router.get("/profile/:name", async (req, res, next) => {
         
         res.json({
           user,
-          message: `User ${user.name} found`, 
+          message: `User ${user.username} found`, 
         })
       }) 
   } catch(err) {
     return next(err)
   }
 })
+
+/* -------------------- Update users avatar -------------------- */
+router.post("/update-avatar", async (req, res, next) => {
+  const { username, url } = req.body;
+
+  try {
+    await userSchema
+      .findOneAndUpdate({ username }, { avatar: url })
+      .then(user => {
+        res.json({
+          user,
+          message: `${username}'s avatar was updated.`,
+          status: 201
+        });
+      });
+  } catch (err) {
+    return next(err);
+  }
+});
 
 /* -------------------- Update users profile information -------------------- */
 

@@ -2,7 +2,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import CommentList from "../components/CommentList";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Voting from "../components/Voting";
 import LoginError from "../components/LoginError";
 
@@ -148,9 +148,9 @@ function PostPage(): JSX.Element {
                             {renderDeleteButton()}
                         </div>
                         <div className="flex items-center justify-between border-b border-light-border">
-                            <p className="p-20 py-5 text-md text-light-theme-green">
+                        <Link to={"/accounts/profile/" + post?.author} title={"View " + post?.author + "'s profile"} className="p-20 py-5 text-md text-light-theme-green">
                                 {post ? post.author : "Loading..."}
-                            </p>
+                            </Link>
                         </div>
                     </div>
 

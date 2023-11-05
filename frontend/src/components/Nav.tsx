@@ -21,6 +21,12 @@ function Navbar() {
         setSearch(query);
     };
 
+    const viewProfile = () => {
+        const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") || "") : { username: "", id: "" };
+        const url = `/accounts/profile/${user.username}`;
+        window.location.href = url;
+    };
+
     const logout = () => {
         localStorage.removeItem("user");
         window.location.href = "/accounts/login";
@@ -59,13 +65,19 @@ function Navbar() {
 
             <div className="px-4 text-md">
                 {user ? (
-                    <h1
-                        onClick={logout}
-                        title="Logout of account"
-                        className="hover:underline hover:underline-offset-2 transition-all"
-                    >
-                        {user.username}
-                    </h1>
+                    <div className="flex items-center">
+                        <h1
+                            onClick={viewProfile}
+                            title="View profile"
+                            className="hover:underline hover:underline-offset-2 transition-all"
+                        >
+                            {user.username}
+                        </h1>
+                        {/* className="text-sm mx-2 px-3 py-1.5 rounded-lg text-light-theme-green hover:bg-green-100 hover:text-light-theme-green-active" */}
+                        <button onClick={logout} className="mx-2 px-3 py-1.5 text-sm text-red-500 hover:bg-red-100 rounded-lg" title="Logout">
+                            Logout
+                        </button>
+                    </div>
                 ) : (
                     <Link
                         to="/accounts/login"
