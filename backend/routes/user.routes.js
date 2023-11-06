@@ -279,6 +279,14 @@ router.post("/update-profile/:name", async (req, res, next) => {
 
 router.post("/make-admin/:id", async (req, res, next) => {
   const id = req.params.id
+
+  if (req.query.admin === "") {
+    res.status(422).json({
+      message: `Admin query needs to be set`
+    })
+    return false
+  }
+  
   const admin = req.query.admin === "true"
   const userID = req.query.userID
 
@@ -298,11 +306,11 @@ router.post("/make-admin/:id", async (req, res, next) => {
       .findByIdAndUpdate(id, {admin: adminAccess})
       .then(user => {
         if (!user) return res.status(404).send(`No user found with the _id: ${id}`)
-    
+        let message =  adminAccess ? `User ${user.username} found and given admin` : `User ${user.username} found and revoked admin`
         res.json({
           name: user.username, 
           id: user._id, 
-          message: `User ${user.username} found and given admin`, 
+          message: message, 
           status: 200
         })
       }) 
