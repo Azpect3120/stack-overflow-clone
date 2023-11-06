@@ -1,6 +1,5 @@
 # ToDo
-
-- Make profile page
+- Make profile page not display if res.status === 404
 - Make images display on post
 - Add userID as a query to `make-admin` route
 - Make create post button disabled until image is uploaded into cloudinary (image doesent upload if done to fast)

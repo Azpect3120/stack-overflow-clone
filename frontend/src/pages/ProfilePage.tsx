@@ -33,31 +33,37 @@ function ProfilePage(): JSX.Element {
     const [userId, setUserId] = useState(null);
 
     useEffect(() => {
-        // Retrieve the user ID from localStorage and store it in state.
-        const user = localStorage.getItem('user');
-        if (user) {
-            const userId = JSON.parse(user).id;
-            setUserId(userId);
-        }
-        // Get user from mongo-db
-        const username = params["username"];
-        fetch(`http://localhost:4000/users/profile/${username}`)
-            .then((res) => res.json())
-            .then((data) => setUser(data.user as User))
-            .catch((err) => console.error(err));
+        const fetchData = async () => {
+            try {
+            // Retrieve the user ID from localStorage
+            const user = localStorage.getItem('user');
+            if (user) {
+                const userId = JSON.parse(user).id;
+                setUserId(userId);
 
-        // Get users posts from mongo-db
-        fetch(`http://localhost:4000/posts/user/${username}`)
-            .then((res) => res.json())
-            .then((data) => {
-                // Fix dates from stupid mongo date to JS date object
-                const postsWithDates: Post[] = data.data.map((post: Post) => ({
-                    ...post,
-                    date: new Date(post.date),
+                // Get user from mongo-db
+                const username = params["username"];
+                const userResponse = await fetch(`http://localhost:4000/users/profile/${username}?userID=${userId}`);
+                const userData = await userResponse.json();
+                setUser(userData.user as User);
+
+                // Get users' posts from mongo-db
+                const postsResponse = await fetch(`http://localhost:4000/posts/user/${username}`);
+                const postData = await postsResponse.json();
+
+                // Fix dates from MongoDB date to JS date object
+                const postsWithDates: Post[] = postData.data.map((post: Post) => ({
+                ...post,
+                date: new Date(post.date),
                 }));
                 setPosts(postsWithDates as Post[]);
-            })
-            .catch((err) => console.error(err));
+            }
+            } catch (err) {
+            console.error(err);
+            }
+        };
+
+        fetchData();
     }, []);
 
     // Update the users avatar display every time the user object is updated
@@ -138,6 +144,7 @@ function ProfilePage(): JSX.Element {
                         <h1 className="text-2xl px-10">
                             {user ? user.username : "Loading"}
                             <span className="text-xs">
+                                <br />
                                 {isSelf
                                     ? user
                                         ? ` #${user._id}`
