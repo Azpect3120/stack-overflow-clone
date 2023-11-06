@@ -24,7 +24,7 @@ router.get("/", async (req, res, next) => {
     await userSchema
       .find()
       .then(users => {
-        res.json({
+        res.status(200).json({
           users: users,
           message: `All ${user.length} users found`,
           userCount: user.length,
@@ -76,9 +76,12 @@ router.post("/create", async (req, res, next) => {
         data: data.data,
         avatar: ""
       })
+      res.status(201).json(data)
+      return true
     }
-    
-    res.json(data)
+    res.status(500).json({
+      message: `Something went wrong`
+    })
   } catch(err) {
     next(err)
   }
@@ -114,14 +117,13 @@ router.post("/delete/:userAuthID", async (req, res, next) => {
 
     if (data.status === 200) {
       await userSchema.deleteOne({userAuthID: userAuthID})
+      res.status(200).json(data)
     } else {
       res.status(500).json({
         data,
         message: `Something went wrong`
       })
     }
-
-    res.json(data)
   } catch(err) {
     next(err)
   }
@@ -155,18 +157,42 @@ router.post("/verify", async (req, res, next) => {
 
 router.get("/profile/:name", async (req, res, next) => {
   const name = req.params.name
+  const userID = req.query.userID
+  let request
+
+  if (userID == null) {
+    request = { username: "", id: "", admin: false} 
+  } else {
+    request = await getUserWithID(res, userID)
+  }
+
+    
+
   try {
 
     await userSchema
       .findOne({username: name})
       .then(user => {
-        if (!user) 
-        return res.status(404).send(`No user found with the username ${name}`)
+        if (!user) return res.status(404).send(`No user found with the username ${name}`)
         
-        res.json({
-          user,
-          message: `User ${user.username} found`, 
-        })
+        const { username, admin, avatar, createdAt } = user
+
+        if (request.username === name || request.admin) {
+          res.status(200).json({
+            user,
+            message: `User ${user.username} found`, 
+          })
+        } else {
+          res.status(200).json({
+            user: {
+              username,
+              admin, 
+              avatar, 
+              createdAt,
+            },
+            message: `User ${user.username} found`, 
+          })
+        }
       }) 
   } catch(err) {
     return next(err)

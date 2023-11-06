@@ -19,7 +19,7 @@ router.get("/", async (req, res, next) => {
     await postSchema
     .find()
     .then((result) => {
-      res.json({
+      res.status(200).json({
         data: result.reverse(),
         message: "Posts successfully fetched",
         status: 200,
@@ -38,7 +38,7 @@ router.get("/user/:username", async (req, res, next) => {
     await postSchema
       .find({author: username})
       .then(result => {
-        res.json({
+        res.status(200).json({
           data: result.reverse(),
           message: `${username}'s posts successfully fetched`,
           status: 200
@@ -67,7 +67,7 @@ router.get("/search", async (req, res, next) => {
       .then((result) => {
         let message = result.length == 0 ? `No posts found from search` : `Posts successfully fetched`
 
-        res.json({
+        res.status(200).json({
           data: result.reverse(),
           count: result.length,
           message: message,
@@ -84,7 +84,7 @@ router.get("/search", async (req, res, next) => {
 router.post("/create-post", async (req, res, next) => {
   try {
     const result = await postSchema.create(req.body);
-    res.json({
+    res.status(201).json({
       data: result,
       message: "Data successfully uploaded",
       status: 200,
