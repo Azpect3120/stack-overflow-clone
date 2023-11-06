@@ -63,7 +63,7 @@ function ProfilePage(): JSX.Element {
         };
 
         fetchData();
-    }, [params]);
+    }, []);
 
     // Update the users avatar display every time the user object is updated
     useEffect(() => setAvatar(user ? user.avatar : ""), [user]);

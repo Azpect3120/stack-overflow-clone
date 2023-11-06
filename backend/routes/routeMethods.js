@@ -1,3 +1,5 @@
+/* ----------------------------- MongoDB Schemas ---------------------------- */
+
 const voteSchema = require('../models/Vote')
 const userSchema = require('../models/User')
 
@@ -81,5 +83,7 @@ async function getUserWithID(res, userID) {
     return false;
   }
 }
+
+/* -------------------------------------------------------------------------- */
 
 module.exports = { countVotes, isValid_id, isDuplicate, getUserWithID }

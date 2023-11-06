@@ -10,7 +10,7 @@ let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require("../models/Vote.js")
 
-// All posts start with /post
+// All posts start with /posts
 
 /* ------------------------------ Get all posts ----------------------------- */
 
@@ -194,7 +194,6 @@ router.post("/delete-post/:id", async (req, res, next) => {
     return next(err)
   }
 })
-
 
 /* -------------------------------------------------------------------------- */
 

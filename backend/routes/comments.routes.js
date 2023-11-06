@@ -1,7 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
+
+
 let { isValid_id, getUserWithID } = require("./routeMethods.js")
+
+/* ----------------------------- MongoDB Schemas ---------------------------- */
+
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
 let voteSchema = require("../models/Vote.js")

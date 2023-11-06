@@ -112,11 +112,16 @@ Routes begin with /users
 
 - **Method**: GET
 - **Route**: `/`
+- **Querys**: `userID=userAuthID`
+- **Details**: userID is optional, if omitted will only return the names of all users
 
 ### Get Users Profile
 
 - **Method**: GET
 - **Route**: `/profile/:name`
+- **Querys**: `userID=userAuthID`
+- **Details**: userID is optional, if omitted or user is not an admin it will only return the username, avatar, createdAt and admin status of user.  If userID is admin or the owner of the account will return whole user object. 
+
 </details>
 
 <details>
@@ -126,8 +131,8 @@ Routes begin with /users
 
 - **Method**: POST
 - **Route**: `/update-profile/:name`
-- **Querys**:  `userID=userAuthID` 
-
+- **Querys**:  `userID=userAuthID`
+- **Details**: if the userID is the same as the account or the userID is an admin it will update with req.body
 ### Update users profile image
 
 - **Method**: POST
@@ -142,7 +147,7 @@ Routes begin with /users
 ### Make User Admin
 
 - **Method**: POST
-- **Route**: `/make-admin/:_id?admin=boolean&userID=userAuthID`
+- **Route**: `/make-admin/:user_id`
 - **Querys**:  `userID=userAuthID` and `admin=Boolean` 
 
 ### Verify User

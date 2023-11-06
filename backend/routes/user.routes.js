@@ -2,11 +2,15 @@ const express = require('express')
 const router = express.Router()
 const cloudinary = require('cloudinary')
 
+const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43"
+
 const { getUserWithID } = require("./routeMethods.js")
+
+/* ----------------------------- MongoDB Schemas ---------------------------- */
 
 const userSchema = require('../models/User')
 
-const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43"
+// All users start with /users
 
 /* ------------------------------ Get all users ----------------------------- */
 
@@ -304,5 +308,7 @@ router.post("/make-admin/:id", async (req, res, next) => {
     return next(err)
   }
 })
+
+/* -------------------------------------------------------------------------- */
 
 module.exports = router
