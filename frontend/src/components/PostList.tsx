@@ -23,7 +23,7 @@ function PostList (props: Props): JSX.Element {
             </div>
             
             {props.posts.map(post => (
-            <Post id={post._id} author={post.author} title={post.title} content={post.content} date={post.date} />
+                <Post id={post._id} key={post._id} author={post.author} title={post.title} content={post.content} date={post.date} />
             ))}
 
         </div>
