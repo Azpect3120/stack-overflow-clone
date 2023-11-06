@@ -160,13 +160,11 @@ router.get("/profile/:name", async (req, res, next) => {
   const userID = req.query.userID
   let request
 
-  if (userID == null) {
+  if (userID == "null") {
     request = { username: "", id: "", admin: false} 
   } else {
     request = await getUserWithID(res, userID)
   }
-
-    
 
   try {
 

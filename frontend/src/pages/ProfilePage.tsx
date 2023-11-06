@@ -35,12 +35,12 @@ function ProfilePage(): JSX.Element {
     useEffect(() => {
         const fetchData = async () => {
             try {
-            // Retrieve the user ID from localStorage
-            const user = localStorage.getItem('user');
-            if (user) {
-                const userId = JSON.parse(user).id;
-                setUserId(userId);
-
+                // Retrieve the user ID from localStorage
+                const user = localStorage.getItem('user');
+                if (user) {
+                    const userId = JSON.parse(user).id;
+                    setUserId(userId);
+                }
                 // Get user from mongo-db
                 const username = params["username"];
                 const userResponse = await fetch(`http://localhost:4000/users/profile/${username}?userID=${userId}`);
@@ -57,14 +57,13 @@ function ProfilePage(): JSX.Element {
                 date: new Date(post.date),
                 }));
                 setPosts(postsWithDates as Post[]);
-            }
             } catch (err) {
             console.error(err);
             }
         };
 
         fetchData();
-    }, []);
+    }, [params]);
 
     // Update the users avatar display every time the user object is updated
     useEffect(() => setAvatar(user ? user.avatar : ""), [user]);
