@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const cloudinary = require('cloudinary')
+const filter = require('leo-profanity');
+
 
 const { isValid_id, getUserWithID } = require("./routeMethods.js")
 
@@ -83,6 +85,8 @@ router.get("/search", async (req, res, next) => {
 
 router.post("/create-post", async (req, res, next) => {
   try {
+    req.body.content = filter.clean(req.body.content);
+    req.body.title = filter.clean(req.body.title);
     const result = await postSchema.create(req.body);
     res.status(201).json({
       data: result,
@@ -135,6 +139,9 @@ router.post("/edit-post/:id", async (req, res, next) => {
       })
       return false
     }
+
+    req.body.content = filter.clean(req.body.content);
+    req.body.title = filter.clean(req.body.title);
 
     await postSchema  
     .findByIdAndUpdate(postID, req.body)
