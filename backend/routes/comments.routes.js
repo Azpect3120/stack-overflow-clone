@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const filter = require('leo-profanity');
 
 
 
@@ -44,6 +45,8 @@ router.post("/create/:id", async (req, res, next) => {
 
   if (!await isValid_id(res, postID, postSchema)) return false
 
+  req.body.content = filter.clean(req.body.content);
+
   try {
     await commentSchema
     .create({
@@ -80,6 +83,8 @@ router.post("/edit/:id", async (req, res, next) => {
       })
       return false
     }
+
+    req.body.content = filter.clean(req.body.content);
 
     await commentSchema
     .findByIdAndUpdate(commentID, req.body)

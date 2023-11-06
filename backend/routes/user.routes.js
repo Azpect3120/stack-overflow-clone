@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const cloudinary = require('cloudinary')
+const filter = require('leo-profanity');
 
 const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43"
 
@@ -76,7 +77,7 @@ router.post("/create", async (req, res, next) => {
       },
       body: JSON.stringify({
         applicationId: appId, 
-        username: username, 
+        username: filter.clean(username), 
         password: password, 
         data: "{}"
       })
