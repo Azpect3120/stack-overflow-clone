@@ -147,15 +147,15 @@ function ProfilePage(): JSX.Element {
                             {user ? user.username : "Loading"}
                             <span className="text-xs">
                                 <br />
-                                {isSelf
-                                    ? user
+                                {user
+                                    ? user._id
                                         ? ` #${user._id}`
                                         : " #Loading"
                                     : ""}
                             </span>
                             <br />
                             <span className="text-sm">
-                                {isSelf ? (user ? user.email : "Loading") : ""}
+                                {user ? user.email : "Loading"}
                             </span>
                         </h1>
                     </div>

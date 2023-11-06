@@ -11,6 +11,7 @@ interface Post {
     content: string;
     author: string;
     date: Date;
+    imageUrl: string;
     _id: string;
 }
 
@@ -131,7 +132,6 @@ function PostPage(): JSX.Element {
             <div className="w-full flex justify-center">
                 <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
 
-
                     <div className="w-full">
                         <div className="flex items-center">
                             {error && (
@@ -157,6 +157,14 @@ function PostPage(): JSX.Element {
                             </Link>
                         </div>
                     </div>
+
+                    {
+                        post ? 
+                            post.imageUrl ? 
+                                <img src={post.imageUrl} className="w-full p-10" />        
+                            : ""
+                        : ""
+                    }
 
                     <p className="mx-20 my-10 text-lg whitespace-pre-line">
                         {post ? post.content : "Loading..."}
