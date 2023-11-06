@@ -197,6 +197,7 @@ router.get("/profile/:name", async (req, res, next) => {
             user,
             message: `User ${user.username} found`, 
           })
+          return
         } else {
           res.status(200).json({
             user: {
@@ -207,6 +208,7 @@ router.get("/profile/:name", async (req, res, next) => {
             },
             message: `User ${user.username} found`, 
           })
+          return
         }
       }) 
   } catch(err) {

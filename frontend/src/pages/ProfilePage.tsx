@@ -30,17 +30,20 @@ function ProfilePage(): JSX.Element {
     const [isSelf, setSelf] = useState<boolean>(false);
     const [avatar, setAvatar] = useState<string>("");
 
-    const [userId, setUserId] = useState(null);
+    const [userId, setUserId] = useState("");
+
+    useEffect(() => {
+        // Retrieve the user ID from localStorage
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user) {
+            const requestingID = user.id;
+            setUserId(requestingID);
+        }
+    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Retrieve the user ID from localStorage
-                const user = localStorage.getItem('user');
-                if (user) {
-                    const userId = JSON.parse(user).id;
-                    setUserId(userId);
-                }
                 // Get user from mongo-db
                 const username = params["username"];
                 const userResponse = await fetch(`http://localhost:4000/users/profile/${username}?userID=${userId}`);
@@ -63,7 +66,7 @@ function ProfilePage(): JSX.Element {
         };
 
         fetchData();
-    }, []);
+    }, [userId]);
 
     // Update the users avatar display every time the user object is updated
     useEffect(() => setAvatar(user ? user.avatar : ""), [user]);
