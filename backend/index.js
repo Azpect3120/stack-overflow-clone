@@ -3,6 +3,10 @@ const cloudinary = require('cloudinary').v2;
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const cors = require("cors")
+const http = require('http');
+const socketIo = require('socket.io');
+const app = express()
+
 require("dotenv").config()
 
 const postRoute = require('./routes/post.routes')
@@ -34,14 +38,18 @@ mongoose
     console.error('Error connecting to mongo', err.reason);
   })
 
-
-const app = express()
+/* ----------------------------- Add middleware ----------------------------- */
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
   extended : true
 }))
+
+/* -------------------- Add Socket.IO to the HTTP server -------------------- */
+
+const server = http.createServer(app);
+const io = socketIo(server);
 
 /* ------------------------------- App routes ------------------------------- */
 
@@ -59,7 +67,7 @@ app.use((err, req, res, next) => {
 
 /* ------------------------------ Start server ------------------------------ */
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is listening at http://localhost:${port}`);
 });
 
