@@ -193,7 +193,7 @@ function ProfilePage(): JSX.Element {
                         ))}
                     </div>
                     <div className="w-full flex flex-col items-center justify-center">
-                        <div className="flex justify-between items-center text-sm w-2/3 border-x border-t border-x-light-border">
+                        <div className="flex justify-between items-center text-sm w-full">
                             <div className="w-fit text-xs px-5 py-3 flex items-center">
                             <button
                                 onClick={() => setPage(page - 1)}
