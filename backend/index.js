@@ -11,8 +11,8 @@ require("dotenv").config()
 
 const postRoute = require('./routes/post.routes')
 const userRoute = require('./routes/user.routes')
-const commentRoute = require('./routes/comments.routes')
-const voteRoute = require('./routes/votes.routes')
+const commentRoute = require('./routes/comment.routes')
+const voteRoute = require('./routes/vote.routes')
 
 const port = process.env.port || 4000
 

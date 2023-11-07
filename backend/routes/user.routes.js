@@ -230,7 +230,6 @@ router.post("/update-avatar", async (req, res, next) => {
       cloudinary.v2.api
         .delete_resources([`Avatars/${publicId}`], 
           { type: 'upload', resource_type: 'image' })
-        .then(console.log);
     }
 
     await userSchema.findOneAndUpdate({ username }, { avatar: url }, { new: true })

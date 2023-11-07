@@ -27,6 +27,9 @@ function ProfilePage(): JSX.Element {
     const params = useParams();
     const [user, setUser] = useState<User | null>(null);
     const [posts, setPosts] = useState<Post[]>([]);
+    const [page, setPage] = useState<number>(1);
+    const [pageCount, setPageCount] = useState<number>(5);
+    const [size, setSize] = useState<number>(10)
     const [isSelf, setSelf] = useState<boolean>(false);
     const [avatar, setAvatar] = useState<string>("");
     const [userId, setUserId] = useState("");
@@ -52,8 +55,10 @@ function ProfilePage(): JSX.Element {
                 setUser(userData.user as User);
 
                 // Get users' posts from mongo-db
-                const postsResponse = await fetch(`http://localhost:4000/posts/user/${username}`);
+                const postsResponse = await fetch(`http://localhost:4000/posts/user/${username}?size=${size}&page=${page}`);
                 const postData = await postsResponse.json();
+
+                setPageCount(postData.totalPages)
 
                 // Fix dates from MongoDB date to JS date object
                 const postsWithDates: Post[] = postData.data.map((post: Post) => ({
@@ -67,7 +72,7 @@ function ProfilePage(): JSX.Element {
         };
 
         fetchData();
-    }, [userId]);
+    }, [userId, page, size]);
 
     // Update the users avatar display every time the user object is updated
     useEffect(() => setAvatar(user ? user.avatar : ""), [user]);
@@ -183,6 +188,45 @@ function ProfilePage(): JSX.Element {
                             </div>
                         ))}
                     </div>
+                    <div className="w-full flex flex-col items-center justify-center">
+
+      <div className="flex justify-between items-center text-sm w-2/3 border-x border-t border-x-light-border">
+        <div className="w-fit text-xs px-5 py-3 flex items-center">
+          <button
+            onClick={() => setPage(page - 1)}
+            disabled={page <= 1}
+            className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
+          >
+            Previous page
+          </button>
+
+          <p className="px-2">
+            {page}
+              /
+            {pageCount}
+          </p>
+
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page >= pageCount}
+            className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
+          >
+            Next page
+          </button>
+        </div>
+
+
+
+          <div className="text-xs px-5">
+            <button onClick={() => setSize(10)} className={size == 10 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 10 </button>
+            <button onClick={() => setSize(15)} className={size == 15 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 15 </button>
+            <button onClick={() => setSize(25)} className={size == 25 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 25 </button>
+          </div>
+        </div>
+
+        {/* /\ Buttons /\ */}
+
+      </div>
                 </div>
             </div>
             <Footer />

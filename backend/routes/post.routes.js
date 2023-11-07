@@ -18,17 +18,28 @@ let voteSchema = require("../models/Vote.js")
 
 router.get("/user/:username", async (req, res, next) => {
   const username = req.params.username;
-  try {
-    await postSchema
-      .find({author: username})
-      .then(result => {
-        res.status(200).json({
-          data: result.reverse(),
-          message: `${username}'s posts successfully fetched`,
-          status: 200
-        })
-      })
+  const page = parseInt(req.query.page) || 1
+  const PAGE_SIZE = parseInt(req.query.size)
 
+  try {
+    const totalResults = await postSchema.countDocuments({ author: username })
+
+    const results = await postSchema
+      .skip((page - 1) * PAGE_SIZE) // Calculate how many documents to skip based on the page number
+      .sort({ createdAt: -1 }) // Sort by _id (or any other field you want to sort by)
+      .limit(PAGE_SIZE) // Limit the number of documents per page
+
+    let message = results.length === 0 ? 'No posts found from search' : 'Search results successfully fetched';
+
+    res.status(200).json({
+      data: results,
+      count: results.length,
+      currentPage: page,
+      totalPosts: totalResults,
+      totalPages: Math.ceil(totalResults / PAGE_SIZE),
+      message: message,
+      status: 200,
+    })
   } catch (err) {
     next(err)
   }
@@ -141,7 +152,6 @@ router.post("/edit-post/:id", async (req, res, next) => {
     await postSchema  
     .findByIdAndUpdate(postID, req.body)
     .then(result => {
-      console.log(result)
       res.json({
         data: result, 
         message: "Data successfully updated",
