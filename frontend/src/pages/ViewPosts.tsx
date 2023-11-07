@@ -25,7 +25,7 @@ function ViewPosts(): JSX.Element {
   const [page, setPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(5);
   const [data, setData] = useState<Data>({ search: "", totalPages: pageCount, totalPosts: 0, message: ""})
-  const [size, setSize] = useState<number>(7)
+  const [size, setSize] = useState<number>(10)
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -54,52 +54,41 @@ function ViewPosts(): JSX.Element {
     <div>
       <Navbar />
 
-      <div className="w-full flex justify-center">
+      <div className="w-full flex flex-col items-center justify-center">
         <PostList posts={posts} data={data} />
 
-        {/* \/ Buttons \/ */}
-
-        <div className="flex flex-col items-center space-y-2">
-        {/* //! PLEASE STYLE THESE BUTTONS AND MOVE THEM */}
-          {/* Next Page Button */}
-          <button
-            onClick={() => setPage(page + 1)}
-            disabled={page >= pageCount}
-            className={`${
-              page >= pageCount ? "bg-gray-400" : "bg-green-500"
-            } p-2 rounded`}
-          >
-            Next page
-          </button>
-
-          {/* Previous Page Button */}
+      <div className="flex justify-between items-center text-sm w-2/3 border-x border-t border-x-light-border">
+        <div className="w-fit text-xs px-5 py-3 flex items-center">
           <button
             onClick={() => setPage(page - 1)}
             disabled={page <= 1}
-            className={`${
-              page <= 1 ? "bg-gray-400" : "bg-red-500"
-            } p-2 rounded`}
+            className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
           >
             Previous page
           </button>
 
-          <button onClick={() => setSize(15)}>
-            15 posts
-          </button>
-          <button onClick={() => setSize(10)}>
-            10 posts
-          </button>
-          <button onClick={() => setSize(5)}>
-            5 posts
-          </button>
+          <p className="px-2">
+            {page}
+              /
+            {pageCount}
+          </p>
 
-          <p>Total pages: {pageCount}</p>
-          <p>Current page: {page}</p>
-          <b>
-            PUT THESE BUTTONS WHERE YOU WANT THEM
-            <br />
-            located in ViewPosts.tsx
-          </b>
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page >= pageCount}
+            className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
+          >
+            Next page
+          </button>
+        </div>
+
+
+
+          <div className="text-xs px-5">
+            <button onClick={() => setSize(10)} className={size == 10 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 10 </button>
+            <button onClick={() => setSize(15)} className={size == 15 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 15 </button>
+            <button onClick={() => setSize(25)} className={size == 25 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 25 </button>
+          </div>
         </div>
 
         {/* /\ Buttons /\ */}
