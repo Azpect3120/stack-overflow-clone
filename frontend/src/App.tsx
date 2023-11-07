@@ -11,7 +11,7 @@ import ViewPosts from "./pages/ViewPosts";
 import PostPage from "./pages/PostPage";
 import ProfilePage from "./pages/ProfilePage";
 
-function App() {
+function App(): JSX.Element {
   return (
     <Router>
       <Routes>

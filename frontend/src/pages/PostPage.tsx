@@ -19,6 +19,7 @@ function PostPage(): JSX.Element {
     const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
     const [error, setError] = useState<string | null>(null);
     const [post, setPost] = useState<Post | null>(null);
+    const [editing, setEditing] = useState<boolean>(false);
     const { id } = useParams();
 
     const [userId, setUserId] = useState(null);
@@ -108,15 +109,51 @@ function PostPage(): JSX.Element {
         }
     };
 
+    const editPost = async () => {
+        try {
+            await fetch(`http://localhost:4000/posts/edit-post/${id}?userID=${userId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ content: "Content", title: "Title" })
+            });
+
+            setPost({...post, content: "Content", title: "Title" });
+
+        } catch (err) {
+            console.error(err);
+        }
+
+    };
+
     const renderDeleteButton = () => {
         if (post) {
             if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).username === post.author) {
                 return (
                     <button
                         onClick={deletePost}
-                        className="ml-auto m-20 mb-10 text-red-600 transition-all hover:bg-red-200 px-3 py-1.5 rounded-lg"
+                        className="text-red-600 transition-all hover:bg-red-200 text-sm px-2 py-1 my-1.5 rounded-lg"
                     >
                         Delete Post
+                    </button>
+                );
+            } else {
+                return "";
+            }
+        }
+        return "";
+    };
+
+    const renderEditButton = () => {
+        if (post) {
+            if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).username === post.author) {
+                return (
+                    <button
+                        onClick={() => {setEditing(!editing)}}
+                        className="text-green-600 transition-all hover:bg-green-200 text-sm px-2 py-1 rounded-lg"
+                    >
+                        Edit Post
                     </button>
                 );
             } else {
@@ -149,7 +186,10 @@ function PostPage(): JSX.Element {
                             <h1 className="p-20 px-10 text-4xl">
                                 {post ? post.title : "Loading..."}
                             </h1>
-                            {renderDeleteButton()}
+                            <div className="w-fit px-5 ml-auto flex flex-col items-center justify-center">
+                                {renderEditButton()}
+                                {renderDeleteButton()}
+                            </div>
                         </div>
                         <div className="flex items-center justify-between border-b border-light-border">
                         <Link to={"/accounts/profile/" + post?.author} title={"View " + post?.author + "'s profile"} className="p-20 py-5 text-md text-light-theme-green">
@@ -166,9 +206,16 @@ function PostPage(): JSX.Element {
                         : ""
                     }
 
-                    <p className="mx-20 my-10 text-lg whitespace-pre-line">
-                        {post ? post.content : "Loading..."}
-                    </p>
+                    {
+                        editing ? 
+                            <textarea className="mx-20 my-10 text-lg whitespace-pre-line">
+                                {post ? post.content : "Loading..."}
+                            </textarea>
+                        :
+                        <p className="mx-20 my-10 text-lg whitespace-pre-line">
+                            {post ? post.content : "Loading..."}
+                        </p>
+                    }
                     <CommentList id={post ? post._id : ""} />
                 </div>
             </div>
