@@ -16,7 +16,7 @@ function Post(props: Props): JSX.Element {
                 <Link
                     to={"/posts/" + props.id}
                     title="View post"
-                    className="text-xl text-light-theme-green hover:text-light-theme-green-active transition-all"
+                    className="text-xl text-light-theme-green hover:text-light-theme-green-active transition-all overflow-x-hidden overflow-ellipsis whitespace-nowrap"
                 >
                     {props.title}
                 </Link>
