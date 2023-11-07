@@ -26,7 +26,7 @@ function PostPage(): JSX.Element {
 
     useEffect(() => {
         // Retrieve the user ID from localStorage and store it in state.
-        const user = localStorage.getItem('user');
+        const user = localStorage.getItem("user");
         if (user) {
             const userId = JSON.parse(user).id;
             setUserId(userId);
@@ -96,12 +96,15 @@ function PostPage(): JSX.Element {
 
     const deletePost = async () => {
         try {
-            await fetch(`http://localhost:4000/posts/delete-post/${id}?userID=${userId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            await fetch(
+                `http://localhost:4000/posts/delete-post/${id}?userID=${userId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
             window.location.href = "/posts";
         } catch (err) {
@@ -111,25 +114,35 @@ function PostPage(): JSX.Element {
 
     const editPost = async () => {
         try {
-            await fetch(`http://localhost:4000/posts/edit-post/${id}?userID=${userId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ content: "Content", title: "Title" })
-            });
+            await fetch(
+                `http://localhost:4000/posts/edit-post/${id}?userID=${userId}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(post),
+                }
+            );
 
-            setPost({...post, content: "Content", title: "Title" });
-
+            setEditing(!editing);
         } catch (err) {
             console.error(err);
         }
+    };
 
+    const updateContent = (e: any) => {
+        const newContent: string = e.target.value || "";
+        setPost({ ...post, content: newContent });
     };
 
     const renderDeleteButton = () => {
         if (post) {
-            if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).username === post.author) {
+            if (
+                localStorage.getItem("user") &&
+                JSON.parse(localStorage.getItem("user")).username ===
+                    post.author
+            ) {
                 return (
                     <button
                         onClick={deletePost}
@@ -147,10 +160,16 @@ function PostPage(): JSX.Element {
 
     const renderEditButton = () => {
         if (post) {
-            if (localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).username === post.author) {
+            if (
+                localStorage.getItem("user") &&
+                JSON.parse(localStorage.getItem("user")).username ===
+                    post.author
+            ) {
                 return (
                     <button
-                        onClick={() => {setEditing(!editing)}}
+                        onClick={() => {
+                            setEditing(!editing);
+                        }}
                         className="text-green-600 transition-all hover:bg-green-200 text-sm px-2 py-1 rounded-lg"
                     >
                         Edit Post
@@ -168,7 +187,6 @@ function PostPage(): JSX.Element {
             <Nav />
             <div className="w-full flex justify-center">
                 <div className="h-fit min-h-screen w-2/3 border-x border-light-border">
-
                     <div className="w-full">
                         <div className="flex items-center">
                             {error && (
@@ -192,30 +210,47 @@ function PostPage(): JSX.Element {
                             </div>
                         </div>
                         <div className="flex items-center justify-between border-b border-light-border">
-                        <Link to={"/accounts/profile/" + post?.author} title={"View " + post?.author + "'s profile"} className="p-20 py-5 text-md text-light-theme-green">
+                            <Link
+                                to={"/accounts/profile/" + post?.author}
+                                title={"View " + post?.author + "'s profile"}
+                                className="p-20 py-5 text-md text-light-theme-green"
+                            >
                                 {post ? post.author : "Loading..."}
                             </Link>
                         </div>
                     </div>
 
-                    {
-                        post ? 
-                            post.imageUrl ? 
-                                <img src={post.imageUrl} className="w-full p-10" />        
-                            : ""
-                        : ""
-                    }
+                    {post ? (
+                        post.imageUrl ? (
+                            <img src={post.imageUrl} className="w-full p-10" />
+                        ) : (
+                            ""
+                        )
+                    ) : (
+                        ""
+                    )}
 
-                    {
-                        editing ? 
-                            <textarea className="mx-20 my-10 text-lg whitespace-pre-line">
+                    <div className="flex items-center justify-center w-full h-fit my-10">
+                        {editing ? (
+                            <>
+                                <textarea
+                                    onChange={updateContent}
+                                    className="p-2 border border-light-border h-[500px] w-5/6 resize-none text-lg whitespace-pre-line"
+                                    value={post ? post.content : "Loading"}
+                                />
+                                <button
+                                    onClick={editPost}
+                                    className="text-sm px-2 py-1 mx-2 rounded-lg text-green-600 hover:bg-green-200 transition-all"
+                                >
+                                    Edit Post
+                                </button>
+                            </>
+                        ) : (
+                            <p className="p-2 w-5/6 text-lg whitespace-pre-line">
                                 {post ? post.content : "Loading..."}
-                            </textarea>
-                        :
-                        <p className="mx-20 my-10 text-lg whitespace-pre-line">
-                            {post ? post.content : "Loading..."}
-                        </p>
-                    }
+                            </p>
+                        )}
+                    </div>
                     <CommentList id={post ? post._id : ""} />
                 </div>
             </div>
