@@ -29,6 +29,7 @@ function ProfilePage(): JSX.Element {
     const [posts, setPosts] = useState<Post[]>([]);
     const [page, setPage] = useState<number>(1);
     const [pageCount, setPageCount] = useState<number>(5);
+    const [totalPosts, setTotalPosts] = useState<number>(0);
     const [size, setSize] = useState<number>(10)
     const [isSelf, setSelf] = useState<boolean>(false);
     const [avatar, setAvatar] = useState<string>("");
@@ -59,6 +60,7 @@ function ProfilePage(): JSX.Element {
                 const postData = await postsResponse.json();
 
                 setPageCount(postData.totalPages)
+                setTotalPosts(postData.totalPosts)
 
                 // Fix dates from MongoDB date to JS date object
                 const postsWithDates: Post[] = postData.data.map((post: Post) => ({
@@ -167,6 +169,8 @@ function ProfilePage(): JSX.Element {
                     </div>
 
                     {/* Render the users posts */}
+                    <h1 className="text-2xl p-8"> {user?.username}'s Posts </h1>
+                    <p className="px-8 pb-4 font-light"> {totalPosts} Posts </p>
                     <div className="divide-y divide-light-border border-y border-light-border">
                         {posts.map((post) => (
                             <div className="w-full h-fit">
@@ -189,44 +193,41 @@ function ProfilePage(): JSX.Element {
                         ))}
                     </div>
                     <div className="w-full flex flex-col items-center justify-center">
+                        <div className="flex justify-between items-center text-sm w-2/3 border-x border-t border-x-light-border">
+                            <div className="w-fit text-xs px-5 py-3 flex items-center">
+                            <button
+                                onClick={() => setPage(page - 1)}
+                                disabled={page <= 1}
+                                className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
+                            >
+                                Previous page
+                            </button>
 
-      <div className="flex justify-between items-center text-sm w-2/3 border-x border-t border-x-light-border">
-        <div className="w-fit text-xs px-5 py-3 flex items-center">
-          <button
-            onClick={() => setPage(page - 1)}
-            disabled={page <= 1}
-            className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
-          >
-            Previous page
-          </button>
+                            <p className="px-2">
+                                {page}
+                                /
+                                {pageCount}
+                            </p>
 
-          <p className="px-2">
-            {page}
-              /
-            {pageCount}
-          </p>
+                            <button
+                                onClick={() => setPage(page + 1)}
+                                disabled={page >= pageCount}
+                                className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
+                            >
+                                Next page
+                            </button>
+                            </div>
 
-          <button
-            onClick={() => setPage(page + 1)}
-            disabled={page >= pageCount}
-            className="px-2 h-6 mx-1 border rounded-md border-light-border hover:bg-light-theme-green hover:text-white"
-          >
-            Next page
-          </button>
-        </div>
+                            <div className="text-xs px-5">
+                                <button onClick={() => setSize(10)} className={size == 10 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 10 </button>
+                                <button onClick={() => setSize(15)} className={size == 15 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 15 </button>
+                                <button onClick={() => setSize(25)} className={size == 25 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 25 </button>
+                            </div>
+                        </div>
 
+                        {/* /\ Buttons /\ */}
 
-
-          <div className="text-xs px-5">
-            <button onClick={() => setSize(10)} className={size == 10 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 10 </button>
-            <button onClick={() => setSize(15)} className={size == 15 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 15 </button>
-            <button onClick={() => setSize(25)} className={size == 25 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 25 </button>
-          </div>
-        </div>
-
-        {/* /\ Buttons /\ */}
-
-      </div>
+                    </div>
                 </div>
             </div>
             <Footer />

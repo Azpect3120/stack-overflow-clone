@@ -25,6 +25,7 @@ router.get("/user/:username", async (req, res, next) => {
     const totalResults = await postSchema.countDocuments({ author: username })
 
     const results = await postSchema
+      .find({ author: username })
       .skip((page - 1) * PAGE_SIZE) // Calculate how many documents to skip based on the page number
       .sort({ createdAt: -1 }) // Sort by _id (or any other field you want to sort by)
       .limit(PAGE_SIZE) // Limit the number of documents per page
