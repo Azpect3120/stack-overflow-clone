@@ -29,7 +29,6 @@ function ProfilePage(): JSX.Element {
     const [posts, setPosts] = useState<Post[]>([]);
     const [isSelf, setSelf] = useState<boolean>(false);
     const [avatar, setAvatar] = useState<string>("");
-
     const [userId, setUserId] = useState("");
 
     useEffect(() => {
@@ -47,6 +46,8 @@ function ProfilePage(): JSX.Element {
                 // Get user from mongo-db
                 const username = params["username"];
                 const userResponse = await fetch(`http://localhost:4000/users/profile/${username}?userID=${userId}`);
+                // Make 404 error page
+                if (userResponse.status === 404) console.log('No')
                 const userData = await userResponse.json();
                 setUser(userData.user as User);
 

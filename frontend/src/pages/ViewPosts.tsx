@@ -25,13 +25,15 @@ function ViewPosts(): JSX.Element {
   const [page, setPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number>(5);
   const [data, setData] = useState<Data>({ search: "", totalPages: pageCount, totalPosts: 0, message: ""})
+  const [size, setSize] = useState<number>(7)
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   let search = searchParams.get("search");
 
   useEffect(() => {
     search = search ? search : ""
-    const queryString = `?page=${page}&query=${search}`
+    const queryString = `?page=${page}&query=${search}&size=${size}`
 
     try {
       fetch(`http://localhost:4000/posts/search${queryString}`)
@@ -46,7 +48,7 @@ function ViewPosts(): JSX.Element {
     } catch (err) {
       console.error(err);
     }
-  }, [search, page])
+  }, [search, page, size])
 
   return (
     <div>
@@ -79,6 +81,16 @@ function ViewPosts(): JSX.Element {
             } p-2 rounded`}
           >
             Previous page
+          </button>
+
+          <button onClick={() => setSize(15)}>
+            15 posts
+          </button>
+          <button onClick={() => setSize(10)}>
+            10 posts
+          </button>
+          <button onClick={() => setSize(5)}>
+            5 posts
           </button>
 
           <p>Total pages: {pageCount}</p>

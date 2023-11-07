@@ -39,10 +39,9 @@ router.get("/user/:username", async (req, res, next) => {
 router.get("/search", async (req, res, next) => { 
   const page = parseInt(req.query.page) || 1
   let query = req.query.query
+  const PAGE_SIZE = parseInt(req.query.size)
   query = query === null ? "" : query
   const regex = new RegExp(query, 'i')
-
-  const PAGE_SIZE = 5 // Define the number of search results per page
   
   try {
     const searchQuery = {
