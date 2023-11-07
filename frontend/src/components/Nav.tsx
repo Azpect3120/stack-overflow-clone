@@ -1,5 +1,5 @@
 import "../assets/css/output.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface User {
@@ -11,9 +11,11 @@ function Navbar() {
     const ls = localStorage.getItem("user");
     const user: User = ls ? JSON.parse(ls) : null;
     const [search, setSearch] = useState<string>("");
+    const navigate = useNavigate();
 
-    const handleSubmit = () => {
-        window.location.href = `/posts?search=${search}`;
+    const handleSubmit = (event: any) => {
+        event.prevent.default()
+        navigate(`/posts/search=${search}`);
     };
 
     const handleInputChange = (event: any) => {
@@ -24,16 +26,16 @@ function Navbar() {
     const viewProfile = () => {
         const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") || "") : { username: "", id: "" };
         const url = `/accounts/profile/${user.username}`;
-        window.location.href = url;
+        navigate(url);
     };
 
     const logout = () => {
         localStorage.removeItem("user");
-        window.location.href = "/accounts/login";
+        navigate("/accounts/login")
     };
 
     const toHome = () => {
-        window.location.href = "/posts";
+        navigate("/posts")
     };
 
     return (
@@ -52,7 +54,7 @@ function Navbar() {
                 New Post
             </Link>
 
-            <form onSubmit={handleSubmit} className="w-1/2">
+            <form onSubmit={(event) => handleSubmit(event)} className="w-1/2">
                 <input
                     type="text"
                     name="search"

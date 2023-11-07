@@ -14,24 +14,6 @@ let voteSchema = require("../models/Vote.js")
 
 // All posts start with /posts
 
-/* ------------------------------ Get all posts ----------------------------- */
-
-router.get("/", async (req, res, next) => {
-  try {
-    await postSchema
-    .find()
-    .then((result) => {
-      res.status(200).json({
-        data: result.reverse(),
-        message: "Posts successfully fetched",
-        status: 200,
-      })
-    })
-  } catch(err) {
-    return next(err)
-  }
-})
-
 /* ------------------------ Get all of a users posts ------------------------ */
 
 router.get("/user/:username", async (req, res, next) => {
@@ -54,29 +36,43 @@ router.get("/user/:username", async (req, res, next) => {
 
 /* ------------------- Search posts with title and content ------------------ */
 
-router.get("/search", async (req, res, next) => {
+router.get("/search", async (req, res, next) => { 
+  const page = parseInt(req.query.page) || 1
   let query = req.query.query
+  query = query === null ? "" : query
   const regex = new RegExp(query, 'i')
-  try {
-    await postSchema
-      .find({
-        $or: [
-          { title: { $regex: regex } },
-          { content: { $regex: regex } },
-          { author: { $regex: regex } }
-        ]
-      })
-      .then((result) => {
-        let message = result.length == 0 ? `No posts found from search` : `Posts successfully fetched`
 
-        res.status(200).json({
-          data: result.reverse(),
-          count: result.length,
-          message: message,
-          status: 200,
-        })
-      })
-  } catch(err) {
+  const PAGE_SIZE = 5 // Define the number of search results per page
+  
+  try {
+    const searchQuery = {
+      $or: [
+        { title: { $regex: regex } },
+        { content: { $regex: regex } },
+        { author: { $regex: regex } }
+      ]
+    }
+
+    const totalResults = await postSchema.countDocuments(searchQuery)
+
+    const results = await postSchema
+      .find(searchQuery)
+      .skip((page - 1) * PAGE_SIZE) // Calculate how many documents to skip based on the page number
+      .sort({ createdAt: -1 }) // Sort by _id (or any other field you want to sort by)
+      .limit(PAGE_SIZE) // Limit the number of documents per page
+
+    let message = results.length === 0 ? 'No posts found from search' : 'Search results successfully fetched';
+
+    res.status(200).json({
+      data: results,
+      count: results.length,
+      currentPage: page,
+      totalPosts: totalResults,
+      totalPages: Math.ceil(totalResults / PAGE_SIZE),
+      message: message,
+      status: 200,
+    })
+  } catch (err) {
     return next(err)
   }
 })

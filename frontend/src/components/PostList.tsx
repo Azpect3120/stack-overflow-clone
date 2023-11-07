@@ -9,8 +9,16 @@ interface Post {
     _id: string;
 }
 
+interface Data {
+    search: string;
+    totalPages: number;
+    totalPosts: number;
+    message: string;
+}
+
 interface Props {
     posts: Post[];
+    data: Data
 }
 
 function PostList (props: Props): JSX.Element {
@@ -19,9 +27,10 @@ function PostList (props: Props): JSX.Element {
         <div className="h-fit min-h-screen w-2/3 border-x border-light-border divide-y divide-light-border">
             <div className="w-full">
                 <h1 className="text-2xl p-8"> All Posts </h1>
-                <p className="px-8 pb-4 font-light"> {props.posts.length} Posts </p>
+                <p className="px-8 pb-4 font-light"> {props.data.totalPosts} Posts </p>
             </div>
-            
+            {/* Message for the user */}
+            {props.data.totalPosts ? "" : props.data.message}
             {props.posts.map(post => (
                 <Post id={post._id} key={post._id} author={post.author} title={post.title} content={post.content} date={post.date} />
             ))}
