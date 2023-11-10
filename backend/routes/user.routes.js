@@ -189,7 +189,7 @@ router.get("/profile/:name", async (req, res, next) => {
     await userSchema
       .findOne({username: name})
       .then(user => {
-        if (!user) return res.status(404).send(`No user found with the username ${name}`)
+        if (!user) return res.status(404).json({ message: `No user found with the username ${name}` })
         
         const { username, admin, avatar, createdAt } = user
 

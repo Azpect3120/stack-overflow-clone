@@ -50,9 +50,14 @@ function ProfilePage(): JSX.Element {
                 // Get user from mongo-db
                 const username = params["username"];
                 const userResponse = await fetch(`http://localhost:4000/users/profile/${username}?userID=${userId}`);
-                // Make 404 error page
-                if (userResponse.status === 404) console.log('No')
                 const userData = await userResponse.json();
+                
+                // Make 404 error page
+                if (userResponse.status === 404) {
+                    console.log(userData.message)
+                    return false
+                }
+
                 setUser(userData.user as User);
 
                 // Get users' posts from mongo-db
@@ -69,7 +74,7 @@ function ProfilePage(): JSX.Element {
                 }));
                 setPosts(postsWithDates as Post[]);
             } catch (err) {
-            console.error(err);
+                console.error(err);
             }
         };
 
