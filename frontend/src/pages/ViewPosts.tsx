@@ -43,7 +43,6 @@ function ViewPosts(): JSX.Element {
           setPosts(data.data);
           setPageCount(data.totalPages);
           setData(data)
-          console.log(data)
         });
     } catch (err) {
       console.error(err);

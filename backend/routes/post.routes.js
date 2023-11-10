@@ -27,7 +27,7 @@ router.get("/user/:username", async (req, res, next) => {
     const results = await postSchema
       .find({ author: username })
       .skip((page - 1) * PAGE_SIZE) // Calculate how many documents to skip based on the page number
-      .sort({ createdAt: -1 }) // Sort by _id (or any other field you want to sort by)
+      .sort({ createdAt: -1 }) // Sort by date
       .limit(PAGE_SIZE) // Limit the number of documents per page
 
     let message = results.length === 0 ? 'No posts found from search' : 'Search results successfully fetched';
@@ -50,12 +50,13 @@ router.get("/user/:username", async (req, res, next) => {
 
 router.get("/search", async (req, res, next) => { 
   const page = parseInt(req.query.page) || 1
-  let query = req.query.query
   const PAGE_SIZE = parseInt(req.query.size)
+  
+  let query = req.query.query
   query = query === null ? "" : query
   const regex = new RegExp(query, 'i')
   
-  try {
+  try {PAGE_SIZE
     const searchQuery = {
       $or: [
         { title: { $regex: regex } },

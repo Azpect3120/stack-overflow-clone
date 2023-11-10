@@ -42,7 +42,6 @@ function PostPage(): JSX.Element {
                 },
             });
             const data = await res.json();
-            console.log(`All ${data.data.length} votes successfully fetched `);
             setVoteCount(data.voteCount); // Update voteCount state with the fetched data
         } catch (err) {
             console.error(err);
