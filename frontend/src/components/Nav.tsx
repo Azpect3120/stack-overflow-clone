@@ -75,7 +75,6 @@ function Navbar() {
                         >
                             {user.username}
                         </h1>
-                        {/* className="text-sm mx-2 px-3 py-1.5 rounded-lg text-light-theme-green hover:bg-green-100 hover:text-light-theme-green-active" */}
                         <button onClick={logout} className="mx-2 px-3 py-1.5 text-sm text-red-500 hover:bg-red-100 rounded-lg" title="Logout">
                             Logout
                         </button>
