@@ -10,6 +10,7 @@ import CreateAccountPage from "./pages/CreateAccountPage";
 import ViewPosts from "./pages/ViewPosts";
 import PostPage from "./pages/PostPage";
 import ProfilePage from "./pages/ProfilePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App(): JSX.Element {
   return (
@@ -22,6 +23,8 @@ function App(): JSX.Element {
         <Route path="/posts" element={<ViewPosts />} />
         <Route path="/posts/:id" element={<PostPage />} />
         <Route path="/posts/create" element={<CreatePostPage />} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );
