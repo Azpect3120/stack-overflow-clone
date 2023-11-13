@@ -4,15 +4,15 @@ import CreateComment from "./CreateComment";
 import { useEffect, useState } from "react";
 
 interface CommentObject {
-    author: String;
-    content: String;
+    author: string;
+    content: string;
     date: Date;
-    postID: String;
-    _id: String;
+    postID: string;
+    _id: string;
 }
 
 interface Props {
-    id: String;
+    id: string;
 }
 
 function CommentList(props: Props): JSX.Element {

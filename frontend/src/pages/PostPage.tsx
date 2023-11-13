@@ -10,7 +10,7 @@ interface Post {
     title: string;
     content: string;
     author: string;
-    date: Date;
+    date: Date | null;
     imageUrl: string;
     _id: string;
 }
@@ -18,7 +18,7 @@ interface Post {
 function PostPage(): JSX.Element {
     const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
     const [error, setError] = useState<string | null>(null);
-    const [post, setPost] = useState<Post | null>(null);
+    const [post, setPost] = useState<Post>({title: "", content: "", author: "", date: null, imageUrl: "", _id: ""});
     const [editing, setEditing] = useState<boolean>(false);
     const { id } = useParams();
 

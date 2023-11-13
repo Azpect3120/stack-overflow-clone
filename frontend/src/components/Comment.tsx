@@ -6,11 +6,11 @@ import LoginError from "./LoginError";
 import EditComment from "./EditComment"
 
 interface CommentObject {
-    author: String;
-    content: String;
+    author: string;
+    content: string;
     date: Date;
-    postID: String;
-    _id: String;
+    postID: string;
+    _id: string;
 }
 
 interface Props {
@@ -129,15 +129,15 @@ function Comment(props: Props): JSX.Element {
                             commentData={props.comment}
                             postID={props.comment.postID}
                             commentID={props.comment._id}
-                            userId={userId}
+                            userId={userId || ""}
                             onCancel={handleCancelEdit}
                         />
                     ) : (
                         <div>
                             {props.comment ? (
-                                JSON.parse(localStorage.getItem("user")) ? (
+                                           JSON.parse(localStorage.getItem("user") || "{username: ''}") ? (
                                     props.comment.author ===
-                                    JSON.parse(localStorage.getItem("user")).username ? (
+                                        JSON.parse(localStorage.getItem("user") || "{username: ''}").username ? (
                                         <div>
                                             <button
                                                 onClick={handleEditClick}
