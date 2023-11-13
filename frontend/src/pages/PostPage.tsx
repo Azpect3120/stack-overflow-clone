@@ -81,7 +81,7 @@ function PostPage(): JSX.Element {
                 },
                 body: JSON.stringify({
                     date: new Date(),
-                    author: JSON.parse(localStorage.getItem("user")).username,
+                    author: JSON.parse(localStorage.getItem("user") || "{username: ''}").username,
                     vote: isUpvote,
                 }),
             });
@@ -139,7 +139,7 @@ function PostPage(): JSX.Element {
         if (post) {
             if (
                 localStorage.getItem("user") &&
-                JSON.parse(localStorage.getItem("user")).username ===
+                JSON.parse(localStorage.getItem("user") || "{username: ''}").username ===
                     post.author
             ) {
                 return (
@@ -161,7 +161,7 @@ function PostPage(): JSX.Element {
         if (post) {
             if (
                 localStorage.getItem("user") &&
-                JSON.parse(localStorage.getItem("user")).username ===
+                JSON.parse(localStorage.getItem("user") || "{username: ''}").username ===
                     post.author
             ) {
                 return (
