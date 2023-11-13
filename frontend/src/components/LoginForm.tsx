@@ -50,6 +50,7 @@ function LoginForm() {
         <div className="h-full flex flex-col items-center justify-center px-6 py-12 lg:px-8">
             {error && (
                 <LoginError
+                    styles=""
                     message={error}
                     onClose={() => setError(null)}
                 />
