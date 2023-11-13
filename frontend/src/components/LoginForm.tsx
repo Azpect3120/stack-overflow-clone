@@ -50,13 +50,8 @@ function LoginForm() {
         <div className="h-full flex flex-col items-center justify-center px-6 py-12 lg:px-8">
             {error && (
                 <LoginError
-<<<<<<< HEAD
-                    styles="" 
-                    message="Failed to login"
-=======
                     styles=""
                     message={error}
->>>>>>> 495630d3ca480cf043b13c4a85df5600b643c823
                     onClose={() => setError(null)}
                 />
             )}
