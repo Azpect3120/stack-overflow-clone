@@ -22,8 +22,6 @@ function LoginForm() {
 
             const data = await response.json();
 
-            console.log(data);
-
             if (data.status === 200) {
                 localStorage.setItem(
                     "user",
@@ -100,6 +98,7 @@ function LoginForm() {
                     <div>
                         <button
                             type="submit"
+                            disabled={isDisabled}
                             className={isDisabled == true ? 
                             "flex w-full justify-center rounded-md bg-light-theme-green px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-light-theme-green hover:bg-light-theme-green-active transition-all opacity-25" : 
                             "flex w-full justify-center rounded-md bg-light-theme-green px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-light-theme-green hover:bg-light-theme-green-active transition-all"

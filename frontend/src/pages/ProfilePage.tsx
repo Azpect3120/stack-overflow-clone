@@ -160,11 +160,7 @@ function ProfilePage(): JSX.Element {
                             {user ? user.username : "Loading"}
                             <span className="text-xs">
                                 <br />
-                                {user
-                                    ? user._id
-                                        ? ` #${user._id}`
-                                        : " #Loading"
-                                    : ""}
+                                {user && user._id ? ` #${user._id}` : ""}
                             </span>
                             <br />
                             <span className="text-sm">
@@ -229,9 +225,6 @@ function ProfilePage(): JSX.Element {
                                 <button onClick={() => setSize(25)} className={size == 25 ? `w-6 h-6 mx-1 border rounded-md border-light-border bg-light-theme-green text-white` : `w-6 h-6 mx-1 border rounded-md border-light-border`}> 25 </button>
                             </div>
                         </div>
-
-                        {/* /\ Buttons /\ */}
-
                     </div>
                 </div>
             </div>

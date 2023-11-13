@@ -139,7 +139,7 @@ function PostPage(): JSX.Element {
         if (post) {
             if (
                 localStorage.getItem("user") &&
-                JSON.parse(localStorage.getItem("user")).username ===
+                JSON.parse(localStorage.getItem("user") || "{username: ''}").username ===
                     post.author
             ) {
                 return (
@@ -161,7 +161,7 @@ function PostPage(): JSX.Element {
         if (post) {
             if (
                 localStorage.getItem("user") &&
-                JSON.parse(localStorage.getItem("user")).username ===
+                JSON.parse(localStorage.getItem("user") || "{username: ''}").username ===
                     post.author
             ) {
                 return (
