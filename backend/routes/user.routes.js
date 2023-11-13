@@ -164,7 +164,7 @@ router.post("/verify", async (req, res, next) => {
       })
     })
     const data = await response.json()
-
+    // ! FIX HTTP STATUS CODE
     res.json(data)
   } catch(err) {
     next(err)
@@ -265,7 +265,7 @@ router.post("/update-profile/:name", async (req, res, next) => {
       .then(result => {
         if (!result) return res.status(404).send(`No user found with the username ${user.username}`)
         
-        res.json({
+        res.status(200).json({
           message: `User ${result.username} found and updated`, 
           status: 200
         })
@@ -307,7 +307,7 @@ router.post("/make-admin/:id", async (req, res, next) => {
       .then(user => {
         if (!user) return res.status(404).send(`No user found with the _id: ${id}`)
         let message =  adminAccess ? `User ${user.username} found and given admin` : `User ${user.username} found and revoked admin`
-        res.json({
+        res.status(200).json({
           name: user.username, 
           id: user._id, 
           message: message, 

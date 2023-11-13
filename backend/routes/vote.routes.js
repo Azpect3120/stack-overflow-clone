@@ -28,7 +28,7 @@ router.post("/post/:id", async (req, res, next) => {
       type: 'Post'
     })
     .then(() => {
-      res.json({
+      res.status(200).json({
         message: `Vote on post ${postID} successful`,
         status: 200,
       })
@@ -54,7 +54,7 @@ router.post("/comment/:id", async (req, res, next) => {
       type: 'Comment'
     })
     .then(() => {
-      res.json({
+      res.status(200).json({
         message: `Vote on comment ${commentID} successful`,
         status: 200,
       })
@@ -77,7 +77,7 @@ router.get("/:id", async (req, res, next) => {
     .then(async votes => {
       let message = votes.length == 0 ? `No votes found for id: ${targetID}` : `All votes successfully fetched`
 
-      res.json({
+      res.status(200).json({
         data: votes,
         voteCount: countVotes(votes),
         message: message,

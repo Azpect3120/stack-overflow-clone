@@ -27,7 +27,7 @@ router.get("/:id", async (req, res, next) => {
       postID: postID
     })
     .then((result) => {
-      res.json({
+      res.status(200).json({
         data: result.reverse(),
         message: "Comments successfully fetched",
         status: 200,
@@ -54,7 +54,7 @@ router.post("/create/:id", async (req, res, next) => {
       postID: postID
     })
     .then(() => {
-      res.json({
+      res.status(200).json({
         message: "Comment successfully created",
         status: 200,
       })
@@ -89,7 +89,7 @@ router.post("/edit/:id", async (req, res, next) => {
     await commentSchema
     .findByIdAndUpdate(commentID, req.body)
     .then(async content => {
-      res.json({
+      res.status(200).json({
         message: "Comment updated successfully",
         comment: await content,
         status: 200,
@@ -127,7 +127,7 @@ router.post("/delete/:id", async (req, res, next) => {
     
     await Promise.all(deletePromises)
 
-    res.json({
+    res.status(204).json({
       message: "Comment and votes successfully Deleted",
       status: 200,
     })

@@ -154,7 +154,7 @@ router.post("/edit-post/:id", async (req, res, next) => {
     await postSchema  
     .findByIdAndUpdate(postID, req.body)
     .then(result => {
-      res.json({
+      res.status(200).json({
         data: result, 
         message: "Data successfully updated",
         status: 200
