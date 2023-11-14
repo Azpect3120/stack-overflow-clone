@@ -14,7 +14,7 @@ const userRoute = require('./routes/user.routes')
 const commentRoute = require('./routes/comment.routes')
 const voteRoute = require('./routes/vote.routes')
 
-const port = process.env.port;
+const port = process.env.PORT;
 
 /* --------------------------- cloudinary Config ---------------------------- */
 
