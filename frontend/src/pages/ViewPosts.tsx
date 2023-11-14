@@ -36,7 +36,7 @@ function ViewPosts(): JSX.Element {
     const queryString = `?page=${page}&query=${search}&size=${size}`
 
     try {
-      fetch(`http://localhost:4000/posts/search${queryString}`)
+      fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/posts/search${queryString}`)
         .then((res) => res.json())
         .then((data) => {
           data.data.forEach((post: Post) => (post.date = new Date(post.date)));

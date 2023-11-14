@@ -30,7 +30,7 @@ function CreatePostPage(): JSX.Element {
       setForm({ ...form, date: new Date() });
   
       try {
-        await fetch("http://localhost:4000/posts/create-post", {
+        await fetch("https://stack-overflow-clone-server-3cyi.onrender.com/posts/create-post", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

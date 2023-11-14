@@ -35,7 +35,7 @@ function PostPage(): JSX.Element {
 
     const getVotes = async () => {
         try {
-            const res = await fetch(`http://localhost:4000/votes/${id}`, {
+            const res = await fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/votes/${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -52,7 +52,7 @@ function PostPage(): JSX.Element {
         const fetchData = async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:4000/posts/get-post/${id}`
+                    `https://stack-overflow-clone-server-3cyi.onrender.com/posts/get-post/${id}`
                 );
                 // ! FIX THIS TO SEND NO POST TO CLIENT, PAGE WILL LOAD INDEFINITELY
                 if (res.status === 404) {
@@ -74,7 +74,7 @@ function PostPage(): JSX.Element {
             return;
         }
         try {
-            let res = await fetch(`http://localhost:4000/votes/post/${id}`, {
+            let res = await fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/votes/post/${id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -96,7 +96,7 @@ function PostPage(): JSX.Element {
     const deletePost = async () => {
         try {
             await fetch(
-                `http://localhost:4000/posts/delete-post/${id}?userID=${userId}`,
+                `https://stack-overflow-clone-server-3cyi.onrender.com/posts/delete-post/${id}?userID=${userId}`,
                 {
                     method: "POST",
                     headers: {
@@ -114,7 +114,7 @@ function PostPage(): JSX.Element {
     const editPost = async () => {
         try {
             await fetch(
-                `http://localhost:4000/posts/edit-post/${id}?userID=${userId}`,
+                `https://stack-overflow-clone-server-3cyi.onrender.com/posts/edit-post/${id}?userID=${userId}`,
                 {
                     method: "POST",
                     headers: {
