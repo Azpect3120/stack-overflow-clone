@@ -27,7 +27,7 @@ function createComment (props: Props): JSX.Element {
         setComment({ ...comment, date: new Date() });
 
         try {
-            await fetch(`http://localhost:4000/comments/create/${props.postID}`, {
+            await fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/comments/create/${props.postID}`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

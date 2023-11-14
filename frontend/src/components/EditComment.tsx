@@ -39,7 +39,7 @@ function CreateComment(props: Props): JSX.Element {
         setComment({ ...comment, date: new Date() });
 
         try {
-            await fetch(`http://localhost:4000/comments/edit/${props.commentID}?userID=${props.userId}`, {
+            await fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/comments/edit/${props.commentID}?userID=${props.userId}`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

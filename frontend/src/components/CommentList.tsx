@@ -21,7 +21,7 @@ function CommentList(props: Props): JSX.Element {
     useEffect(() => {
         if (props.id) {
             try {
-                fetch(`http://localhost:4000/comments/${props.id}`)
+                fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/comments/${props.id}`)
                 .then(res => res.json())
                 .then(data => {
                     data.data.forEach((comment: CommentObject) => comment.date = new Date(comment.date));

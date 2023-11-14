@@ -49,7 +49,7 @@ function CreateAccountForm () {
         } else {
             // Query database and ensure username and such is valid
             try {
-                const response = await fetch("http://localhost:4000/users/create", {
+                const response = await fetch("https://stack-overflow-clone-server-3cyi.onrender.com/users/create", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

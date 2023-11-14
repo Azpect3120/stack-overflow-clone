@@ -12,7 +12,7 @@ function LoginForm() {
         event.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:4000/users/verify", {
+            const response = await fetch("https://stack-overflow-clone-server-3cyi.onrender.com/users/verify", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -36,7 +36,7 @@ function Comment(props: Props): JSX.Element {
     const deleteComment = async () => {
         try {
             await fetch(
-                `http://localhost:4000/comments/delete/${props.comment._id}?userID=${userId}`,
+                `https://stack-overflow-clone-server-3cyi.onrender.com/comments/delete/${props.comment._id}?userID=${userId}`,
                 {
                     method: "POST",
                     headers: {
@@ -52,7 +52,7 @@ function Comment(props: Props): JSX.Element {
 
     const getVotes = async () => {
         try {
-          const res = await fetch(`http://localhost:4000/votes/${props.comment._id}`, {
+          const res = await fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/votes/${props.comment._id}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -76,7 +76,7 @@ function Comment(props: Props): JSX.Element {
             return;
         }
         try {
-            let res = await fetch(`http://localhost:4000/votes/comment/${props.comment._id}`, {
+            let res = await fetch(`https://stack-overflow-clone-server-3cyi.onrender.com/votes/comment/${props.comment._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
