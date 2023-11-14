@@ -7,6 +7,7 @@ interface Post {
     author: string;
     date: Date;
     _id: string;
+    imageUrl: string;
 }
 
 interface Data {
@@ -32,7 +33,7 @@ function PostList (props: Props): JSX.Element {
             {/* Message for the user */}
             {props.data.totalPosts ? "" : props.data.message}
             {props.posts.map(post => (
-                <Post id={post._id} key={post._id} author={post.author} title={post.title} content={post.content} date={post.date} />
+                <Post id={post._id} key={post._id} author={post.author} title={post.title} content={post.content} date={post.date} imageUrl={post.imageUrl} />
             ))}
 
         </div>

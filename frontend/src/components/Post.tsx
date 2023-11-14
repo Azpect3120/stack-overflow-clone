@@ -7,6 +7,7 @@ interface Props {
     title: string;
     content: string;
     date: Date;
+    imageUrl: string;
 }
 
 function Post(props: Props): JSX.Element {
@@ -29,9 +30,14 @@ function Post(props: Props): JSX.Element {
                     </span>
                 </p>
             </div>
-            <p className="text-sm font-light px-8 pb-4 whitespace-nowrap overflow-x-hidden overflow-ellipsis">
-                {props.content}
-            </p>
+            <div className="flex w-full items-center justify-between px-8 pb-4">
+                <p className="text-sm font-light whitespace-nowrap overflow-x-hidden overflow-ellipsis">
+                    {props.content}
+                </p>
+                <p className="text-xs font-light shrink-0 w-fit">
+                    {props.imageUrl ? "1 attachment..." : ""}
+                </p>
+            </div>
         </div>
     );
 }

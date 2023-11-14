@@ -11,6 +11,7 @@ interface Post {
   author: string;
   date: Date;
   _id: string;
+  imageUrl: string;
 }
 
 interface Data {
