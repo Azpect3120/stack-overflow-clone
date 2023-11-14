@@ -21,6 +21,7 @@ interface Post {
     author: string;
     date: Date;
     _id: string;
+    imageUrl: string;
 }
 
 function ProfilePage(): JSX.Element {
@@ -187,9 +188,14 @@ function ProfilePage(): JSX.Element {
                                         {post.date.toLocaleDateString()}
                                     </span>
                                 </div>
-                                <p className="text-sm font-light px-8 pb-4 whitespace-nowrap overflow-x-hidden overflow-ellipsis">
-                                    {post.content}
-                                </p>
+                                <div className="flex w-full items-center justify-between px-8 pb-4">
+                                    <p className="text-sm font-light whitespace-nowrap overflow-x-hidden overflow-ellipsis">
+                                        {post.content}
+                                    </p>
+                                    <p className="text-xs font-light shrink-0 w-fit">
+                                        {post.imageUrl ? "1 attachment..." : ""}
+                                    </p>
+                                </div>
                             </div>
                         ))}
                     </div>
