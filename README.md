@@ -1,5 +1,6 @@
 # API Routes
 
+
 ## Posts
 Routes begin with /posts
 <details>
