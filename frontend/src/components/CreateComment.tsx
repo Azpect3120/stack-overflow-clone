@@ -3,6 +3,7 @@ import { SyntheticEvent, useState } from "react";
 interface CommentObject {
     author: String;
     content: String;
+    votes: Array<{ author: string, vote: boolean, date: Date}>;
     date: Date;
 }
 
@@ -14,7 +15,7 @@ function createComment (props: Props): JSX.Element {
     const ls = localStorage.getItem("user");
     const author: string = ls ? JSON.parse(ls).username : "";
 
-    let [comment, setComment] = useState<CommentObject>({author, content: "", date: new Date() });
+    let [comment, setComment] = useState<CommentObject>({author, content: "", votes: [],date: new Date() });
 
     const handleSubmit = async (event: SyntheticEvent): Promise<void> => {
         event.preventDefault();

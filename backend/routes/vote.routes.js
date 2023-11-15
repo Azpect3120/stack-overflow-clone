@@ -7,87 +7,99 @@ let { countVotes, isValid_id, isDuplicate } = require("./routeMethods.js")
 
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
-let voteSchema = require('../models/Vote.js')
 
 // All votes start with /votes
 
 /* ---------------------------- Post vote on post --------------------------- */
 
 router.post("/post/:id", async (req, res, next) => {
-  const postID = req.params.id
+  const postID = req.params.id;
+  const userID = req.query.userID
 
-  if (!await isValid_id(res, postID, postSchema)) return false
-  if (await isDuplicate(req, res, postID, req.body.author)) return true
-  
+  if (!await isValid_id(res, postID, postSchema)) return false;
+  if (await isDuplicate(req, res, postID, req.body.author)) return true;
+
+  const user = await getUserWithID(res, userID)
+
   try {
-
-    await voteSchema
-    .create({
-      ...req.body,
-      targetID: postID,
-      type: 'Post'
-    })
-    .then(() => {
-      res.status(200).json({
-        message: `Vote on post ${postID} successful`,
-        status: 200,
+    if (!user) {
+      res.status(403).json({
+        message: "You must be logged in to cast a vote",
+        status: 403
       })
-    })
-  } catch(err) {
-      return next(err)
+      return false
+    }
+
+    let { username, vote } = req.body
+
+    const newVote = {
+      author: username,
+      vote: vote,
+      date: new Date()
+    };
+
+    const updatedPost = await postSchema.findByIdAndUpdate(postID, {
+      $push: { votes: newVote }
+    }, { new: true }); 
+
+    const updatedVoteCount = countVotes(updatedPost.votes);
+
+    res.status(200).json({
+      message: `Vote on post ${postID} successful`,
+      voteCount: updatedVoteCount,
+      status: 200
+    });
+  } catch (err) {
+    return next(err);
   }
-})
+});
+
+
 
 /* -------------------------- Post vote on comment -------------------------- */
 
 router.post("/comment/:id", async (req, res, next) => {
-  const commentID = req.params.id
+  const commentID = req.params.id;
+  const userID = req.query.userID
 
-  if (!await isValid_id(res, commentID, commentSchema)) return false
-  if (await isDuplicate(req, res, commentID, req.body.author)) return true
-  
-  try {
-    await voteSchema
-    .create({
-      ...req.body,
-      targetID: commentID,
-      type: 'Comment'
-    })
-    .then(() => {
-      res.status(200).json({
-        message: `Vote on comment ${commentID} successful`,
-        status: 200,
-      })
-    })
-  } catch(err) {
-    return next(err)
-  }
-})
+  if (!await isValid_id(res, commentID, commentSchema)) return false;
+  if (await isDuplicate(req, res, commentID, req.body.author)) return true;
 
-/* --------------------- Get votes on post and comments --------------------- */
-
-router.get("/:id", async (req, res, next) => {
-  const targetID = req.params.id
+  const user = await getUserWithID(res, userID)
 
   try {
-    await voteSchema
-    .find({
-      targetID: targetID
-    })
-    .then(async votes => {
-      let message = votes.length == 0 ? `No votes found for id: ${targetID}` : `All votes successfully fetched`
-
-      res.status(200).json({
-        data: votes,
-        voteCount: countVotes(votes),
-        message: message,
-        status: 200,
+    if (!user) {
+      res.status(403).json({
+        message: "You must be logged in to cast a vote",
+        status: 403
       })
-    })
-  } catch(err) {
-    return next(err)
+      return false
+    }
+
+    let { username, vote } = req.body
+
+    const newVote = {
+      author: username,
+      vote: vote,
+      date: new Date()
+    };
+
+    const updatedComment = await commentSchema.findByIdAndUpdate(commentID, {
+      $push: { votes: newVote }
+    }, { new: true });
+
+    const updatedVoteCount = countVotes(updatedComment.votes);
+
+    res.status(200).json({
+      message: `Vote on comment ${commentID} successful`,
+      voteCount: updatedVoteCount,
+      status: 200
+    });
+  } catch (err) {
+    return next(err);
   }
-})
+});
+
 
 /* -------------------------------------------------------------------------- */
   

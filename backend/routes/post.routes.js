@@ -188,7 +188,7 @@ router.post("/delete-post/:id", async (req, res, next) => {
     const deletePromises = [
       postSchema.findByIdAndRemove(postID),
       commentSchema.deleteMany({ postID: postID }),
-      voteSchema.deleteMany({ targetID: postID }),
+      //! voteSchema.deleteMany({ targetID: postID }),
     ]
     
     if (post.imageUrl) {

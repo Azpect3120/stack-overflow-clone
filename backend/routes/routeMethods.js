@@ -1,6 +1,7 @@
 /* ----------------------------- MongoDB Schemas ---------------------------- */
 
-const voteSchema = require('../models/Vote')
+// const voteSchema = require('../models/Vote')
+const postSchema = require('../models/Post')
 const userSchema = require('../models/User')
 
 /* ------------------------------- Count votes ------------------------------ */
@@ -24,19 +25,29 @@ function countVotes(data) {
 
 async function isDuplicate(req, res, id, author) {
   try {
-    const existingVote = await voteSchema.findOne({
+    let { vote } = req.body
+
+    let newVote = {
       author: author,
-      targetID: id
+      vote: vote,
+      date: new Date.now()
+    }
+
+    const existingVoteInPost = await postSchema.findOne({
+      _id: id,
+      votes: { $elemMatch: author }
     });
 
-    if (existingVote) {
-      await voteSchema.findByIdAndUpdate(existingVote._id, req.body);
+    const existingVoteInComment = await commentSchema.findOne({
+      _id: id,
+      votes: { $elemMatch: author }
+    });
 
-      res.status(200).json({
-        id: id,
-        message: `Updated ${author}'s vote on ${id}`
-      });
-
+    if (existingVoteInPost) {
+      await postSchema.findByIdAndUpdate(id, newVote);
+      return true
+    } else if (existingVoteInComment) {
+      await commentSchema.findByIdAndUpdate(id, newVote);
       return true
     }
 

@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 interface Post {
   title: string;
   content: string;
+  votes: Array<{author: string, vote: boolean, date: Date}>;
   author: string;
   date: Date;
   _id: string;

@@ -50,7 +50,7 @@ function Comment(props: Props): JSX.Element {
         }
     };
 
-    const getVotes = async () => {
+    /* const getVotes = async () => {
         try {
           const res = await fetch(`http://localhost:4000/votes/${props.comment._id}`, {
             method: "GET",
@@ -64,19 +64,15 @@ function Comment(props: Props): JSX.Element {
         } catch (err) {
           console.error(err);
         }
-      };
-
-      useEffect(() => {
-          getVotes()
-      }, []);
+      }; */
 
     const addVote = async (isUpvote: boolean) => {
-        if (!localStorage.getItem("user")) {
+        if (!userId) {
             setError("You must be logged in to vote.");
             return;
         }
         try {
-            let res = await fetch(`http://localhost:4000/votes/comment/${props.comment._id}`, {
+            let res = await fetch(`http://localhost:4000/votes/comment/${props.comment._id}?userID=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -89,11 +85,10 @@ function Comment(props: Props): JSX.Element {
             });
             let data = await res.json()
             console.log(data.message)
+            setVoteCount(data.voteCount)
         } catch (err) {
             console.error(err);
         }
-        getVotes()
-
     };
 
     const handleEditClick = () => {
@@ -135,9 +130,9 @@ function Comment(props: Props): JSX.Element {
                     ) : (
                         <div>
                             {props.comment ? (
-                                JSON.parse(localStorage.getItem("user")) ? (
+                                JSON.parse(localStorage.getItem("user") || "") ? (
                                     props.comment.author ===
-                                    JSON.parse(localStorage.getItem("user")).username ? (
+                                    JSON.parse(localStorage.getItem("user") || "{username:''").username ? (
                                         <div>
                                             <button
                                                 onClick={handleEditClick}

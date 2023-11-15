@@ -8,6 +8,9 @@ let commentSchema = new Schema({
     content: {
       type: String
     },
+    votes: {
+      type: Array
+    },
     date: {
       type: Date
     },

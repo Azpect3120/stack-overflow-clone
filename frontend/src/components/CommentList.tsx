@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 interface CommentObject {
     author: String;
     content: String;
+    votes: Array<{ author: string, vote: boolean, date: Date}>;
     date: Date;
     postID: String;
     _id: String;
