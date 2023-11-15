@@ -33,21 +33,6 @@ function PostPage(): JSX.Element {
         }
     }, []);
 
-    /* const getVotes = async () => {
-        try {
-            const res = await fetch(`http://localhost:4000/votes/${id}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            const data = await res.json();
-            setVoteCount(data.voteCount); // Update voteCount state with the fetched data
-        } catch (err) {
-            console.error(err);
-        }
-    }; */
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -60,7 +45,7 @@ function PostPage(): JSX.Element {
                 }
                 const data = await res.json();
                 setPost(data.data as Post);
-                setVoteCount(data.data.voteCount)
+                setVoteCount(data.voteCount)
             } catch (err) {
                 console.error(err);
             }
@@ -82,7 +67,7 @@ function PostPage(): JSX.Element {
                 },
                 body: JSON.stringify({
                     date: new Date(),
-                    author: JSON.parse(localStorage.getItem("user")).username,
+                    author: JSON.parse(localStorage.getItem("user") || "{username: ''}").username,
                     vote: isUpvote,
                 }),
             });
@@ -162,7 +147,7 @@ function PostPage(): JSX.Element {
         if (post) {
             if (
                 localStorage.getItem("user") &&
-                JSON.parse(localStorage.getItem("user")).username ===
+                JSON.parse(localStorage.getItem("user") || "{username: ''}").username ===
                     post.author
             ) {
                 return (

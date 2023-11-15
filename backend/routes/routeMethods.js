@@ -2,6 +2,7 @@
 
 // const voteSchema = require('../models/Vote')
 const postSchema = require('../models/Post')
+const commentSchema = require('../models/Comment')
 const userSchema = require('../models/User')
 
 /* ------------------------------- Count votes ------------------------------ */
@@ -30,24 +31,29 @@ async function isDuplicate(req, res, id, author) {
     let newVote = {
       author: author,
       vote: vote,
-      date: new Date.now()
+      date: new Date()
     }
 
-    const existingVoteInPost = await postSchema.findOne({
-      _id: id,
-      votes: { $elemMatch: author }
-    });
+    const existingVoteInPost = await postSchema.findOneAndUpdate(
+      { _id: id, 'votes.author': author },
+      { $set: { 'votes.$': newVote } },
+      { new: true }
+    );    
 
-    const existingVoteInComment = await commentSchema.findOne({
-      _id: id,
-      votes: { $elemMatch: author }
-    });
+    const existingVoteInComment = await commentSchema.findOneAndUpdate(
+      { _id: id, 'votes.author': author },
+      { $set: { 'votes.$': newVote } },
+      { new: true }
+    );
 
-    if (existingVoteInPost) {
-      await postSchema.findByIdAndUpdate(id, newVote);
-      return true
-    } else if (existingVoteInComment) {
-      await commentSchema.findByIdAndUpdate(id, newVote);
+    const existingVote = existingVoteInPost || existingVoteInComment;
+
+    if (existingVote) {
+      res.status(200).json({
+        message: `Vote successfully updated`,
+        voteCount: countVotes(existingVote.votes),
+        status: 200
+      })
       return true
     }
 

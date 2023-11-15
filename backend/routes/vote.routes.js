@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-let { countVotes, isValid_id, isDuplicate } = require("./routeMethods.js")
+let { getUserWithID, countVotes, isValid_id, isDuplicate } = require("./routeMethods.js")
 
 /* ----------------------------- MongoDB Schemas ---------------------------- */
 
@@ -16,8 +16,10 @@ router.post("/post/:id", async (req, res, next) => {
   const postID = req.params.id;
   const userID = req.query.userID
 
+  const { author, vote } = req.body
+
   if (!await isValid_id(res, postID, postSchema)) return false;
-  if (await isDuplicate(req, res, postID, req.body.author)) return true;
+  if (await isDuplicate(req, res, postID, author)) return true;
 
   const user = await getUserWithID(res, userID)
 
@@ -30,10 +32,8 @@ router.post("/post/:id", async (req, res, next) => {
       return false
     }
 
-    let { username, vote } = req.body
-
     const newVote = {
-      author: username,
+      author: author,
       vote: vote,
       date: new Date()
     };
@@ -42,11 +42,9 @@ router.post("/post/:id", async (req, res, next) => {
       $push: { votes: newVote }
     }, { new: true }); 
 
-    const updatedVoteCount = countVotes(updatedPost.votes);
-
     res.status(200).json({
       message: `Vote on post ${postID} successful`,
-      voteCount: updatedVoteCount,
+      voteCount: countVotes(updatedPost.votes),
       status: 200
     });
   } catch (err) {
@@ -62,8 +60,10 @@ router.post("/comment/:id", async (req, res, next) => {
   const commentID = req.params.id;
   const userID = req.query.userID
 
+  let { author, vote } = req.body
+
   if (!await isValid_id(res, commentID, commentSchema)) return false;
-  if (await isDuplicate(req, res, commentID, req.body.author)) return true;
+  if (await isDuplicate(req, res, commentID, author)) return true;
 
   const user = await getUserWithID(res, userID)
 
@@ -76,10 +76,8 @@ router.post("/comment/:id", async (req, res, next) => {
       return false
     }
 
-    let { username, vote } = req.body
-
     const newVote = {
-      author: username,
+      author: author,
       vote: vote,
       date: new Date()
     };

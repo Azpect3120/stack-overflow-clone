@@ -4,13 +4,13 @@ const cloudinary = require('cloudinary')
 const filter = require('leo-profanity');
 
 
-const { isValid_id, getUserWithID } = require("./routeMethods.js")
+const { countVotes, isValid_id, getUserWithID } = require("./routeMethods.js")
 
 /* ----------------------------- MongoDB schemas ---------------------------- */
 
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
-let voteSchema = require("../models/Vote.js")
+// let voteSchema = require("../models/Vote.js")
 
 // All posts start with /posts
 
@@ -119,6 +119,7 @@ router.get("/get-post/:id", async (req, res, next) => {
     .then((result) => {
       res.status(200).json({
         data: result,
+        voteCount: countVotes(result.votes),
         message: "Post successfully fetched",
         status: 200,
       })
@@ -152,10 +153,11 @@ router.post("/edit-post/:id", async (req, res, next) => {
     req.body.title = filter.clean(req.body.title);
 
     await postSchema  
-    .findByIdAndUpdate(postID, req.body)
+    .findByIdAndUpdate(postID, req.body, { new: true })
     .then(result => {
       res.status(200).json({
         data: result, 
+        voteCount: countVotes(result.votes),
         message: "Data successfully updated",
         status: 200
       })
@@ -187,8 +189,7 @@ router.post("/delete-post/:id", async (req, res, next) => {
 
     const deletePromises = [
       postSchema.findByIdAndRemove(postID),
-      commentSchema.deleteMany({ postID: postID }),
-      //! voteSchema.deleteMany({ targetID: postID }),
+      commentSchema.deleteMany({ postID: postID })
     ]
     
     if (post.imageUrl) {
