@@ -82,15 +82,22 @@ router.post("/comment/:id", async (req, res, next) => {
       date: new Date()
     };
 
-    const updatedComment = await commentSchema.findByIdAndUpdate(commentID, {
-      $push: { votes: newVote }
-    }, { new: true });
+    const originalComment = await commentSchema.findById(commentID);
 
-    const updatedVoteCount = countVotes(updatedComment.votes);
+    const updatedComment = await commentSchema.findByIdAndUpdate(
+      commentID,
+      { 
+        $push: { votes: newVote },
+        $set: { voteCount: countVotes([...originalComment.votes, newVote]) }
+      },
+      { new: true }
+    );
+    
+    const voteCount = updatedComment.voteCount;
 
     res.status(200).json({
       message: `Vote on comment ${commentID} successful`,
-      voteCount: updatedVoteCount,
+      voteCount: voteCount,
       status: 200
     });
   } catch (err) {
