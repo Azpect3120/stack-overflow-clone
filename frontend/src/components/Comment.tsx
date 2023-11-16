@@ -7,10 +7,10 @@ import LoginError from "./LoginError";
 import EditComment from "./EditComment"
 
 interface CommentObject {
-    author: String;
+    author: string;
     content: String;
     date: Date;
-    voteCount: Number;
+    voteCount: number;
     postID: String;
     _id: String;
 }
@@ -21,10 +21,10 @@ interface Props {
 
 function Comment(props: Props): JSX.Element {
     const [isEditing, setIsEditing] = useState(false)
-    const [voteCount, setVoteCount] = useState<Number | null>(props.comment.voteCount); // Initialize voteCount stat
+    const [voteCount, setVoteCount] = useState<number | null>(props.comment.voteCount); // Initialize voteCount stat
     const [error, setError] = useState<String | null>(null);
 
-    const [userId, setUserId] = useState(null);
+    const [userId, setUserId] = useState<String | null>(null);
 
     useEffect(() => {
         // Retrieve the user ID from localStorage and store it in state.
