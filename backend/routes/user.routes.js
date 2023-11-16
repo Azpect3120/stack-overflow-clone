@@ -3,9 +3,10 @@ const router = express.Router()
 const cloudinary = require('cloudinary')
 const filter = require('leo-profanity');
 
-const appId = "501dfdb9-3711-4e49-a180-1ff480b22a43"
+const appId = '501dfdb9-3711-4e49-a180-1ff480b22a43'
 
-const { getUserWithID } = require("./routeMethods.js")
+const { getUserWithID } = require('./routeMethods.js')
+const availableTags = require('../data/tags')
 
 /* ----------------------------- MongoDB Schemas ---------------------------- */
 
@@ -20,13 +21,14 @@ router.get("/", async (req, res, next) => {
   let user
 
   if (!userID) {
-    user = {username: "newUser", id: "", admin: false}
+    user = { username: "newUser", id: "", admin: false }
   } else {
 
     user = await getUserWithID(res, userID)
   }
 
   try {
+
     await userSchema
       .find()
       .then(users => {
@@ -58,10 +60,11 @@ router.get("/", async (req, res, next) => {
 
 router.post("/create", async (req, res, next) => {
   const {username, password, email} = req.body
-  const regex = new RegExp(email, 'i')
+  const emailRegex = new RegExp(email, 'i')
 
   try {
-    const emailCheck = await userSchema.find({email: {$regex: regex}})
+
+    const emailCheck = await userSchema.find({ email: { $regex: emailRegex } })
 
     if (emailCheck.length > 0) {
       res.status(409).json({
@@ -101,51 +104,10 @@ router.post("/create", async (req, res, next) => {
       message: `Something went wrong`
     })
   } catch(err) {
-    next(err)
+    return next(err)
   }
 })
 
-/* ------------------------------- Delete user ------------------------------ */
-
-router.post("/delete/:userAuthID", async (req, res, next) => {
-  const userAuthID = req.params.userAuthID
-  const userID = req.query.userID
-
-  let user = await getUserWithID(res, userID)
-
-  if (!user.admin) {
-    res.status(403).json({
-      message: `User ${user.username} not allowed to delete users`
-    })
-  }
-
-  try {
-    const response = await fetch("http://54.176.161.136:8080/users/delete", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        applicationId: appId, 
-        ID: userAuthID
-      })
-    })
-
-    const data = await response.json()
-
-    if (data.status === 200) {
-      await userSchema.deleteOne({userAuthID: userAuthID})
-      res.status(200).json(data)
-    } else {
-      res.status(500).json({
-        data,
-        message: `Something went wrong`
-      })
-    }
-  } catch(err) {
-    next(err)
-  }
-})
 
 /* ----------------- Send username and password through form ---------------- */
 
@@ -167,7 +129,7 @@ router.post("/verify", async (req, res, next) => {
     // ! FIX HTTP STATUS CODE
     res.json(data)
   } catch(err) {
-    next(err)
+    return next(err)
   }
 })
 
@@ -223,6 +185,7 @@ router.post("/update-avatar", async (req, res, next) => {
   const { username, url } = req.body;
 
   try {
+
     const user = await userSchema.findOne({ username })
 
     if (user.avatar) {
@@ -232,7 +195,11 @@ router.post("/update-avatar", async (req, res, next) => {
           { type: 'upload', resource_type: 'image' })
     }
 
-    await userSchema.findOneAndUpdate({ username }, { avatar: url }, { new: true })
+    await userSchema.findOneAndUpdate(
+      { username }, 
+      { avatar: url }, 
+      { new: true }
+    )
 
     res.status(201).json({
       message: `${username}'s avatar was updated.`,
@@ -244,12 +211,14 @@ router.post("/update-avatar", async (req, res, next) => {
 });
 
 /* -------------------- Update users profile information -------------------- */
-
+// ! NOT FINISHED, UPDATING PROFILE NOT USEFUL
 router.post("/update-profile/:name", async (req, res, next) => {
   const name = req.params.name
   const userID = req.query.userID
 
   const user = await getUserWithID(res, userID)
+  // ! ADD MORE FIELDS LATER
+  const { email } = req.body
 
   try {
 
@@ -261,7 +230,11 @@ router.post("/update-profile/:name", async (req, res, next) => {
     }
 
     await userSchema
-      .findOneAndUpdate({username: name}, req.body)
+      .findOneAndUpdate(
+        {username: name}, 
+        {email: email},
+        {new: true}
+      )
       .then(result => {
         if (!result) return res.status(404).send(`No user found with the username ${user.username}`)
         
@@ -275,22 +248,134 @@ router.post("/update-profile/:name", async (req, res, next) => {
   }
 })
 
+/* ---------------------------- Add tags to user ---------------------------- */
+
+router.post("/add-tags/:name", async (req, res, next) => {
+  const name = req.params.name
+  const userID = req.query.userID
+  
+  const { newTags }= req.body
+
+  const user = await getUserWithID(res, userID)
+
+  try {
+
+    if (name !== user.username/*  && !user.admin */) {
+      res.status(403).json({
+        message: `User ${user.username}, not able to edit ${name}'s tags`
+      })
+      return false
+    }
+
+    const allTagsIncluded = newTags.every(tag => availableTags.includes(tag));
+
+    if (!allTagsIncluded && !user.admin) {
+      res.status(403).json({
+        message: `One of [${newTags}] is not an available tag for user ${user.username}`
+      })
+      return false
+    }
+
+    await userSchema
+      .findOneAndUpdate(
+        {username: name},
+        { $addToSet: { tags: { $each: newTags } } },
+        { new: true }
+      )
+      .then(result => {
+        if (!result) return res.status(404).send(`No user found with the username ${user.username}`)
+        
+        res.status(200).json({
+          message: `User ${result.username} found and updated`, 
+          added: newTags,
+          status: 200
+        })
+      }) 
+  } catch (err) {
+    return next(err)
+  }
+})
+
+/* -------------------------- Remove tags from user ------------------------- */
+
+router.post("/remove-tags/:name", async (req, res, next) => {
+  const name = req.params.name
+  const userID = req.query.userID
+  
+  const { removeTags }= req.body
+
+  const user = await getUserWithID(res, userID)
+
+  try {
+
+    if (name !== user.username && !user.admin) {
+      res.status(403).json({
+        message: `User ${user.username}, not able to edit ${name}'s tags`
+      })
+      return false
+    }
+
+    await userSchema
+      .findOne(
+        { username: name },
+        { new: false }
+      )
+      .then(result => {
+        if (!result) {
+          return res.status(404).send(`No user found with the username ${user.username}`);
+        }
+
+        // Check if all tags in removeTags exist in the tags array
+        const tagsExist = removeTags.every(tag => result.tags.includes(tag));
+
+        if (!tagsExist) {
+          res.status(400).json({
+            message: `Not have every tag in [${removeTags}] exist in the user's tags`,
+            removeTags: removeTags,
+            status: 400
+          });
+          return false
+        }
+
+        let updatedUser = userSchema.findOneAndUpdate(
+          { username: name },
+          { $pull: { tags: { $in: removeTags } } },
+          { new: true }
+        );
+
+        res.status(200).json({
+          message: `User ${updatedUser.username} found and updated`,
+          removed: removeTags,
+          userTags: updatedUser.tags,
+          status: 200
+        });
+
+        return true
+      })
+  } catch (err) {
+    return next(err)
+  }
+})
+
 /* ----------------------- Set an account to be admin ----------------------- */
 
 router.post("/make-admin/:id", async (req, res, next) => {
   const id = req.params.id
+  const userID = req.query.userID
 
-  if (req.query.admin === "") {
+  const adminMapping = {
+    "true": true,
+    "false": false,
+  };
+
+  const admin = adminMapping[req.query.admin] || null;
+  
+  if (req.query.admin === null) {
     res.status(422).json({
-      message: `Admin query needs to be set`
+      message: `Admin query needs to be set as boolean`
     })
     return false
   }
-  
-  const admin = req.query.admin === "true"
-  const userID = req.query.userID
-
-  const adminAccess = admin ? true : false
 
   let user = await getUserWithID(res, userID)
 
@@ -302,11 +387,16 @@ router.post("/make-admin/:id", async (req, res, next) => {
   }
 
   try {
+
     await userSchema
-      .findByIdAndUpdate(id, {admin: adminAccess})
+      .findByIdAndUpdate(
+        id, 
+        { admin: admin },
+        { new: true }
+      )
       .then(user => {
         if (!user) return res.status(404).send(`No user found with the _id: ${id}`)
-        let message =  adminAccess ? `User ${user.username} found and given admin` : `User ${user.username} found and revoked admin`
+        let message =  admin ? `User ${user.username} found and given admin` : `User ${user.username} found and revoked admin`
         res.status(200).json({
           name: user.username, 
           id: user._id, 
@@ -316,6 +406,48 @@ router.post("/make-admin/:id", async (req, res, next) => {
       }) 
   } catch (err) {
     return next(err)
+  }
+})
+
+/* ------------------------------- Delete user ------------------------------ */
+
+router.post("/delete/:userAuthID", async (req, res, next) => {
+  const userAuthID = req.params.userAuthID
+  const userID = req.query.userID
+
+  let user = await getUserWithID(res, userID)
+
+  if (!user.admin) {
+    res.status(403).json({
+      message: `User ${user.username} not allowed to delete users`
+    })
+  }
+
+  try {
+    const response = await fetch("http://54.176.161.136:8080/users/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        applicationId: appId, 
+        ID: userAuthID
+      })
+    })
+
+    const data = await response.json()
+
+    if (data.status === 200) {
+      await userSchema.deleteOne({userAuthID: userAuthID})
+      res.status(200).json(data)
+    } else {
+      res.status(500).json({
+        data,
+        message: `Something went wrong`
+      })
+    }
+  } catch(err) {
+    next(err)
   }
 })
 

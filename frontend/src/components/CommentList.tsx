@@ -7,6 +7,7 @@ interface CommentObject {
     author: String;
     content: String;
     votes: Array<{ author: string, vote: boolean, date: Date}>;
+    voteCount: Number;
     date: Date;
     postID: String;
     _id: String;

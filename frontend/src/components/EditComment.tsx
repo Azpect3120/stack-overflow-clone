@@ -10,7 +10,7 @@ interface Props {
     postID: String;
     commentData: CommentObject;
     commentID: String;
-    userId: String;
+    userId: String | null;
     onCancel: Function
 }
 

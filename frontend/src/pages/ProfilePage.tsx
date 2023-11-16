@@ -37,7 +37,7 @@ function ProfilePage(): JSX.Element {
 
     useEffect(() => {
         // Retrieve the user ID from localStorage
-        const user = JSON.parse(localStorage.getItem('user'));
+        const user = JSON.parse(localStorage.getItem('user') || "");
         if (user) {
             const requestingID = user.id;
             setUserId(requestingID);

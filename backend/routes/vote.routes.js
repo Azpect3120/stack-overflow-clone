@@ -13,41 +13,45 @@ let commentSchema = require("../models/Comment.js")
 /* ---------------------------- Post vote on post --------------------------- */
 
 router.post("/post/:id", async (req, res, next) => {
-  const postID = req.params.id;
+  const postID = req.params.id
   const userID = req.query.userID
 
   const { author, vote } = req.body
 
-  if (!await isValid_id(res, postID, postSchema)) return false;
-  if (await isDuplicate(req, res, postID, author)) return true;
+  if (!(await isValid_id(res, postID, postSchema))) return false
+  if (await isDuplicate(req, res, postID, author)) return true
 
-  const user = await getUserWithID(res, userID)
+  const user = await getUserWithID(res, userID);
 
   try {
     if (!user) {
       res.status(403).json({
         message: "You must be logged in to cast a vote",
-        status: 403
+        status: 403,
       })
       return false
     }
 
-    const newVote = {
-      author: author,
-      vote: vote,
-      date: new Date()
-    };
+    const newVote = { author, vote }
 
-    const updatedPost = await postSchema.findByIdAndUpdate(postID, {
-      $push: { votes: newVote }
-    }, { new: true }); 
+    const originalPost = await postSchema.findById(postID);
+
+    const updatedPost = await postSchema.findByIdAndUpdate(
+      postID,
+      { 
+        $push: { votes: newVote },
+        $set: { voteCount: countVotes([...originalPost.votes, newVote]) }
+      },
+      { new: true }
+    )
 
     res.status(200).json({
       message: `Vote on post ${postID} successful`,
-      voteCount: countVotes(updatedPost.votes),
-      status: 200
+      voteCount: updatedPost.voteCount,
+      status: 200,
     });
   } catch (err) {
+    console.error(err); // Log the error for debugging
     return next(err);
   }
 });
@@ -76,21 +80,24 @@ router.post("/comment/:id", async (req, res, next) => {
       return false
     }
 
-    const newVote = {
-      author: author,
-      vote: vote,
-      date: new Date()
-    };
+    const newVote = { author, vote }
 
-    const updatedComment = await commentSchema.findByIdAndUpdate(commentID, {
-      $push: { votes: newVote }
-    }, { new: true });
+    const originalComment = await commentSchema.findById(commentID);
 
-    const updatedVoteCount = countVotes(updatedComment.votes);
+    const updatedComment = await commentSchema.findByIdAndUpdate(
+      commentID,
+      { 
+        $push: { votes: newVote },
+        $set: { voteCount: countVotes([...originalComment.votes, newVote]) }
+      },
+      { new: true }
+    )
+    
+    const voteCount = updatedComment.voteCount;
 
     res.status(200).json({
       message: `Vote on comment ${commentID} successful`,
-      voteCount: updatedVoteCount,
+      voteCount: voteCount,
       status: 200
     });
   } catch (err) {

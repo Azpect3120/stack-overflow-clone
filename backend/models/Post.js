@@ -14,6 +14,9 @@ let postSchema = new Schema({
     votes: {
       type: Array
     },
+    voteCount: {
+      type: Number
+    },
     date: {
       type: Date
     },

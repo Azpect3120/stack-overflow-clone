@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const filter = require('leo-profanity');
-
-
+const filter = require('leo-profanity')
 
 let { countVotes, isValid_id, getUserWithID } = require("./routeMethods.js")
 
@@ -123,12 +121,7 @@ router.post("/delete/:id", async (req, res, next) => {
       return false
     }
 
-    const deletePromises = [
-      commentSchema.findByIdAndDelete(commentID),
-      voteSchema.deleteMany({ targetID: commentID }),
-    ]
-    
-    await Promise.all(deletePromises)
+    await commentSchema.findByIdAndDelete(commentID)
 
     res.status(204).json({
       message: "Comment and votes successfully Deleted",

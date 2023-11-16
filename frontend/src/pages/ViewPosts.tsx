@@ -55,7 +55,7 @@ function ViewPosts(): JSX.Element {
       <Navbar />
 
       <div className="w-full flex flex-col items-center justify-center">
-        <PostList posts={posts} data={data} />
+        <PostList posts={posts} data={data} search={search}/>
 
       <div className="flex justify-between items-center text-sm w-2/3 border-x border-t border-x-light-border">
         <div className="w-fit text-xs px-5 py-3 flex items-center">
