@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom'
 import "../assets/css/output.css";
 import Voting from "./Voting";
 import LoginError from "./LoginError";
@@ -9,6 +10,7 @@ interface CommentObject {
     author: String;
     content: String;
     date: Date;
+    voteCount: Number;
     postID: String;
     _id: String;
 }
@@ -19,7 +21,7 @@ interface Props {
 
 function Comment(props: Props): JSX.Element {
     const [isEditing, setIsEditing] = useState(false)
-    const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
+    const [voteCount, setVoteCount] = useState<Number | null>(props.comment.voteCount); // Initialize voteCount stat
     const [error, setError] = useState<String | null>(null);
 
     const [userId, setUserId] = useState(null);
@@ -49,22 +51,6 @@ function Comment(props: Props): JSX.Element {
             console.error(err);
         }
     };
-
-    /* const getVotes = async () => {
-        try {
-          const res = await fetch(`http://localhost:4000/votes/${props.comment._id}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const data = await res.json();
-          console.log(`All ${data.data.length} votes successfully fetched `)
-          setVoteCount(data.voteCount); // Update voteCount state with the fetched data
-        } catch (err) {
-          console.error(err);
-        }
-      }; */
 
     const addVote = async (isUpvote: boolean) => {
         if (!userId) {
@@ -113,12 +99,9 @@ function Comment(props: Props): JSX.Element {
             
             <div className="w-full">
                 <div className="flex text-xs items-center justify-between">
-                    <p className="text-light-theme-green py-2">
-                        {" "}
-                        {props.comment.author} (
-                        {props.comment.date.toLocaleDateString()}){" "}
-                    </p>
-
+                    <Link to={"/accounts/profile/" + props.comment.author} title={"View " + props.comment.author + "'s profile"}  className="text-light-theme-green py-2">
+                        {" "}{props.comment.author} ({props.comment.date.toLocaleDateString()}){" "}
+                    </Link>
                     {isEditing ? ( // Conditional rendering based on isEditing state
                         <EditComment
                             commentData={props.comment}
