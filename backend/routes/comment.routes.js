@@ -27,9 +27,11 @@ router.get("/:id", async (req, res, next) => {
     })
     .then((result) => {
       console.log(result)
+      let voteCount = !result.votes ? 0 : countVotes(result.votes)
+
       res.status(200).json({
         data: result.reverse(),
-        voteCount: countVotes(result.votes),
+        voteCount: voteCount,
         message: "Comments successfully fetched",
         status: 200,
       })
