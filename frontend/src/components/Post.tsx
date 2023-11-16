@@ -6,6 +6,7 @@ interface Props {
     author: string;
     title: string;
     content: string;
+    votes: Array<{ author: string, vote: boolean, date: Date }>;
     date: Date;
     imageUrl: string;
 }

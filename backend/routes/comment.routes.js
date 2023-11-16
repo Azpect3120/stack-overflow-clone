@@ -1,20 +1,17 @@
 const express = require('express')
 const router = express.Router()
-const filter = require('leo-profanity');
+const filter = require('leo-profanity')
 
-
-
-let { isValid_id, getUserWithID } = require("./routeMethods.js")
+let { countVotes, isValid_id, getUserWithID } = require("./routeMethods.js")
 
 /* ----------------------------- MongoDB Schemas ---------------------------- */
 
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
-let voteSchema = require("../models/Vote.js")
 
 // All comments start with /comments
 
-/* ---------------------------- Get all Comments ---------------------------- */
+/* ------------------------ Get all Comments on post ------------------------ */
 
 router.get("/:id", async (req, res, next) => {
   const postID = req.params.id
@@ -27,8 +24,12 @@ router.get("/:id", async (req, res, next) => {
       postID: postID
     })
     .then((result) => {
+      console.log(result)
+      let voteCount = !result.votes ? 0 : countVotes(result.votes)
+
       res.status(200).json({
         data: result.reverse(),
+        voteCount: voteCount,
         message: "Comments successfully fetched",
         status: 200,
       })
@@ -87,11 +88,11 @@ router.post("/edit/:id", async (req, res, next) => {
     req.body.content = filter.clean(req.body.content);
 
     await commentSchema
-    .findByIdAndUpdate(commentID, req.body)
-    .then(async content => {
+    .findByIdAndUpdate(commentID, req.body, { new: true })
+    .then(content => {
       res.status(200).json({
         message: "Comment updated successfully",
-        comment: await content,
+        comment: content,
         status: 200,
       })
     })
@@ -120,12 +121,7 @@ router.post("/delete/:id", async (req, res, next) => {
       return false
     }
 
-    const deletePromises = [
-      commentSchema.findByIdAndDelete(commentID),
-      voteSchema.deleteMany({ targetID: commentID }),
-    ]
-    
-    await Promise.all(deletePromises)
+    await commentSchema.findByIdAndDelete(commentID)
 
     res.status(204).json({
       message: "Comment and votes successfully Deleted",

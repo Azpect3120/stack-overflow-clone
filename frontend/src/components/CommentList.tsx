@@ -4,15 +4,17 @@ import CreateComment from "./CreateComment";
 import { useEffect, useState } from "react";
 
 interface CommentObject {
-    author: string;
-    content: string;
+    author: String;
+    content: String;
+    votes: Array<{ author: string, vote: boolean, date: Date}>;
+    voteCount: Number;
     date: Date;
     postID: string;
     _id: string;
 }
 
 interface Props {
-    id: string;
+    id: String;
 }
 
 function CommentList(props: Props): JSX.Element {

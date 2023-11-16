@@ -38,7 +38,7 @@ function ProfilePage(): JSX.Element {
 
     useEffect(() => {
         // Retrieve the user ID from localStorage
-        const user = JSON.parse(localStorage.getItem('user') || "{}");
+        const user = JSON.parse(localStorage.getItem('user') || "");
         if (user) {
             const requestingID = user.id;
             setUserId(requestingID);
@@ -161,7 +161,11 @@ function ProfilePage(): JSX.Element {
                             {user ? user.username : "Loading"}
                             <span className="text-xs">
                                 <br />
-                                {user && user._id ? ` #${user._id}` : ""}
+                                {user
+                                    ? user._id
+                                        ? ` #${user._id}`
+                                        : " #Loading"
+                                    : ""}
                             </span>
                             <br />
                             <span className="text-sm">

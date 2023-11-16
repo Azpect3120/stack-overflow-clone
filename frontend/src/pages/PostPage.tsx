@@ -33,21 +33,6 @@ function PostPage(): JSX.Element {
         }
     }, []);
 
-    const getVotes = async () => {
-        try {
-            const res = await fetch(`http://localhost:4000/votes/${id}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            const data = await res.json();
-            setVoteCount(data.voteCount); // Update voteCount state with the fetched data
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -60,21 +45,22 @@ function PostPage(): JSX.Element {
                 }
                 const data = await res.json();
                 setPost(data.data as Post);
+                setVoteCount(data.voteCount)
             } catch (err) {
                 console.error(err);
             }
         };
         fetchData(); // Call the async function inside the effect
-        getVotes();
     }, []);
 
     const addVote = async (isUpvote: boolean) => {
-        if (!localStorage.getItem("user")) {
+        if (!userId) {
             setError("You must be signed in to vote.");
             return;
         }
+
         try {
-            let res = await fetch(`http://localhost:4000/votes/post/${id}`, {
+            let res = await fetch(`http://localhost:4000/votes/post/${id}?userID=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -87,10 +73,10 @@ function PostPage(): JSX.Element {
             });
             let data = await res.json();
             console.log(data.message);
+            setVoteCount(data.voteCount)
         } catch (err) {
             console.error(err);
         }
-        getVotes();
     };
 
     const deletePost = async () => {

@@ -1,13 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-let { countVotes, isValid_id, isDuplicate } = require("./routeMethods.js")
+let { getUserWithID, countVotes, isValid_id, isDuplicate } = require("./routeMethods.js")
 
 /* ----------------------------- MongoDB Schemas ---------------------------- */
 
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
-let voteSchema = require('../models/Vote.js')
 
 // All votes start with /votes
 
@@ -15,79 +14,97 @@ let voteSchema = require('../models/Vote.js')
 
 router.post("/post/:id", async (req, res, next) => {
   const postID = req.params.id
+  const userID = req.query.userID
 
-  if (!await isValid_id(res, postID, postSchema)) return false
-  if (await isDuplicate(req, res, postID, req.body.author)) return true
-  
+  const { author, vote } = req.body
+
+  if (!(await isValid_id(res, postID, postSchema))) return false
+  if (await isDuplicate(req, res, postID, author)) return true
+
+  const user = await getUserWithID(res, userID);
+
   try {
-
-    await voteSchema
-    .create({
-      ...req.body,
-      targetID: postID,
-      type: 'Post'
-    })
-    .then(() => {
-      res.status(200).json({
-        message: `Vote on post ${postID} successful`,
-        status: 200,
+    if (!user) {
+      res.status(403).json({
+        message: "You must be logged in to cast a vote",
+        status: 403,
       })
-    })
-  } catch(err) {
-      return next(err)
+      return false
+    }
+
+    const newVote = { author, vote }
+
+    const originalPost = await postSchema.findById(postID);
+
+    const updatedPost = await postSchema.findByIdAndUpdate(
+      postID,
+      { 
+        $push: { votes: newVote },
+        $set: { voteCount: countVotes([...originalPost.votes, newVote]) }
+      },
+      { new: true }
+    )
+
+    res.status(200).json({
+      message: `Vote on post ${postID} successful`,
+      voteCount: updatedPost.voteCount,
+      status: 200,
+    });
+  } catch (err) {
+    console.error(err); // Log the error for debugging
+    return next(err);
   }
-})
+});
+
+
 
 /* -------------------------- Post vote on comment -------------------------- */
 
 router.post("/comment/:id", async (req, res, next) => {
-  const commentID = req.params.id
+  const commentID = req.params.id;
+  const userID = req.query.userID
 
-  if (!await isValid_id(res, commentID, commentSchema)) return false
-  if (await isDuplicate(req, res, commentID, req.body.author)) return true
-  
-  try {
-    await voteSchema
-    .create({
-      ...req.body,
-      targetID: commentID,
-      type: 'Comment'
-    })
-    .then(() => {
-      res.status(200).json({
-        message: `Vote on comment ${commentID} successful`,
-        status: 200,
-      })
-    })
-  } catch(err) {
-    return next(err)
-  }
-})
+  let { author, vote } = req.body
 
-/* --------------------- Get votes on post and comments --------------------- */
+  if (!await isValid_id(res, commentID, commentSchema)) return false;
+  if (await isDuplicate(req, res, commentID, author)) return true;
 
-router.get("/:id", async (req, res, next) => {
-  const targetID = req.params.id
+  const user = await getUserWithID(res, userID)
 
   try {
-    await voteSchema
-    .find({
-      targetID: targetID
-    })
-    .then(async votes => {
-      let message = votes.length == 0 ? `No votes found for id: ${targetID}` : `All votes successfully fetched`
-
-      res.status(200).json({
-        data: votes,
-        voteCount: countVotes(votes),
-        message: message,
-        status: 200,
+    if (!user) {
+      res.status(403).json({
+        message: "You must be logged in to cast a vote",
+        status: 403
       })
-    })
-  } catch(err) {
-    return next(err)
+      return false
+    }
+
+    const newVote = { author, vote }
+
+    const originalComment = await commentSchema.findById(commentID);
+
+    const updatedComment = await commentSchema.findByIdAndUpdate(
+      commentID,
+      { 
+        $push: { votes: newVote },
+        $set: { voteCount: countVotes([...originalComment.votes, newVote]) }
+      },
+      { new: true }
+    )
+    
+    const voteCount = updatedComment.voteCount;
+
+    res.status(200).json({
+      message: `Vote on comment ${commentID} successful`,
+      voteCount: voteCount,
+      status: 200
+    });
+  } catch (err) {
+    return next(err);
   }
-})
+});
+
 
 /* -------------------------------------------------------------------------- */
   

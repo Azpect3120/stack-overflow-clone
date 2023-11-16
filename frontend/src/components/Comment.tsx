@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom'
 import "../assets/css/output.css";
 import Voting from "./Voting";
 import LoginError from "./LoginError";
@@ -7,10 +8,11 @@ import EditComment from "./EditComment"
 
 interface CommentObject {
     author: string;
-    content: string;
+    content: String;
     date: Date;
-    postID: string;
-    _id: string;
+    voteCount: number;
+    postID: String;
+    _id: String;
 }
 
 interface Props {
@@ -19,10 +21,10 @@ interface Props {
 
 function Comment(props: Props): JSX.Element {
     const [isEditing, setIsEditing] = useState(false)
-    const [voteCount, setVoteCount] = useState<number | null>(null); // Initialize voteCount stat
+    const [voteCount, setVoteCount] = useState<number | null>(props.comment.voteCount); // Initialize voteCount stat
     const [error, setError] = useState<String | null>(null);
 
-    const [userId, setUserId] = useState(null);
+    const [userId, setUserId] = useState<String | null>(null);
 
     useEffect(() => {
         // Retrieve the user ID from localStorage and store it in state.
@@ -50,33 +52,13 @@ function Comment(props: Props): JSX.Element {
         }
     };
 
-    const getVotes = async () => {
-        try {
-          const res = await fetch(`http://localhost:4000/votes/${props.comment._id}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const data = await res.json();
-          console.log(`All ${data.data.length} votes successfully fetched `)
-          setVoteCount(data.voteCount); // Update voteCount state with the fetched data
-        } catch (err) {
-          console.error(err);
-        }
-      };
-
-      useEffect(() => {
-          getVotes()
-      }, []);
-
     const addVote = async (isUpvote: boolean) => {
-        if (!localStorage.getItem("user")) {
+        if (!userId) {
             setError("You must be logged in to vote.");
             return;
         }
         try {
-            let res = await fetch(`http://localhost:4000/votes/comment/${props.comment._id}`, {
+            let res = await fetch(`http://localhost:4000/votes/comment/${props.comment._id}?userID=${userId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -89,11 +71,10 @@ function Comment(props: Props): JSX.Element {
             });
             let data = await res.json()
             console.log(data.message)
+            setVoteCount(data.voteCount)
         } catch (err) {
             console.error(err);
         }
-        getVotes()
-
     };
 
     const handleEditClick = () => {
@@ -118,12 +99,9 @@ function Comment(props: Props): JSX.Element {
             
             <div className="w-full">
                 <div className="flex text-xs items-center justify-between">
-                    <p className="text-light-theme-green py-2">
-                        {" "}
-                        {props.comment.author} (
-                        {props.comment.date.toLocaleDateString()}){" "}
-                    </p>
-
+                    <Link to={"/accounts/profile/" + props.comment.author} title={"View " + props.comment.author + "'s profile"}  className="text-light-theme-green py-2">
+                        {" "}{props.comment.author} ({props.comment.date.toLocaleDateString()}){" "}
+                    </Link>
                     {isEditing ? ( // Conditional rendering based on isEditing state
                         <EditComment
                             commentData={props.comment}
@@ -135,9 +113,9 @@ function Comment(props: Props): JSX.Element {
                     ) : (
                         <div>
                             {props.comment ? (
-                                           JSON.parse(localStorage.getItem("user") || "{username: ''}") ? (
+                                JSON.parse(localStorage.getItem("user") || "") ? (
                                     props.comment.author ===
-                                        JSON.parse(localStorage.getItem("user") || "{username: ''}").username ? (
+                                    JSON.parse(localStorage.getItem("user") || "{username:''").username ? (
                                         <div>
                                             <button
                                                 onClick={handleEditClick}
