@@ -26,32 +26,64 @@ function countVotes(data) {
 
 async function isDuplicate(req, res, id, author) {
   try {
+    let updatedDoc
     let { vote } = req.body
 
-    let newVote = {
-      author: author,
-      vote: vote,
-      date: new Date()
+    let newVote = { author, vote }
+
+    const existingVoteInPost = await postSchema.findOne(
+      { 
+        _id: id, 
+        "votes.author": author 
+      }
+    )
+
+    const existingVoteInComment = await commentSchema.findOne(
+      { 
+        _id: id, 
+        "votes.author": author 
+      }
+    )
+
+    if (existingVoteInPost) {      
+      updatedDoc = await postSchema.findOneAndUpdate(
+        { _id: id, "votes.author": author },
+        {
+          $set: {
+            'votes.$': newVote
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      updatedDoc.voteCount = countVotes(updatedDoc.votes);
+      await updatedDoc.save()
+    } else if (existingVoteInComment) {
+      updatedDoc = await commentSchema.findOneAndUpdate(
+        { _id: id, "votes.author": author },
+        {
+          $set: {
+            'votes.$': newVote
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      updatedDoc.voteCount = countVotes(updatedDoc.votes);
+      await updatedDoc.save()
     }
 
-    const existingVoteInPost = await postSchema.findOneAndUpdate(
-      { _id: id, 'votes.author': author },
-      { $set: { 'votes.$': newVote } },
-      { new: true }
-    );    
+    console.log(updatedDoc)
 
-    const existingVoteInComment = await commentSchema.findOneAndUpdate(
-      { _id: id, 'votes.author': author },
-      { $set: { 'votes.$': newVote } },
-      { new: true }
-    );
 
-    const existingVote = existingVoteInPost || existingVoteInComment;
+    const existingVote = existingVoteInPost || existingVoteInComment
 
     if (existingVote) {
       res.status(200).json({
         message: `Vote successfully updated`,
-        voteCount: countVotes(existingVote.votes),
+        voteCount: updatedDoc.voteCount,
         status: 200
       })
       return true
@@ -61,7 +93,7 @@ async function isDuplicate(req, res, id, author) {
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      message: 'An error occurred',
+      message: 'An error occurred in function isDuplicate',
       error: error
     });
   }

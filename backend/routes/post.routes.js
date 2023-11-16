@@ -4,7 +4,7 @@ const cloudinary = require('cloudinary')
 const filter = require('leo-profanity');
 
 
-const { countVotes, isValid_id, getUserWithID } = require("./routeMethods.js")
+const { isValid_id, getUserWithID } = require("./routeMethods.js")
 
 /* ----------------------------- MongoDB schemas ---------------------------- */
 
@@ -119,7 +119,7 @@ router.get("/get-post/:id", async (req, res, next) => {
     .then((result) => {
       res.status(200).json({
         data: result,
-        voteCount: countVotes(result.votes),
+        voteCount: result.voteCount,
         message: "Post successfully fetched",
         status: 200,
       })
@@ -157,7 +157,7 @@ router.post("/edit-post/:id", async (req, res, next) => {
     .then(result => {
       res.status(200).json({
         data: result, 
-        voteCount: countVotes(result.votes),
+        voteCount: result.voteCount,
         message: "Data successfully updated",
         status: 200
       })
