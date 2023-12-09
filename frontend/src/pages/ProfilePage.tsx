@@ -96,7 +96,6 @@ function ProfilePage(): JSX.Element {
 
     const updateAvatar = async (event: any) => {
         const imageFile = event.target.files[0];
-        console.log(imageFile);
         const formData = new FormData();
         formData.append("file", imageFile);
         formData.append("upload_preset", "Avatars");

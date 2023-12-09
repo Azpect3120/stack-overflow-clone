@@ -38,7 +38,6 @@ function CreatePostPage(): JSX.Element {
           body: JSON.stringify(form), // Send the FormData object
         });
         
-        console.log(form);
         window.location.href = "/posts";
       } catch (err) {
         console.error(err);
@@ -58,7 +57,6 @@ function CreatePostPage(): JSX.Element {
   
     const handleImageUpload = (event: any) => {
       const imageFile = event.target.files[0];
-      console.log(imageFile);
       const formData = new FormData();
       formData.append("file", imageFile);
       formData.append("upload_preset", "BlogImages");

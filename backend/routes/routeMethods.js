@@ -75,9 +75,6 @@ async function isDuplicate(req, res, id, author) {
       await updatedDoc.save()
     }
 
-    console.log(updatedDoc)
-
-
     const existingVote = existingVoteInPost || existingVoteInComment
 
     if (existingVote) {
@@ -91,7 +88,6 @@ async function isDuplicate(req, res, id, author) {
 
     return false
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       message: 'An error occurred in function isDuplicate',
       error: error

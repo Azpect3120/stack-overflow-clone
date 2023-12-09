@@ -72,7 +72,6 @@ function PostPage(): JSX.Element {
                 }),
             });
             let data = await res.json();
-            console.log(data.message);
             setVoteCount(data.voteCount)
         } catch (err) {
             console.error(err);
