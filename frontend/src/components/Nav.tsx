@@ -24,7 +24,7 @@ function Navbar() {
     };
 
     const viewProfile = () => {
-        const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user") || "") : { username: "", id: "" };
+        const user = JSON.parse(localStorage.getItem("user") || '{ "username": "", id: "" }');
         const url = `/accounts/profile/${user.username}`;
         navigate(url);
     };

@@ -8,11 +8,11 @@ import EditComment from "./EditComment"
 
 interface CommentObject {
     author: string;
-    content: String;
+    content: string;
     date: Date;
     voteCount: number;
-    postID: String;
-    _id: String;
+    postID: string;
+    _id: string;
 }
 
 interface Props {
@@ -24,14 +24,14 @@ function Comment(props: Props): JSX.Element {
     const [voteCount, setVoteCount] = useState<number | null>(props.comment.voteCount); // Initialize voteCount stat
     const [error, setError] = useState<String | null>(null);
 
-    const [userId, setUserId] = useState<String | null>(null);
+    const [userId, setUserId] = useState<String | null>("");
 
     useEffect(() => {
         // Retrieve the user ID from localStorage and store it in state.
         const user = localStorage.getItem('user');
         if (user) {
-            const userId = JSON.parse(user).id;
-            setUserId(userId);
+            const userID = JSON.parse(user).id;
+            setUserId(userID);
         }
     }, []);
 
@@ -65,12 +65,11 @@ function Comment(props: Props): JSX.Element {
                 },
                 body: JSON.stringify({
                     date: new Date(),
-                    author: (JSON.parse(localStorage.getItem("user") || "" ).username || "Unknown"),
+                    author: (JSON.parse(localStorage.getItem("user") || '{"username": ""}').username || "Unknown"),
                     vote: isUpvote,
                 })
             });
             let data = await res.json()
-            console.log(data.message)
             setVoteCount(data.voteCount)
         } catch (err) {
             console.error(err);
@@ -113,9 +112,9 @@ function Comment(props: Props): JSX.Element {
                     ) : (
                         <div>
                             {props.comment ? (
-                                JSON.parse(localStorage.getItem("user") || "") ? (
+                                JSON.parse(localStorage.getItem("user") || '{"username":""}') ? (   
                                     props.comment.author ===
-                                    JSON.parse(localStorage.getItem("user") || "{username:''").username ? (
+                                    JSON.parse(localStorage.getItem("user") || '{"username":""}').username ? (
                                         <div>
                                             <button
                                                 onClick={handleEditClick}

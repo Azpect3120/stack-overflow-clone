@@ -4,10 +4,10 @@ import CreateComment from "./CreateComment";
 import { useEffect, useState } from "react";
 
 interface CommentObject {
-    author: String;
-    content: String;
+    author: string;
+    content: string;
     votes: Array<{ author: string, vote: boolean, date: Date}>;
-    voteCount: Number;
+    voteCount: number;
     date: Date;
     postID: string;
     _id: string;

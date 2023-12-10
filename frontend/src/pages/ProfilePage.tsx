@@ -163,7 +163,7 @@ function ProfilePage(): JSX.Element {
                                 {user
                                     ? user._id
                                         ? ` #${user._id}`
-                                        : " #Loading"
+                                        : ""
                                     : ""}
                             </span>
                             <br />
@@ -178,7 +178,7 @@ function ProfilePage(): JSX.Element {
                     <p className="px-8 pb-4 font-light"> {totalPosts} Posts </p>
                     <div className="divide-y divide-light-border border-y border-light-border">
                         {posts.map((post) => (
-                            <div className="w-full h-fit">
+                            <div className="w-full h-fit" key={post._id}>
                                 <div className="w-full flex justify-between items-center px-8 py-4">
                                     <Link
                                         to={"/posts/" + post._id}
