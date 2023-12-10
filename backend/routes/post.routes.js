@@ -10,7 +10,6 @@ const { isValid_id, getUserWithID } = require("./routeMethods.js")
 
 let postSchema = require("../models/Post.js")
 let commentSchema = require("../models/Comment.js")
-// let voteSchema = require("../models/Vote.js")
 
 // All posts start with /posts
 
@@ -48,32 +47,41 @@ router.get("/user/:username", async (req, res, next) => {
 
 /* ------------------- Search posts with title and content ------------------ */
 
-router.get("/search", async (req, res, next) => { 
-  const page = parseInt(req.query.page) || 1
-  const PAGE_SIZE = parseInt(req.query.size)
-  
-  let query = req.query.query
-  query = query === null ? "" : query
-  const regex = new RegExp(query, 'i')
-  
-  try {PAGE_SIZE
-    const searchQuery = {
-      $or: [
-        { title: { $regex: regex } },
-        { content: { $regex: regex } },
-        { author: { $regex: regex } }
-      ]
-    }
+router.get("/search", async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const PAGE_SIZE = parseInt(req.query.size);
 
-    const totalResults = await postSchema.countDocuments(searchQuery)
+  let query = req.query.query;
+  query = query || ""; // If query is null, set it to an empty string
+  const keywords = query.split(/\s+/); // Split the query at space characters
+
+  const regexArray = keywords.map(keyword => new RegExp(keyword, 'i'));
+
+  const searchQuery = {
+    $and: [
+      {
+        $or: [
+          { title: { $in: regexArray } },
+          { content: { $in: regexArray } },
+          { author: { $in: regexArray } }
+        ]
+      }
+    ]
+  };
+
+  try {
+    const totalResults = await postSchema.countDocuments(searchQuery);
 
     const results = await postSchema
       .find(searchQuery)
-      .skip((page - 1) * PAGE_SIZE) // Calculate how many documents to skip based on the page number
-      .sort({ createdAt: -1 }) // Sort by _id (or any other field you want to sort by)
-      .limit(PAGE_SIZE) // Limit the number of documents per page
+      .skip((page - 1) * PAGE_SIZE)
+      .sort({ createdAt: -1 })
+      .limit(PAGE_SIZE);
 
-    let message = results.length === 0 ? 'No posts found from search' : 'Search results successfully fetched';
+    let message =
+      results.length === 0
+        ? "No posts found from search"
+        : "Search results successfully fetched";
 
     res.status(200).json({
       data: results,
@@ -83,11 +91,12 @@ router.get("/search", async (req, res, next) => {
       totalPages: Math.ceil(totalResults / PAGE_SIZE),
       message: message,
       status: 200,
-    })
+    });
   } catch (err) {
-    return next(err)
+    return next(err);
   }
-})
+});
+
 
 /* -------------------------- Create post from form ------------------------- */
 

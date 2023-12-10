@@ -25,11 +25,11 @@ interface Props {
 }
 
 function PostList (props: Props): JSX.Element {
-
+    let searchTerms = props.search?.split(" ").join(", ")
     return (
         <div className="h-fit min-h-screen w-2/3 border-x border-light-border divide-y divide-light-border">
             <div className="w-full">
-                <h1 className="text-2xl p-8"> {props.search ? `Search term: ${props.search}` : "All Posts"} </h1>
+                <h1 className="text-2xl p-8"> {props.search ? `Search terms: ${searchTerms}` : "All Posts"} </h1>
                 <p className="px-8 pb-4 font-light"> {props.data.totalPosts} Posts </p>
             </div>
             {/* Message for the user */}
