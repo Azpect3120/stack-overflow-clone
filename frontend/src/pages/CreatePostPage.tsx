@@ -52,7 +52,6 @@ function CreatePostPage(): JSX.Element {
     const handleInputChange = (event: any) => {
       const { name, value } = event.target;
       setForm({ ...form, [name]: value });
-      console.log(form);
     };
   
     const handleImageUpload = (event: any) => {

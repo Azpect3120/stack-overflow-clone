@@ -29,7 +29,7 @@ function CreateAccountForm () {
         }
     }
 
-    useEffect(() => {console.log(error);}, [error])
+    useEffect(() => {console.error(error);}, [error])
 
     const isDisabled = useMemo(()=>{ 
         return password1 !== password2 || username.length < 3 || password1.length < 3 || email.length < 3;

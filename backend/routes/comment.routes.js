@@ -24,7 +24,6 @@ router.get("/:id", async (req, res, next) => {
       postID: postID
     })
     .then((result) => {
-      console.log(result)
       let voteCount = !result.votes ? 0 : countVotes(result.votes)
 
       res.status(200).json({
