@@ -236,7 +236,9 @@ router.post("/update-profile/:name", async (req, res, next) => {
         {new: true}
       )
       .then(result => {
-        if (!result) return res.status(404).send(`No user found with the username ${user.username}`)
+        if (!result) return res.status(404).json({ 
+          message: `No user found with the username ${user.username}`
+        })
         
         res.status(200).json({
           message: `User ${result.username} found and updated`, 
@@ -283,7 +285,9 @@ router.post("/add-tags/:name", async (req, res, next) => {
         { new: true }
       )
       .then(result => {
-        if (!result) return res.status(404).send(`No user found with the username ${user.username}`)
+        if (!result) return res.status(404).json({ 
+          message: `No user found with the username ${user.username}`
+        })
         
         res.status(200).json({
           message: `User ${result.username} found and updated`, 
@@ -302,7 +306,7 @@ router.post("/remove-tags/:name", async (req, res, next) => {
   const name = req.params.name
   const userID = req.query.userID
   
-  const { removeTags }= req.body
+  const { removeTags } = req.body
 
   const user = await getUserWithID(res, userID)
 
@@ -322,10 +326,12 @@ router.post("/remove-tags/:name", async (req, res, next) => {
       )
       .then(result => {
         if (!result) {
-          return res.status(404).send(`No user found with the username ${user.username}`);
+          return res.status(404).json({ 
+            message: `No user found with the username ${user.username}`
+          });
         }
 
-        // Check if all tags in removeTags exist in the tags array
+        // Check if all tags in removeTags exist in the tags array of the user
         const tagsExist = removeTags.every(tag => result.tags.includes(tag));
 
         if (!tagsExist) {
@@ -395,8 +401,10 @@ router.post("/make-admin/:id", async (req, res, next) => {
         { new: true }
       )
       .then(user => {
-        if (!user) return res.status(404).send(`No user found with the _id: ${id}`)
-        let message =  admin ? `User ${user.username} found and given admin` : `User ${user.username} found and revoked admin`
+        if (!user) return res.status(404).json({
+          message: `No user found with the _id: ${id}`
+        })
+        let message = admin ? `User ${user.username} found and given admin` : `User ${user.username} found and revoked admin`
         res.status(200).json({
           name: user.username, 
           id: user._id, 
